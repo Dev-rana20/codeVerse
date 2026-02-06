@@ -7,11 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.Grownited.entity.CatagoryEntity;
-import com.Grownited.entity.HackathonEntity;
+
 import com.Grownited.entity.UserDetailEntity;
 import com.Grownited.entity.UserEntity;
-import com.Grownited.entity.UserTypeEntity;
+
 
 import com.Grownited.repository.UserRepository;
 
@@ -62,45 +61,7 @@ public class SessionController {
 		return "Login";
 	}
 	
-	@GetMapping("/catagory")
-	public String openCatagotry() {
-		return "Catagory";
-	}
 	
-	@GetMapping("/userType")
-	public String openUserType() {
-		return "UserType";
-	}
-	
-	@PostMapping("/saveCatagory")
-	public String saveCatagory(CatagoryEntity catagoryEntity) {
-		
-		System.out.println(catagoryEntity.getCatagoryId());
-		return "UserType";
-	}
-	
-	
-	@GetMapping("/hackathon")
-	public String openHackathon(){
-		return "Hackathon";
-	}
-	
-	@PostMapping("/saveUserType")
-	public String saveUserType(UserTypeEntity userTypeEntity) {
-		
-		System.out.println(userTypeEntity.getUserTypeId());
-		return "Hackathon";
-	}
-	
-	@PostMapping("/saveHackathon")
-	
-	public String saveHackathon(HackathonEntity hackathonEntity) {
-		
-		
-		System.out.println(hackathonEntity.getEventType());
-		System.out.println(hackathonEntity.getTitle());
-		return "HackathonDescription";
-	}
 }
 
 

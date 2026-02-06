@@ -11,16 +11,16 @@
 
 <style>
     body {
-        background: #f4f6f9;
+        background: #f5f7fa;
     }
-    .hackathon-card {
-        max-width: 650px;
+    .signup-card {
+        max-width: 550px;
         margin: auto;
-        margin-top: 50px;
+        margin-top: 60px;
         padding: 25px;
-        border-radius: 12px;
+        border-radius: 10px;
         background: #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 </style>
 </head>
@@ -28,12 +28,12 @@
 <body>
 
 <div class="container">
-    <div class="hackathon-card">
+    <div class="signup-card">
         <h3 class="text-center mb-4">Create Hackathon</h3>
 
         <form action="/saveHackathon" method="post">
 
-            <!-- Hackathon Title -->
+            <!-- Title -->
             <div class="mb-3">
                 <label class="form-label">Hackathon Title</label>
                 <input type="text" name="title" class="form-control" required>
@@ -44,9 +44,8 @@
                 <label class="form-label">Status</label>
                 <select name="status" class="form-select" required>
                     <option value="">-- Select Status --</option>
-                    <option>Upcoming</option>
-                    <option>Ongoing</option>
-                    <option>Completed</option>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
                 </select>
             </div>
 
@@ -65,9 +64,9 @@
             <div class="mb-3">
                 <label class="form-label">Payment</label>
                 <select name="payment" class="form-select" required>
-                    <option value="">-- Payment Type --</option>
-                    <option>Free</option>
-                    <option>Paid</option>
+                    <option value="">-- Select Payment Type --</option>
+                    <option value="true">Paid</option>
+                    <option value="false">Free</option>
                 </select>
             </div>
 
@@ -86,7 +85,7 @@
             <!-- Location -->
             <div class="mb-3">
                 <label class="form-label">Location</label>
-                <input type="text" name="location" class="form-control" placeholder="City / Platform" required>
+                <input type="text" name="location" class="form-control" required>
             </div>
 
             <!-- User Type -->

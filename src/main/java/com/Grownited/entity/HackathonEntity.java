@@ -3,6 +3,9 @@ package com.Grownited.entity;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,28 +15,30 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="hackathon")
 public class HackathonEntity {
-
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer hackthonId;
 	private String title;
-	private String status;
+	private boolean status;
 	private String eventType;
-	private String payment;
+	private boolean payment;
 	private Integer minTeamSize;
 	private Integer maxTeamSize;
 	private String location;
 	private String userType;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate registrationStartDate;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate registrationEndDate;
 	
 	
-	public Integer getHackthon_id() {
+	//getter & setter
+	public Integer getHackthonId() {
 		return hackthonId;
 	}
-	public void setHackthon_id(Integer hackthon_id) {
-		this.hackthonId = hackthon_id;
+	public void setHackthonId(Integer hackthonId) {
+		this.hackthonId = hackthonId;
 	}
 	public String getTitle() {
 		return title;
@@ -41,10 +46,10 @@ public class HackathonEntity {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getStatus() {
+	public boolean isStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(boolean status) {
 		this.status = status;
 	}
 	public String getEventType() {
@@ -53,10 +58,10 @@ public class HackathonEntity {
 	public void setEventType(String eventType) {
 		this.eventType = eventType;
 	}
-	public String getPayment() {
+	public boolean isPayment() {
 		return payment;
 	}
-	public void setPayment(String payment) {
+	public void setPayment(boolean payment) {
 		this.payment = payment;
 	}
 	public Integer getMinTeamSize() {
@@ -95,7 +100,6 @@ public class HackathonEntity {
 	public void setRegistrationEndDate(LocalDate registrationEndDate) {
 		this.registrationEndDate = registrationEndDate;
 	}
-	
 	
 	
 }

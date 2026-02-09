@@ -5,9 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Add New Category</title>
-
+<jsp:include page="AdminCSS.jsp"></jsp:include>
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
     body {
@@ -21,8 +22,10 @@
 </head>
 
 <body>
+<jsp:include page="AdminHeader.jsp"></jsp:include>
+	<jsp:include page="AdminSidebar.jsp"></jsp:include>
 
-<div class="container">
+<div class="content">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow">
@@ -57,10 +60,9 @@
             </div>
         </div>
     </div>
+    	<jsp:include page="AdminFooter.jsp"></jsp:include>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -13,7 +13,7 @@ public class UserDetailEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userDetailId;
-	private Integer uerId;
+	private Integer userId;
 	private String qualification;
 	private String city;
 	private String state;
@@ -28,11 +28,11 @@ public class UserDetailEntity {
 	public void setUserDetailId(Integer userDetailId) {
 		this.userDetailId = userDetailId;
 	}
-	public Integer getUerId() {
-		return uerId;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setUerId(Integer uerId) {
-		this.uerId = uerId;
+	public void setUserId(Integer uerId) {
+		this.userId = uerId;
 	}
 	public String getQualification() {
 		return qualification;

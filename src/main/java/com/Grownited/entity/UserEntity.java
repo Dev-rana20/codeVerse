@@ -19,7 +19,7 @@ public class UserEntity {
 	private String lastName;
 	private String email;
 	private String password;
-	private LocalDate createAt;
+	private LocalDate createdAt;
 	private String role; //admin , participant , judge
 	private String gender;
 	private Integer birthYear;
@@ -58,12 +58,7 @@ public class UserEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public LocalDate getCreateAt() {
-		return createAt;
-	}
-	public void setCreateAt(LocalDate createAt) {
-		this.createAt = createAt;
-	}
+	
 	public String getRole() {
 		return role;
 	}
@@ -106,7 +101,11 @@ public class UserEntity {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
+	public LocalDate getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDate createdAt) {
+		this.createdAt = createdAt;
+	}
 	
 }

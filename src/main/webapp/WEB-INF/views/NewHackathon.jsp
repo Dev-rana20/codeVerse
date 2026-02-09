@@ -5,9 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Create Hackathon</title>
-
+<jsp:include page="AdminCSS.jsp"></jsp:include>
 <!-- Bootstrap 5 CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
     body {
@@ -26,8 +27,10 @@
 </head>
 
 <body>
+	<jsp:include page="AdminHeader.jsp"></jsp:include>
+	<jsp:include page="AdminSidebar.jsp"></jsp:include>
 
-<div class="container">
+<div class="content">
     <div class="signup-card">
         <h3 class="text-center mb-4">Create Hackathon</h3>
 
@@ -120,6 +123,7 @@
 
         </form>
     </div>
+    	<jsp:include page="AdminFooter.jsp"></jsp:include>
 </div>
 
 </body>

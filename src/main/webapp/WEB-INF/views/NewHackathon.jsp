@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,14 +44,14 @@
             </div>
 
             <!-- Status -->
-            <div class="mb-3">
-                <label class="form-label">Status</label>
-                <select name="status" class="form-select" required>
-                    <option value="">-- Select Status --</option>
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                </select>
-            </div>
+			<div class="form-group">
+				<label>Status</label> <select name="status" required class="form-control">
+					<option value="">-- Select Status --</option>
+					<option value="UPCOMING">Upcoming</option>
+					<option value="ONGOING">Ongoing</option>
+					<option value="COMPLETED">Completed</option>
+				</select>
+			</div>
 
             <!-- Event Type -->
             <div class="mb-3">
@@ -68,8 +69,8 @@
                 <label class="form-label">Payment</label>
                 <select name="payment" class="form-select" required>
                     <option value="">-- Select Payment Type --</option>
-                    <option value="true">Paid</option>
-                    <option value="false">Free</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Free">Free</option>
                 </select>
             </div>
 
@@ -94,11 +95,12 @@
             <!-- User Type -->
             <div class="mb-3">
                 <label class="form-label">User Type</label>
-                <select name="userType" class="form-select" required>
+                <select name="userTypeId" class="form-select" required>
                     <option value="">-- Select User Type --</option>
-                    <option>Student</option>
-                    <option>Professional</option>
-                    <option>Open</option>
+                   <c:forEach var="u" items="${allUserType}">
+                   <option value="${u.userTypeId}">${u.userType}</option>
+                   </c:forEach>
+                   
                 </select>
             </div>
 

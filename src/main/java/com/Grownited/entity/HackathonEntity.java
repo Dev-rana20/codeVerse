@@ -1,10 +1,6 @@
 package com.Grownited.entity;
 
-
 import java.time.LocalDate;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,30 +11,27 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="hackathon")
 public class HackathonEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer hackthonId;
-	private String title;
-	private boolean status;
-	private String eventType;
-	private boolean payment;
-	private Integer minTeamSize;
-	private Integer maxTeamSize;
-	private String location;
-	private String userType;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate registrationStartDate;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDate registrationEndDate;
-	
-	
-	//getter & setter
-	public Integer getHackthonId() {
-		return hackthonId;
+	Integer hackathonId;
+	String title;
+
+	String status;
+
+	String eventType;
+	String payment;
+	Integer minTeamSize;
+	Integer maxTeamSize;
+	String location;
+	Integer userTypeId;// fk
+	LocalDate registrationStartDate;
+	LocalDate registrationEndDate;
+	public Integer getHackathonId() {
+		return hackathonId;
 	}
-	public void setHackthonId(Integer hackthonId) {
-		this.hackthonId = hackthonId;
+	public void setHackathonId(Integer hackathonId) {
+		this.hackathonId = hackathonId;
 	}
 	public String getTitle() {
 		return title;
@@ -46,10 +39,10 @@ public class HackathonEntity {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public boolean isStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public String getEventType() {
@@ -58,10 +51,10 @@ public class HackathonEntity {
 	public void setEventType(String eventType) {
 		this.eventType = eventType;
 	}
-	public boolean isPayment() {
+	public String getPayment() {
 		return payment;
 	}
-	public void setPayment(boolean payment) {
+	public void setPayment(String payment) {
 		this.payment = payment;
 	}
 	public Integer getMinTeamSize() {
@@ -82,11 +75,11 @@ public class HackathonEntity {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getUserType() {
-		return userType;
+	public Integer getUserTypeId() {
+		return userTypeId;
 	}
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setUserTypeId(Integer userTypeId) {
+		this.userTypeId = userTypeId;
 	}
 	public LocalDate getRegistrationStartDate() {
 		return registrationStartDate;
@@ -100,6 +93,5 @@ public class HackathonEntity {
 	public void setRegistrationEndDate(LocalDate registrationEndDate) {
 		this.registrationEndDate = registrationEndDate;
 	}
-	
 	
 }

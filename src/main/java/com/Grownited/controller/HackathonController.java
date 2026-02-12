@@ -31,7 +31,6 @@ public class HackathonController {
 	public String newHackathon(Model model) {
 		
 	List<UserTypeEntity> allUserType= userTypeRepository.findAll();
-	
 	model.addAttribute("allUserType", allUserType);
 		return "NewHackathon";
 	}

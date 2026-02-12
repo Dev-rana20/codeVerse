@@ -57,7 +57,7 @@
 						<div class="col-md-12 grid-margin">
 							<div class="row">
 								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold">List Hackathon</h3>
+									<h3 class="font-weight-bold">List User</h3>
 
 								</div>
 
@@ -71,8 +71,8 @@
 							<div class="card">
 								<div class="card-body">
 									<div class="d-flex justify-content-between">
-										<p class="card-title">All Hackathon</p>
-										<a href="newHackathon" class="text-info">New</a>
+										<p class="card-title">All Users</p>
+										<a href="signup" class="text-info">New</a>
 									</div>
 									<div class="table-responsive">
 										<table class="table table-bordered table-hover table-striped">

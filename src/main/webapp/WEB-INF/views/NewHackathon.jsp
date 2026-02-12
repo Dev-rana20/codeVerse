@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,7 +109,7 @@
 											<label>User Type</label> <select class="form-control"
 												name="userTypeId" required>
 												<option value="">-- Select User Type --</option>
-												<c:forEach var="u" items="${allUserType}">
+												<c:forEach items="${allUserType}" var="u" >
 													<option value="${u.userTypeId}">${u.userType}</option>
 												</c:forEach>
 											</select>

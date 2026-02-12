@@ -35,10 +35,22 @@
 	background: #dc3545;
 }
 
-  .btn-add { background: #28a745; }
-        .btn-edit { background: #ffc107; color: black; }
-        .btn-delete { background: #dc3545; }
-        .btn-view { background: #007bff; }
+.btn-add {
+	background: #28a745;
+}
+
+.btn-edit {
+	background: #ffc107;
+	color: black;
+}
+
+.btn-delete {
+	background: #dc3545;
+}
+
+.btn-view {
+	background: #007bff;
+}
 </style>
 
 </head>
@@ -57,7 +69,7 @@
 						<div class="col-md-12 grid-margin">
 							<div class="row">
 								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold">List Hackathon</h3>
+									<h3 class="font-weight-bold">List User</h3>
 
 								</div>
 
@@ -71,64 +83,38 @@
 							<div class="card">
 								<div class="card-body">
 									<div class="d-flex justify-content-between">
-										<p class="card-title">All Hackathon</p>
+										<p class="card-title">All Users</p>
 										<a href="newHackathon" class="text-info">New</a>
 									</div>
 									<div class="table-responsive">
-										<table class="table table-bordered table-hover">
-											<thead>
+										<table class="table table-bordered table-striped text-center">
+											<thead class="table-dark">
 												<tr>
-													<th>#</th>
-													<th>Title</th>
-													<th>Status</th>
-													<th>Event Type</th>
-													<th>Payment</th>
-													<th>Team Size</th>
-													<th>Location</th>
-													<th>Registration Period</th>
-													<th>Actions</th>
+													<th>User Type ID</th>
+													<th>User Type</th>
+													<th>Action</th>
 												</tr>
 											</thead>
-
 											<tbody>
-												<c:choose>
-													<c:when test="${empty allHackathon}">
-														<tr>
-															<td colspan="9">No hackathons found</td>
-														</tr>
-													</c:when>
+												<c:forEach items="${userTypeList}" var="u">
+													<tr>
+														<td>${u.userTypeId}</td>
+														<td>${u.userType}</td>
+														<td><a href="editUserType?id=${u.userTypeId}"
+															class="btn btn-warning btn-sm">Edit</a> <a
+															href="deleteUserType?id=${u.userTypeId}"
+															class="btn btn-danger btn-sm"
+															onclick="return confirm('Are you sure you want to delete?')">
+																Delete </a></td>
+													</tr>
+												</c:forEach>
 
-													<c:otherwise>
-														<c:forEach var="h" items="${allHackathon}" varStatus="i">
-															<tr>
-																<td>${i.count}</td>
-																<td>${h.title}</td>
+												<c:if test="${empty userTypeList}">
+													<tr>
+														<td colspan="3">No User Types Found</td>
+													</tr>
+												</c:if>
 
-																<td><span class="badge ${h.status}">
-																		${h.status} </span></td>
-
-																<td>${h.eventType}</td>
-
-																<td><span class="badge ${h.payment}">
-																		${h.payment} </span></td>
-
-																<td>${h.minTeamSize}-${h.maxTeamSize}</td>
-
-																<td>${h.location}</td>
-
-																<td>${h.registrationStartDate}to
-																	${h.registrationEndDate}</td>
-
-																<td><a href="viewHackathon?hackathonId=${h.hackathonId}" class="btn btn-view">View</a>
-																	<a href="editHackathon" class="btn btn-edit">Edit</a> <a
-																	href="deleteHackathon?hackathonId=${h.hackathonId}"
-																	class="btn btn-delete"
-																	onclick="return confirm('Are you sure you want to delete this hackathon?')">
-																		Delete </a></td>
-															</tr>
-														</c:forEach>
-													</c:otherwise>
-												</c:choose>
 											</tbody>
 										</table>
 									</div>

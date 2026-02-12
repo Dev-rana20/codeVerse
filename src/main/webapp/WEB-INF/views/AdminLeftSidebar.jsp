@@ -12,9 +12,11 @@
 			<div class="collapse" id="ui-basic">
 				<ul class="nav flex-column sub-menu">
 					<li class="nav-item"><a class="nav-link"
-						href="newUserType">Add New User</a></li>
+						href="newUserType">Add New User Type</a></li> 
 					<li class="nav-item"><a class="nav-link"
 						href="listUser">User List</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="listUserType">User Type List</a></li>
 				</ul>
 			</div></li>
 		<li class="nav-item"><a class="nav-link"

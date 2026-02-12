@@ -28,7 +28,7 @@ public class CategoryController {
 	public String saveCatagory(CategoryEntity categoryEntity) {
 		
 		categoryRepository.save(categoryEntity);
-		return "AdminDashboard";
+		return "redirect:/listCategory";
 	}
 	
 	@GetMapping("listCategory")
@@ -38,6 +38,10 @@ public class CategoryController {
 		model.addAttribute("categoryList",categoryList);
 		return "ListCategory";
 	}
-	
+	@GetMapping("deleteCategory")
+	public String deletehackathon(Integer id) {
+		categoryRepository.deleteById(id);
+		return "redirect:/listCategory";
+	}
 	
 }

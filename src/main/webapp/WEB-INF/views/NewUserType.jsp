@@ -26,7 +26,7 @@
 						<div class="col-md-12 grid-margin">
 							<div class="row">
 								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold">New User Type</h3>
+									<h3 class="font-weight-bold text-center">New User Type</h3>
 
 								</div>
 
@@ -36,7 +36,7 @@
 
 
 					<div class="row">
-						<div class="col-md-6 grid-margin stretch-card">
+						<div class="col-md-6 mx-auto grid-margin stretch-card">
 							<div class="card">
 								<div class="card-body">
 									<div class="d-flex justify-content-between">

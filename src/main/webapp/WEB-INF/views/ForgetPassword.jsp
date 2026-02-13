@@ -1,64 +1,79 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
+	pageEncoding="UTF-8"%>
+
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Forgot Password</title>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Skydash Admin</title>
+<!-- plugins:css -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!-- Bootstrap 5 CDN -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="<c:url value='/assets/vendors/feather/feather.css'/>">
+<link rel="stylesheet"
+	href="<c:url value='/assets/vendors/ti-icons/css/themify-icons.css'/>">
+<link rel="stylesheet"
+	href="<c:url value='/assets/vendors/css/vendor.bundle.base.css'/>">
+<link rel="stylesheet" href="<c:url value='/assets/css/style.css'/>">
+<link rel="shortcut icon"
+	href="<c:url value='/assets/images/favicon.png'/>">
 
-<style>
-    body {
-        background: #f1f4f9;
-    }
-    .forgot-card {
-        max-width: 420px;
-        margin: auto;
-        margin-top: 90px;
-        padding: 25px;
-        border-radius: 10px;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-</style>
 </head>
 
 <body>
+	<div class="container-scroller">
+		<div class="container-fluid page-body-wrapper full-page-wrapper">
+			<div class="content-wrapper d-flex align-items-center auth px-0">
+				<div class="row w-100 mx-0">
+					<div class="col-lg-4 mx-auto">
+						<div class="auth-form-light text-left py-5 px-4 px-sm-5">
+							<div class="brand-logo text-center mb-4">
+								<img alt="BrandLogo" src="/assets/images/logo.png"
+									style="width: 300px; height: auto;">
+							</div>
+							<form action="ForgetPasswordServlet" method="post">
 
-<div class="container">
-    <div class="forgot-card">
-        <h3 class="text-center mb-3">Forgot Password</h3>
-        <p class="text-center text-muted mb-4">
-            Enter your registered email address
-        </p>
+								<!-- Email -->
+								<div class="mb-3">
+									<label class="form-label">Email Address</label> <input
+										type="email" class="form-control" name="email"
+										placeholder="Enter email" required>
+								</div>
 
-        <form action="ForgetPasswordServlet" method="post">
+								<!-- Submit Button -->
+								<div class="d-grid">
+									<button type="submit" class="btn btn-primary">Reset
+										Password</button>
+								</div>
 
-            <!-- Email -->
-            <div class="mb-3">
-                <label class="form-label">Email Address</label>
-                <input type="email" class="form-control" name="email"
-                       placeholder="Enter email" required>
-            </div>
+								<!-- Back to login -->
+								<p class="text-center mt-3">
+									Remember your password? <a href="login">Login</a>
+								</p>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">
-                    Reset Password
-                </button>
-            </div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- content-wrapper ends -->
+		</div>
+		<!-- page-body-wrapper ends -->
+	</div>
+	<!-- container-scroller -->
+	<!-- plugins:js -->
+	<script src="<c:url value='/assets/vendors/js/vendor.bundle.base.js'/>"></script>
+	<script src="<c:url value='/assets/js/off-canvas.js'/>"></script>
 
-            <!-- Back to login -->
-            <p class="text-center mt-3">
-                Remember your password?
-                <a href="login">Login</a>
-            </p>
+	<script src="<c:url value='/assets/js/template.js'/>"></script>
+	<script src="<c:url value='/assets/js/settings.js'/>"></script>
+	<script src="<c:url value='/assets/js/todolist.js'/>"></script>
 
-        </form>
-    </div>
-</div>
+
+
 
 </body>
 </html>

@@ -9,7 +9,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Skydash Admin</title>
+<title>CodeVerse</title>
 <!-- plugins:css -->
 
 <jsp:include page="AdminCSS.jsp"></jsp:include>
@@ -35,10 +35,10 @@
 	background: #dc3545;
 }
 
-  .btn-add { background: #28a745; }
-        .btn-edit { background: #ffc107; color: black; }
-        .btn-delete { background: #dc3545; }
-        .btn-view { background: #007bff; }
+.btn.btn-add { background: #28a745; }
+.btn.btn-edit { background: #ffc107; color: black; }
+.btn.btn-delete { background: #dc3545; }
+.btn.btn-view { background: #007bff; }
 </style>
 
 </head>

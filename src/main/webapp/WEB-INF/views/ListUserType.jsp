@@ -9,7 +9,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Skydash Admin</title>
+<title>CodeVerse</title>
 <!-- plugins:css -->
 
 <jsp:include page="AdminCSS.jsp"></jsp:include>
@@ -90,15 +90,15 @@
 										<table class="table table-bordered table-striped text-center">
 											<thead class="table-dark">
 												<tr>
-													<th>User Type ID</th>
+													<th>#</th>
 													<th>User Type</th>
 													<th>Action</th>
 												</tr>
 											</thead>
 											<tbody>
-												<c:forEach items="${userTypeList}" var="u">
+												<c:forEach var="u" items="${userTypeList}"  varStatus="i">
 													<tr>
-														<td>${u.userTypeId}</td>
+														<td>${i.count}</td>
 														<td>${u.userType}</td>
 														<td><a href="editUserType?id=${u.userTypeId}"
 															class="btn btn-warning btn-sm">Edit</a> <a

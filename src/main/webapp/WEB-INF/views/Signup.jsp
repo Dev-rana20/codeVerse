@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <html lang="en">
 <head>
 <!-- Required meta tags -->
@@ -8,17 +8,12 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>CodeVerse</title>
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/feather/feather.css'/>">
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/ti-icons/css/themify-icons.css'/>">
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/css/vendor.bundle.base.css'/>">
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/font-awesome/css/font-awesome.min.css'/>">
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/mdi/css/materialdesignicons.min.css'/>">
-<link rel="stylesheet" href="<c:url value='/assets/css/style.css'/>">
+<style type="text/css">
+select:valid {
+    color: black !important;
+}
+</style>
+<jsp:include page="AdminCSS.jsp"></jsp:include>
 
 </head>
 <body>
@@ -30,7 +25,8 @@
 						<div class="auth-form-light text-left py-5 px-4 px-sm-5">
 
 							<div class="brand-logo text-center mb-4">
-								<img alt="BrandLogo" src="/assets/images/logo.png" style="width:300px; height:auto;">
+								<img alt="BrandLogo" src="/assets/images/logo.png"
+									style="width: 300px; height: auto;">
 							</div>
 
 							<h3>Sign Up</h3>
@@ -62,22 +58,20 @@
 								</div>
 
 								<!-- Gender -->
-								<div class="mb-3">
-									<label class="form-label d-block">Gender</label>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="gender"
-											value="MALE" required> <label
-											class="form-check-label">Male</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="gender"
-											value="FEMALE"> <label class="form-check-label">Female</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" name="gender"
-											value="OTHER"> <label class="form-check-label">Other</label>
+								<div class="gender-section">
+									<label class="gender-label">Gender</label>
+
+									<div class="gender-options">
+										<label class="gender-option"> <input type="radio"
+											name="gender" value="MALE" required> <span>Male</span>
+										</label> <label class="gender-option"> <input type="radio"
+											name="gender" value="FEMALE"> <span>Female</span>
+										</label> <label class="gender-option"> <input type="radio"
+											name="gender" value="OTHER"> <span>Other</span>
+										</label>
 									</div>
 								</div>
+
 
 								<!-- Birth Year -->
 								<div class="mb-3">
@@ -101,9 +95,9 @@
 								</div>
 
 								<div class="mb-3">
-									<label class="form-label">User Type</label> <select
-										name="userTypeId" class="form-control">
-										<option value="-1">---Select User Type---</option>
+									<label class="form-label">User Type</label> 
+									<select name="userTypeId" class="form-select">
+										<option value="-1" disabled selected>---Select User Type---</option>
 
 										<c:forEach items="${allUserType}" var="ut">
 											<option value="${ut.userTypeId}">${ut.userType}</option>
@@ -140,7 +134,7 @@
 									<label class="form-label">Profile Picture URL</label> <input
 										type="file" name="profilePicURL" class="form-control">
 								</div>
-								
+
 
 								<!-- Submit -->
 								<div class="d-grid">

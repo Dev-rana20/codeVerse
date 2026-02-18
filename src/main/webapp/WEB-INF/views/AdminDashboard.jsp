@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html lang="en">
 <head>
 <!-- Required meta tags -->
@@ -7,9 +9,11 @@
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>CodeVerse</title>
 <!-- plugins:css -->
-
 <jsp:include page="AdminCSS.jsp"></jsp:include>
+
 </head>
+
+<body>
 <body>
 	<div class="container-scroller">
 		<!-- partial:partials/_navbar.html -->
@@ -25,7 +29,7 @@
 						<div class="col-md-12 grid-margin">
 							<div class="row">
 								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold">Welcome John</h3>
+									<h3 class="font-weight-bold">Welcome ${sessionScope.user.firstName}</h3>
 									<h6 class="font-weight-normal mb-0">
 										All systems are running smoothly! You have <span
 											class="text-primary">3 unread alerts!</span>
@@ -59,7 +63,7 @@
 								<div class="col-md-3 mb-4 stretch-card transparent">
 									<div class="card card-tale">
 										<div class="card-body">
-											<p class="mb-4">Today’s Bookings</p>
+											<p class="mb-4">Todayâs Bookings</p>
 											<p class="fs-30 mb-2">4006</p>
 											<p>10.00% (30 days)</p>
 										</div>

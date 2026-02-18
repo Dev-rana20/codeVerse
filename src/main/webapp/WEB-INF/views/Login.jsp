@@ -1,26 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html lang="en">
 <head>
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Skydash Admin</title>
+<title>CodeVerse</title>
 <!-- plugins:css -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/feather/feather.css'/>">
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/ti-icons/css/themify-icons.css'/>">
-<link rel="stylesheet"
-	href="<c:url value='/assets/vendors/css/vendor.bundle.base.css'/>">
-<link rel="stylesheet" href="<c:url value='/assets/css/style.css'/>">
-<link rel="shortcut icon"
-	href="<c:url value='/assets/images/favicon.png'/>">
-
+<jsp:include page="AdminCSS.jsp"></jsp:include>
 </head>
 
 <body>
@@ -33,7 +22,7 @@
 							<div class="brand-logo text-center mb-4">
 								<img alt="BrandLogo" src="/assets/images/logo.png" style="width:300px; height:auto;">
 							</div>
-							<form action="LoginServlet" method="post">
+							<form action="authenticate" method="post">
 
 								<!-- Email -->
 								<div class="mb-3">
@@ -63,6 +52,9 @@
 								<p class="text-center mt-3">
 									Forget Password? <a href="forgetPassword">Click Here</a>
 								</p>
+								<br>
+								<span class="text-danger">${error}</span>
+								
 
 							</form>
 						</div>

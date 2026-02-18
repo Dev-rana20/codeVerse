@@ -25693,3 +25693,31 @@ table.dataTable tbody td.select-checkbox:after {
   }
 }
 /*# sourceMappingURL=maps/style.css.map */
+
+.gender-section {
+    margin-bottom: 20px;
+}
+
+.gender-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.gender-options {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.gender-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.gender-option input {
+    margin: 0;
+}
+

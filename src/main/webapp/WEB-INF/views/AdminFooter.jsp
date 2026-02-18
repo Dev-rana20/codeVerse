@@ -1,10 +1,27 @@
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>CodeVerse</title>
+<!-- plugins:css -->
+<jsp:include page="AdminCSS.jsp"></jsp:include>
+</head>
+
+<body>
+
 <footer class="footer">
 	<div
 		class="d-sm-flex justify-content-center justify-content-sm-between">
 		<span
 			class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright
-			© 2026.  <a href="https://github.com/Dev-rana20/codeVerse.git"
-			target="_blank">CodeVerse Online Hackathon Platform </a> from Dev Rana. All
+			Â© 2026.  <a href="https://github.com/Dev-rana20/codeVerse.git"
+			target="_blank">CodeVerse Online Hackathon Platform </a> By Dev Rana. All
 			rights reserved.
 		</span> <span
 			class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted
@@ -34,3 +51,5 @@
 	<script src="assets/js/jquery.cookie.js" type="text/javascript"></script>
 	<script src="assets/js/dashboard.js"></script>
 	<!-- <script src="assets/js/Chart.roundedBarCharts.js"></script> -->
+</body>
+</html>

@@ -1,4 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>CodeVerse</title>
+<!-- plugins:css -->
+<jsp:include page="AdminCSS.jsp"></jsp:include>
+</head>
 
+<body>
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
 	<ul class="nav">
 		<li class="nav-item"><a class="nav-link" href="/"> <i
@@ -101,3 +115,5 @@
 		</a></li>
 	</ul>
 </nav>
+</body>
+</html>

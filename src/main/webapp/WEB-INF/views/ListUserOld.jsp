@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>User List</title>
+<title>CodeVerse</title>
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"

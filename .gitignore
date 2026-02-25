@@ -32,4 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### application config ###
 src/main/resources/application.properties
+
+###CodeverseApplivation.java ###
+src/main/java/com/CodeVerseApplication.java

@@ -5,11 +5,11 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 //import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
-import com.CodeVerseApplication;
 import com.Grownited.entity.UserEntity;
 
 import jakarta.mail.internet.MimeMessage;
@@ -22,10 +22,11 @@ public class MailerService {
 
 	@Autowired
 	ResourceLoader resourceLoader;
+	
+	@Autowired
+	OtpService otpService;
 
-	MailerService(CodeVerseApplication codeVerseApplication) {
-	}
-//	
+	
 //	public void sendWalcomeMail(UserEntity user) {
 //		SimpleMailMessage message= new SimpleMailMessage();
 //		
@@ -63,5 +64,16 @@ public class MailerService {
 		}
 
 	}
+	
+	 public void sendOtp(String email, String otp) {
+
+	        SimpleMailMessage message = new SimpleMailMessage();
+
+	        message.setTo(email);
+	        message.setSubject("Password Reset OTP");
+	        message.setText("Your OTP is: " + otp);
+
+	        javaMailSender.send(message);
+	    }
 
 }

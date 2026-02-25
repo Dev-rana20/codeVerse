@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <html lang="en">
 <head>
@@ -23,27 +24,24 @@
 								<img alt="BrandLogo" src="/assets/images/logo.png"
 									style="width: 300px; height: auto;">
 							</div>
-							<form action="resetPassword" method="post">
+							<form action="verifyOtp" method="post">
 
-								<!-- Email -->
+								<!-- ERROR MESSAGE -->
+								<c:if test="${not empty error}">
+									<div class="alert alert-danger">${error}</div>
+								</c:if>
+
+								<input type="hidden" name="email" value="${email}">
 								<div class="mb-3">
-									<label class="form-label">Email Address</label> <input
-										type="email" class="form-control" name="email"
-										placeholder="Enter email" required>
+									<label>Enter OTP</label> <input type="text" name="otp"
+										class="form-control" required>
 								</div>
 
-								<!-- Submit Button -->
-								<div class="d-grid">
-									<button type="submit" class="btn btn-primary">Reset
-										Password</button>
-								</div>
-
-								<!-- Back to login -->
-								<p class="text-center mt-3">
-									Remember your password? <a href="login">Login</a>
-								</p>
+								<button type="submit" class="btn btn-primary w-100">
+									Verify OTP</button>
 
 							</form>
+
 						</div>
 					</div>
 				</div>

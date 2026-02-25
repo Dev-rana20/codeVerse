@@ -23,6 +23,10 @@
 								<img alt="BrandLogo" src="/assets/images/logo.png" style="width:300px; height:auto;">
 							</div>
 							<form action="authenticate" method="post">
+							
+								<c:if test="${not empty error}">
+									<div class="alert alert-danger">${error}</div>
+								</c:if>
 
 								<!-- Email -->
 								<div class="mb-3">
@@ -52,10 +56,7 @@
 								<p class="text-center mt-3">
 									Forget Password? <a href="forgetPassword">Click Here</a>
 								</p>
-								<br>
-								<span class="text-danger">${error}</span>
-								
-
+							
 							</form>
 						</div>
 					</div>

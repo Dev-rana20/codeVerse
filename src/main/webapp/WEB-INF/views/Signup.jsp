@@ -31,7 +31,7 @@ select:valid {
 
 							<h3>Sign Up</h3>
 							<br>
-							<form action="register" method="post">
+							<form action="register" method="post" enctype="multipart/form-data">
 
 								<!-- First Name -->
 								<div class="mb-3">
@@ -131,8 +131,8 @@ select:valid {
 
 								<!-- Profile Pic URL -->
 								<div class="mb-3">
-									<label class="form-label">Profile Picture URL</label> <input
-										type="file" name="profilePicURL" class="form-control">
+									<label class="form-label">Profile Picture</label> 
+									<input type="file" name="profilePic" class="form-control">
 								</div>
 
 

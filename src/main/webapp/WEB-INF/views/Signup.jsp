@@ -1,167 +1,108 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>CodeVerse</title>
-<style type="text/css">
-select:valid {
-    color: black !important;
-}
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeVerse — Sign Up</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+<!-- External CSS -->
+<link rel="stylesheet" href="<c:url value='/assets/css/codeverse-form.css'/>">
+
 <jsp:include page="AdminCSS.jsp"></jsp:include>
 
 </head>
-<body>
-	<div class="container-scroller">
-		<div class="container-fluid page-body-wrapper full-page-wrapper">
-			<div class="content-wrapper d-flex align-items-center auth px-0">
-				<div class="row w-100 mx-0">
-					<div class="col-lg-7 mx-auto">
-						<div class="auth-form-light text-left py-5 px-4 px-sm-5">
 
-							<div class="brand-logo text-center mb-4">
-								<img alt="BrandLogo" src="/assets/images/logo.png"
-									style="width: 300px; height: auto;">
-							</div>
+<body class="cv-scope">
 
-							<h3>Sign Up</h3>
-							<br>
-							<form action="register" method="post" enctype="multipart/form-data">
+<div class="auth-left">
+	<div class="auth-card dark-form">
 
-								<!-- First Name -->
-								<div class="mb-3">
-									<label class="form-label">First Name</label> <input type="text"
-										name="firstName" class="form-control" required>
-								</div>
+		<a href="/" class="auth-brand">CODE<span>VERSE</span></a>
 
-								<!-- Last Name -->
-								<div class="mb-3">
-									<label class="form-label">Last Name</label> <input type="text"
-										name="lastName" class="form-control" required>
-								</div>
+		<h2>Create Account</h2>
+		<p style="color:#aaa; font-size:13px;">Join CodeVerse and start competing</p>
 
-								<!-- Email -->
-								<div class="mb-3">
-									<label class="form-label">Email</label> <input type="email"
-										name="email" class="form-control" required>
-								</div>
+		<form action="register" method="post" enctype="multipart/form-data">
 
-								<!-- Password -->
-								<div class="mb-3">
-									<label class="form-label">Password</label> <input
-										type="password" name="password" class="form-control" required>
-								</div>
-
-								<!-- Gender -->
-								<div class="gender-section">
-									<label class="gender-label">Gender</label>
-
-									<div class="gender-options">
-										<label class="gender-option"> <input type="radio"
-											name="gender" value="MALE" required> <span>Male</span>
-										</label> <label class="gender-option"> <input type="radio"
-											name="gender" value="FEMALE"> <span>Female</span>
-										</label> <label class="gender-option"> <input type="radio"
-											name="gender" value="OTHER"> <span>Other</span>
-										</label>
-									</div>
-								</div>
-
-
-								<!-- Birth Year -->
-								<div class="mb-3">
-									<label class="form-label">Birth Year</label> <input
-										type="number" name="birthYear" class="form-control" min="1900"
-										max="2100" required>
-								</div>
-
-								<!-- Contact Number -->
-								<div class="mb-3">
-									<label class="form-label">Contact Number</label> <input
-										type="text" name="contactNum" class="form-control" required>
-								</div>
-
-
-								<!-- Qualification -->
-								<div class="mb-3">
-									<label class="form-label">Qualification</label> <input
-										type="text" name="qualification" class="form-control"
-										placeholder="e.g. B.Tech, MCA, BSc" required>
-								</div>
-
-								<div class="mb-3">
-									<label class="form-label">User Type</label> 
-									<select name="userTypeId" class="form-select">
-										<option value="-1" disabled selected>---Select User Type---</option>
-
-										<c:forEach items="${allUserType}" var="ut">
-											<option value="${ut.userTypeId}">${ut.userType}</option>
-										</c:forEach>
-
-
-									</select>
-								</div>
-
-								<!-- City -->
-								<div class="mb-3">
-									<label class="form-label">City</label> <input type="text"
-										name="city" class="form-control" placeholder="Enter city"
-										required>
-								</div>
-
-								<!-- State -->
-								<div class="mb-3">
-									<label class="form-label">State</label> <input type="text"
-										name="state" class="form-control" placeholder="Enter state"
-										required>
-								</div>
-
-								<!-- Country -->
-								<div class="mb-3">
-									<label class="form-label">Country</label> <input type="text"
-										name="country" class="form-control"
-										placeholder="Enter country" value="India" required>
-								</div>
-
-
-								<!-- Profile Pic URL -->
-								<div class="mb-3">
-									<label class="form-label">Profile Picture</label> 
-									<input type="file" name="profilePic" class="form-control">
-								</div>
-
-
-								<!-- Submit -->
-								<div class="d-grid">
-									<button type="submit" class="btn btn-primary">Save
-										User</button>
-								</div>
-								<!-- Login link -->
-								<p class="text-center mt-3">
-									Already have an account? <a href="login">Login</a>
-								</p>
-
-							</form>
-						</div>
-					</div>
-				</div>
+			<div class="grid-2">
+				<input type="text" name="firstName" class="cv-input" placeholder="First Name" required>
+				<input type="text" name="lastName" class="cv-input" placeholder="Last Name" required>
 			</div>
-			<!-- content-wrapper ends -->
+
+			<input type="email" name="email" class="cv-input" placeholder="Email" required>
+			<input type="password" name="password" class="cv-input" placeholder="Password" required>
+
+			<div class="gender-group">
+				<label><input type="radio" name="gender" value="MALE" required> Male</label>
+				<label><input type="radio" name="gender" value="FEMALE"> Female</label>
+				<label><input type="radio" name="gender" value="OTHER"> Other</label>
+			</div>
+
+			<div class="grid-2">
+				<input type="number" name="birthYear" class="cv-input" placeholder="Birth Year" required>
+				<input type="text" name="contactNum" class="cv-input" placeholder="Contact Number" required>
+			</div>
+
+			<input type="text" name="qualification" class="cv-input" placeholder="Qualification">
+
+			<select name="userTypeId" class="cv-select">
+				<option value="-1" disabled selected>Select User Type</option>
+				<c:forEach items="${allUserType}" var="ut">
+					<option value="${ut.userTypeId}">${ut.userType}</option>
+				</c:forEach>
+			</select>
+
+			<div class="grid-2">
+				<input type="text" name="city" class="cv-input" placeholder="City">
+				<input type="text" name="state" class="cv-input" placeholder="State">
+			</div>
+
+			<input type="text" name="country" class="cv-input" value="India">
+
+			<label style="font-size:13px;">Profile Picture</label>
+			<input type="file" name="profilePic" class="cv-input">
+
+			<button type="submit" class="btn-submit">
+				<i class="bi bi-person-plus"></i> Create Account
+			</button>
+
+		</form>
+
+		<div class="auth-switch">
+			Already have an account? <a href="login">Login</a>
 		</div>
-		<!-- page-body-wrapper ends -->
+
 	</div>
-	<script src="<c:url value='/assets/vendors/js/vendor.bundle.base.js'/>"></script>
+</div>
 
-	<script src="<c:url value='/assets/js/off-canvas.js'/>"></script>
-	<script src="<c:url value='/assets/js/template.js'/>"></script>
-	<script src="<c:url value='/assets/js/settings.js'/>"></script>
-	<script src="<c:url value='/assets/js/todolist.js'/>"></script>
+<div class="auth-right">
+	<p class="auth-tagline">Build.<br>Compete.<br><span>Win.</span></p>
 
+	<div class="auth-feature">
+		<i class="bi bi-lightning-charge-fill"></i>
+		<div>Real Hackathons</div>
+	</div>
+
+	<div class="auth-feature">
+		<i class="bi bi-people-fill"></i>
+		<div>Team Up</div>
+	</div>
+
+	<div class="auth-feature">
+		<i class="bi bi-trophy-fill"></i>
+		<div>Win Prizes</div>
+	</div>
+</div>
 
 </body>
 </html>

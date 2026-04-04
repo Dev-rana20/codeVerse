@@ -1,30 +1,38 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>CodeVerse</title>
-<!-- plugins:css -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeVerse — Sign Up</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+<!-- External CSS -->
+<link rel="stylesheet" href="<c:url value='/assets/css/codeverse-form.css'/>">
+
 <jsp:include page="AdminCSS.jsp"></jsp:include>
+
 </head>
 
-<body>
-	<div class="container-scroller">
-		<div class="container-fluid page-body-wrapper full-page-wrapper">
-			<div class="content-wrapper d-flex align-items-center auth px-0">
-				<div class="row w-100 mx-0">
-					<div class="col-lg-4 mx-auto">
-						<div class="auth-form-light text-left py-5 px-4 px-sm-5">
-							<div class="brand-logo text-center mb-4">
-								<img alt="BrandLogo" src="/assets/images/logo.png"
-									style="width: 300px; height: auto;">
-							</div>
-							<form action="verifyOtp" method="post">
+<body class="cv-scope">
+
+<div class="auth-left">
+	<div class="auth-card dark-form">
+
+		<a href="/" class="auth-brand">CODE<span>VERSE</span></a>
+
+		<h2>Create Account</h2>
+		<p style="color:#aaa; font-size:13px;">Join CodeVerse and start competing</p>
+
+		<form action="verifyOtp" method="post">
 
 								<!-- ERROR MESSAGE -->
 								<c:if test="${not empty error}">
@@ -37,30 +45,36 @@
 										class="form-control" required>
 								</div>
 
-								<button type="submit" class="btn btn-primary w-100">
+								<button type="submit" class="btn-submit">
 									Verify OTP</button>
 
 							</form>
 
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- content-wrapper ends -->
+		<div class="auth-switch">
+			Already have an account? <a href="login">Login</a>
 		</div>
-		<!-- page-body-wrapper ends -->
+
 	</div>
-	<!-- container-scroller -->
-	<!-- plugins:js -->
-	<script src="<c:url value='/assets/vendors/js/vendor.bundle.base.js'/>"></script>
-	<script src="<c:url value='/assets/js/off-canvas.js'/>"></script>
+</div>
 
-	<script src="<c:url value='/assets/js/template.js'/>"></script>
-	<script src="<c:url value='/assets/js/settings.js'/>"></script>
-	<script src="<c:url value='/assets/js/todolist.js'/>"></script>
+<div class="auth-right">
+	<p class="auth-tagline">Build.<br>Compete.<br><span>Win.</span></p>
 
+	<div class="auth-feature">
+		<i class="bi bi-lightning-charge-fill"></i>
+		<div>Real Hackathons</div>
+	</div>
 
+	<div class="auth-feature">
+		<i class="bi bi-people-fill"></i>
+		<div>Team Up</div>
+	</div>
 
+	<div class="auth-feature">
+		<i class="bi bi-trophy-fill"></i>
+		<div>Win Prizes</div>
+	</div>
+</div>
 
 </body>
 </html>

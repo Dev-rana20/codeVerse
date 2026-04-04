@@ -2,10 +2,13 @@ package com.Grownited.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,6 +32,11 @@ public class HackathonEntity {
 	LocalDate registrationEndDate;
 	
 	Integer userId; // fk
+	
+	 @OneToOne(mappedBy = "hackathon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    private HackathonDescriptionEntity description;
+
+	
 	public Integer getHackathonId() {
 		return hackathonId;
 	}
@@ -100,6 +108,12 @@ public class HackathonEntity {
 	}
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+	public HackathonDescriptionEntity getDescription() {
+		return description;
+	}
+	public void setDescription(HackathonDescriptionEntity description) {
+		this.description = description;
 	}
 	
 	

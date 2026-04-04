@@ -26,20 +26,6 @@ public class MailerService {
 	@Autowired
 	OtpService otpService;
 
-	
-//	public void sendWalcomeMail(UserEntity user) {
-//		SimpleMailMessage message= new SimpleMailMessage();
-//		
-//		
-//		message.setTo(user.getEmail());
-//		message.setFrom("devr202004@gmail.com");
-//		message.setSubject("CodeVerse - Welcome to CodeVerse Online Hackathon PlatForm !!!");
-//		message.setText("Hey "+ user.getFirstName()+" , WE ARE HAPPY TO HAVE YOU ON OUR PLATFORM.");
-//		
-//		javaMailSender.send(message);
-//		
-//	}
-
 	public void sendWalcomeMail(UserEntity user) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 
@@ -75,5 +61,24 @@ public class MailerService {
 
 	        javaMailSender.send(message);
 	    }
+	 
+	 public void sendJudgeInviteMail(String email, String password) {
+
+		    SimpleMailMessage message = new SimpleMailMessage();
+
+		    message.setTo(email);
+		    message.setSubject("CodeVerse - Judge Invitation");
+
+		    message.setText(
+		        "You have been invited as a Judge on CodeVerse.\n\n"
+		        + "Login Credentials:\n"
+		        + "Email: " + email + "\n"
+		        + "Password: " + password + "\n\n"
+		        + "Login here: http://localhost:9999/login\n"
+		        + "Please change your password after first login."
+		    );
+
+		    javaMailSender.send(message);
+		}
 
 }

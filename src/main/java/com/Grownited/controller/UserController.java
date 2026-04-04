@@ -58,4 +58,6 @@ public class UserController {
 		userDetailRepository.deleteById(userId);
 		return "redirect:/listUser";
 	}
+	
+	
 }

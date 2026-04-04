@@ -1,38 +1,74 @@
 package com.Grownited.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.time.LocalDate;
 
-@Entity 
-@Table(name="hackathon_judge")
+import jakarta.persistence.*;
+import com.Grownited.enums.AssignmentStatus;
+
+@Entity
+@Table(name = "hackathon_judge", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hackathon_id" }))
 public class HackathonJudgeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer hackathonJudgeId;
-	private Integer hackathonId; //fk
-	private Integer userId;// fk
+
+	// 🔗 Many Judges → One Hackathon
+	@ManyToOne
+	@JoinColumn(name = "hackathon_id", nullable = false)
+	private HackathonEntity hackathon;
+
+	// 🔗 Many Assignments → One User (Judge)
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private UserEntity user;
+
+	// 📌 Status of evaluation
+	@Enumerated(EnumType.STRING)
+	private AssignmentStatus status;
+
+	// 📅 Assignment date
+	private LocalDate assignedAt;
+
+	// ✅ Getters & Setters
+
 	public Integer getHackathonJudgeId() {
 		return hackathonJudgeId;
 	}
+
 	public void setHackathonJudgeId(Integer hackathonJudgeId) {
 		this.hackathonJudgeId = hackathonJudgeId;
 	}
-	public Integer getHackathonId() {
-		return hackathonId;
+
+	public HackathonEntity getHackathon() {
+		return hackathon;
 	}
-	public void setHackathonId(Integer hackathonId) {
-		this.hackathonId = hackathonId;
+
+	public void setHackathon(HackathonEntity hackathon) {
+		this.hackathon = hackathon;
 	}
-	public Integer getUserId() {
-		return userId;
+
+	public UserEntity getUser() {
+		return user;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+
+	public void setUser(UserEntity user) {
+		this.user = user;
 	}
-	
-	
+
+	public AssignmentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AssignmentStatus status) {
+		this.status = status;
+	}
+
+	public LocalDate getAssignedAt() {
+		return assignedAt;
+	}
+
+	public void setAssignedAt(LocalDate assignedAt) {
+		this.assignedAt = assignedAt;
+	}
 }

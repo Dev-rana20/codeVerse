@@ -27,6 +27,7 @@ public class UserEntity {
 	private String profilePicURL;
 	private String otp;
 	private Boolean active;
+	private boolean firstLogin = true;
 	
 	public Integer getUserId() {
 		return userId;
@@ -107,5 +108,12 @@ public class UserEntity {
 	public void setCreatedAt(LocalDate createdAt) {
 		this.createdAt = createdAt;
 	}
+	public boolean isFirstLogin() {
+		return firstLogin;
+	}
+	public void setFirstLogin(boolean firstLogin) {
+		this.firstLogin = firstLogin;
+	}
+	
 	
 }

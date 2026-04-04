@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <html lang="en">
 <head>
 <!-- Required meta tags -->
@@ -31,11 +33,10 @@
 								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
 									<h3 class="font-weight-bold">Welcome ${sessionScope.user.firstName}</h3>
 									<h6 class="font-weight-normal mb-0">
-										All systems are running smoothly! You have <span
-											class="text-primary">3 unread alerts!</span>
+										All systems are running smoothly! 
 									</h6>
 								</div>
-								<div class="col-12 col-xl-4">
+							 	<!-- <div class="col-12 col-xl-4">
 									<div class="justify-content-end d-flex">
 										<div class="dropdown flex-md-grow-1 flex-xl-grow-0">
 											<button class="btn btn-sm btn-light bg-white dropdown-toggle"
@@ -53,7 +54,9 @@
 											</div>
 										</div>
 									</div>
+									 
 								</div>
+								-->
 							</div>
 						</div>
 					</div>
@@ -62,39 +65,43 @@
 							<div class="row">
 								<div class="col-md-3 mb-4 stretch-card transparent">
 									<div class="card card-tale">
+									<a href="listUser" class="nav-link">
 										<div class="card-body">
-											<p class="mb-4">Todayâs Bookings</p>
-											<p class="fs-30 mb-2">4006</p>
-											<p>10.00% (30 days)</p>
+											<p class="mb-4">Total Users</p>
+											<p class="fs-30 mb-2" items="${user}">${fn:length(user)}</p>
 										</div>
+										</a>
 									</div>
 								</div>
+								
 								<div class="col-md-3 mb-4 stretch-card transparent">
+								
 									<div class="card card-dark-blue">
+									<a href="listHackathon" class="nav-link">
 										<div class="card-body">
-											<p class="mb-4">Total Bookings</p>
-											<p class="fs-30 mb-2">61344</p>
-											<p>22.00% (30 days)</p>
+											<p class="mb-4" >Total Hackathon</p>
+											<p class="fs-30 mb-2"items="${allHackathon}">${fn:length(allHackathon)}</p>
 										</div>
+										</a>
 									</div>
+									
 								</div>
-
+								
 
 								<div class="col-md-3 mb-4 stretch-card transparent">
 									<div class="card card-light-blue">
 										<div class="card-body">
-											<p class="mb-4">Number of Meetings</p>
+											<p class="mb-4">Ongoing Hackathon</p>
 											<p class="fs-30 mb-2">34040</p>
-											<p>2.00% (30 days)</p>
+											
 										</div>
 									</div>
 								</div>
 								<div class="col-md-3  mb-4 stretch-card transparent">
 									<div class="card card-light-danger">
 										<div class="card-body">
-											<p class="mb-4">Number of Clients</p>
+											<p class="mb-4">Completed Hackathons</p>
 											<p class="fs-30 mb-2">47033</p>
-											<p>0.22% (30 days)</p>
 										</div>
 									</div>
 								</div>
@@ -104,7 +111,7 @@
 					</div>
 
 
-					<div class="row">
+				<!-- 	<div class="row">
 						<div class="col-md-12 grid-margin stretch-card">
 							<div class="card">
 								<div class="card-body">
@@ -120,7 +127,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div>-->
 
 
 				</div>

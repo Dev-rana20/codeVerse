@@ -4,49 +4,72 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="hackathon_team_members")
 public class HackathonTeamMembersEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer hackathonTeamMemberId;
-	private Integer teamId;//fk
-	private Integer hackathonId;//fk
-	private Integer memberId;// fk
-	private String rollTitle;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer hackathonTeamMemberId;
+
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private HackathonTeamEntity team;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private UserEntity member;
+
+    private String roleTitle;
+    
+    private String status;
+
 	public Integer getHackathonTeamMemberId() {
 		return hackathonTeamMemberId;
 	}
+
 	public void setHackathonTeamMemberId(Integer hackathonTeamMemberId) {
 		this.hackathonTeamMemberId = hackathonTeamMemberId;
 	}
-	public Integer getTeamId() {
-		return teamId;
+
+	public HackathonTeamEntity getTeam() {
+		return team;
 	}
-	public void setTeamId(Integer teamId) {
-		this.teamId = teamId;
+
+	public void setTeam(HackathonTeamEntity team) {
+		this.team = team;
 	}
-	public Integer getHackathonId() {
-		return hackathonId;
+
+	public UserEntity getMember() {
+		return member;
 	}
-	public void setHackathonId(Integer hackathonId) {
-		this.hackathonId = hackathonId;
+
+	public void setMember(UserEntity member) {
+		this.member = member;
 	}
-	public Integer getMemberId() {
-		return memberId;
+
+	public String getRoleTitle() {
+		return roleTitle;
 	}
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
+
+	public void setRoleTitle(String roleTitle) {
+		this.roleTitle = roleTitle;
 	}
-	public String getRollTitle() {
-		return rollTitle;
+
+	public String getStatus() {
+		return status;
 	}
-	public void setRollTitle(String rollTitle) {
-		this.rollTitle = rollTitle;
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
+
 	
-	
+    
+    
+    
 }

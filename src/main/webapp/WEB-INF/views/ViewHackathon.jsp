@@ -1,3 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<html lang="en">
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,102 +28,141 @@
 				<div class="content-wrapper">
 
 					<div class="row">
+
+						<!-- Hackathon Details Card -->
 						<div class="col-md-12 grid-margin stretch-card">
 							<div class="card">
 								<div class="card-body">
 
-									<div class="view-card">
+									<h3 class="mb-4">${hackathon.title}</h3>
 
-										<div
-											class="d-flex justify-content-between align-items-center mb-4">
-											<h3>${hackathon.title}</h3>
-											
+									<div class="row mb-3">
+										<div class="col-md-6">
+											<p>
+												<b>Hackathon ID:</b> ${hackathon.hackathonId}
+											</p>
 										</div>
-
-										<div class="row mb-3">
-											<div class="col-md-6">
-												<p>
-													<span class="label">Hackathon ID:</span>
-													${hackathon.hackathonId}
-												</p>
-											</div>
-											<div class="col-md-6">
-												<p>
-													<span class="label">Title:</span> ${hackathon.title}
-												</p>
-											</div>
+										<div class="col-md-6">
+											<p>
+												<b>Title:</b> ${hackathon.title}
+											</p>
 										</div>
-
-										<div class="row mb-3">
-											<div class="col-md-6">
-												<p>
-													<span class="label">Status:</span> ${hackathon.status}
-												</p>
-											</div>
-											<div class="col-md-6">
-												<p>
-													<span class="label">Event Type:</span>
-													${hackathon.eventType}
-												</p>
-											</div>
-										</div>
-
-										<div class="row mb-3">
-											<div class="col-md-6">
-												<p>
-													<span class="label">Payment:</span> ${hackathon.payment}
-												</p>
-											</div>
-											<div class="col-md-6">
-												<p>
-													<span class="label">Team Size:</span>
-													${hackathon.minTeamSize} - ${hackathon.maxTeamSize}
-												</p>
-											</div>
-										</div>
-
-										<div class="row mb-3">
-											<div class="col-md-6">
-												<p>
-													<span class="label">Location:</span> ${hackathon.location}
-												</p>
-											</div>
-											<div class="col-md-6">
-												<p>
-													<span class="label">User Type ID:</span>
-													${hackathon.userTypeId}
-												</p>
-											</div>
-										</div>
-
-										<div class="row mb-3">
-											<div class="col-md-6">
-												<p>
-													<span class="label">Registration Start Date:</span>
-													${hackathon.registrationStartDate}
-												</p>
-											</div>
-											<div class="col-md-6">
-												<p>
-													<span class="label">Registration End Date:</span>
-													${hackathon.registrationEndDate}
-												</p>
-											</div>
-										</div>
-
-										<div class="text-end mt-4">
-										<a href="listHackathon" class="btn btn-secondary">Back</a>
-											<a href="editHackathon?id=${hackathon.hackathonId}"
-												class="btn btn-warning">Edit</a>
-										</div>
-
 									</div>
+
+									<div class="row mb-3">
+										<div class="col-md-6">
+											<p>
+												<b>Status:</b> ${hackathon.status}
+											</p>
+										</div>
+										<div class="col-md-6">
+											<p>
+												<b>Event Type:</b> ${hackathon.eventType}
+											</p>
+										</div>
+									</div>
+
+									<div class="row mb-3">
+										<div class="col-md-6">
+											<p>
+												<b>Payment:</b> ${hackathon.payment}
+											</p>
+										</div>
+										<div class="col-md-6">
+											<p>
+												<b>Team Size:</b> ${hackathon.minTeamSize} -
+												${hackathon.maxTeamSize}
+											</p>
+										</div>
+									</div>
+
+									<div class="row mb-3">
+										<div class="col-md-6">
+											<p>
+												<b>Location:</b> ${hackathon.location}
+											</p>
+										</div>
+										<div class="col-md-6">
+											<p>
+												<b>User Type ID:</b> ${hackathon.userTypeId}
+											</p>
+										</div>
+									</div>
+
+									<div class="row mb-3">
+										<div class="col-md-6">
+											<p>
+												<b>Registration Start Date:</b>
+												${hackathon.registrationStartDate}
+											</p>
+										</div>
+										<div class="col-md-6">
+											<p>
+												<b>Registration End Date:</b>
+												${hackathon.registrationEndDate}
+											</p>
+										</div>
+									</div>
+
+									<div class="text-end mt-4">
+										<a href="listHackathon" class="btn btn-secondary">Back</a> <a
+											href="editHackathon?id=${hackathon.hackathonId}"
+											class="btn btn-warning">Edit</a>
+									</div>
+
 								</div>
 							</div>
 						</div>
 
 
+						<!-- Hackathon Poster Card -->
+						<c:if test="${hackathonDescriptionEntity !=null}">
+							<div class="col-md-12 grid-margin stretch-card mt-3">
+								<div class="card">
+									<div class="card-body">
+
+										<h4 class="mb-4 text-center">Hackathon Details</h4>
+
+										<div class="row">
+
+											<!-- Poster -->
+											
+
+												<div class="row mb-4">
+
+													<!-- Poster -->
+													<div class="col-md-5 text-center">
+														<c:if test="${not empty descList.hackathonDetailsURL}">
+															<img src="${descList.hackathonDetailsURL}"
+																class="img-fluid rounded shadow"
+																style="max-width: 100%;">
+														</c:if>
+													</div>
+
+													<!-- Description -->
+													<div class="col-md-7">
+														<c:if test="${not empty descList.hackathonDetailsText}">
+															<h5>Description</h5>
+															<p style="text-align: justify;">
+																${descList.hackathonDetailsText}</p>
+														</c:if>
+													</div>
+
+												</div>
+
+								
+
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</c:if>
+
+
 					</div>
+
 					<!-- content-wrapper ends -->
 					<!-- partial:partials/_footer.html -->
 

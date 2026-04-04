@@ -110,21 +110,38 @@ public class SessionController {
 
 		Optional<UserEntity> opUser = userRepository.findByEmail(email);
 
-		if (opUser.isPresent()) {
-			UserEntity dbUser = opUser.get();
-			session.setAttribute("user", dbUser);
-			if (passwordEncoder.matches(password, dbUser.getPassword())) {
-				if (dbUser.getRole().equals("ADMIN")) {
-					return "redirect:/admin-dashboard";
-				} else if (dbUser.getRole().equals("PARTICIPANT")) {
-					return "redirect:/user-dashboard";
-				} else if (dbUser.getRole().equals("JUDGE")) {
-					return "redirect:/judge-dashboard";
-				}
-			}
+		// ✅ check user exists
+		if (opUser.isEmpty()) {
+			model.addAttribute("error", "Invalid Credentials");
+			return "Login";
 		}
 
-		model.addAttribute("error", "Invalid Cridemtials");
+		UserEntity dbUser = opUser.get();
+
+		// ✅ check password
+		if (!passwordEncoder.matches(password, dbUser.getPassword())) {
+			model.addAttribute("error", "Invalid Credentials");
+			return "Login";
+		}
+
+		// ✅ store in session
+		session.setAttribute("user", dbUser);
+
+		// ✅ role-based redirect
+		if (dbUser.getRole().equals("ADMIN")) {
+			return "redirect:/admin-dashboard";
+		} else if (dbUser.getRole().equals("PARTICIPANT")) {
+			return "redirect:/userHome";
+		} else if (dbUser.getRole().equals("JUDGE")) {
+
+			// 🔥 IMPORTANT: first login check
+			if (dbUser.isFirstLogin()) {
+				return "redirect:/judge/complete-profile";
+			}
+
+			return "redirect:/judge-dashboard";
+		}
+
 		return "Login";
 	}
 
@@ -202,5 +219,45 @@ public class SessionController {
 		}
 
 		return "redirect:/login";
+	}
+
+	// judge password change
+	@GetMapping("/judge/complete-profile")
+	public String changePasswordPage() {
+		return "/judge/JudgeChangePassword";
+	}
+
+	@PostMapping("/judge/complete-profile")
+	public String completeProfile(
+	        String firstName,
+	        String lastName,
+	        String contactNum,
+	        String gender,
+	        String newPassword,
+	        HttpSession session) {
+
+	    UserEntity user = (UserEntity) session.getAttribute("user");
+
+	    // Update profile fields
+	    user.setFirstName(firstName);
+	    user.setLastName(lastName);
+	    user.setContactNum(contactNum);
+	    user.setGender(gender);
+
+	    // Update password
+	    String encodedPassword = passwordEncoder.encode(newPassword);
+	    user.setPassword(encodedPassword);
+
+	    // First login completed
+	    user.setFirstLogin(false);
+
+	    userRepository.save(user);
+
+	    return "redirect:/judge-dashboard";
+	}
+
+	@GetMapping("/judge/inviteJudge")
+	public String inviteJudge() {
+		return "/judge/InviteJudge";
 	}
 }

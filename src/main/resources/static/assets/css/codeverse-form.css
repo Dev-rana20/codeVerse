@@ -1,0 +1,186 @@
+/* ===============================
+   CODEVERSE SCOPED UI (NO CONFLICT)
+   =============================== */
+
+.cv-scope {
+    background: #0a0e18;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* LEFT */
+.cv-scope .auth-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* RIGHT */
+.cv-scope .auth-right {
+    width: 45%;
+    background: linear-gradient(145deg, #0a0e18, #111827);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* TAGLINE */
+.cv-scope .auth-tagline {
+    font-size: 34px;
+    font-weight: 800;
+    text-align: center;
+}
+.cv-scope .auth-tagline span {
+    color: #00ffe0;
+}
+
+/* CARD */
+.cv-scope .auth-card {
+    background: #111827;
+    border-radius: 14px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 650px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+/* BRAND */
+.cv-scope .auth-brand {
+    font-family: 'Space Mono', monospace;
+    color: #00ffe0;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 15px;
+}
+.cv-scope .auth-brand span {
+    color: #fff;
+}
+
+/* INPUTS (FULL OVERRIDE) */
+.cv-scope input,
+.cv-scope select,
+.cv-scope textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #0a0e18 !important;
+    color: #ffffff !important;
+    margin-bottom: 12px;
+}
+
+/* FOCUS */
+.cv-scope input:focus,
+.cv-scope select:focus {
+    border-color: #00ffe0;
+    outline: none;
+}
+
+/* PLACEHOLDER */
+.cv-scope ::placeholder {
+    color: #888;
+}
+
+/* GRID */
+.cv-scope .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* BUTTON */
+.cv-scope .btn-submit {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    background: #00ffe0;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+.cv-scope .btn-submit:hover {
+    background: #00ccbb;
+}
+
+/* RADIO */
+.cv-scope .gender-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+/* LINKS */
+.cv-scope .auth-switch {
+    text-align: center;
+    margin-top: 15px;
+}
+.cv-scope .auth-switch a {
+    color: #00ffe0;
+}
+
+/* FEATURES */
+.cv-scope .auth-feature {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    color: #aaa;
+}
+.cv-scope .auth-feature i {
+    color: #00ffe0;
+}
+
+.cv-scope .auth-tagline {
+    font-size: 36px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.4;
+    letter-spacing: -0.5px;
+}
+
+.cv-scope .auth-tagline span {
+    display: inline-block;
+    margin-top: 5px;
+    color: #00ffe0;
+}
+
+.cv-scope .gender-group {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 15px;
+}
+
+.cv-scope .gender-group label {
+    display: inline-flex;
+    align-items: center;   /* THIS is key */
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
+    line-height: 1;        /* prevents vertical shift */
+}
+
+/* Fix radio alignment */
+.cv-scope .gender-group input[type="radio"] {
+    accent-color: #00ffe0;
+    margin: 0;             /* remove default browser margin */
+    position: relative;
+    top: 1px;              /* tiny adjustment for perfect centering */
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .cv-scope .auth-right {
+        display: none;
+    }
+    .cv-scope .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

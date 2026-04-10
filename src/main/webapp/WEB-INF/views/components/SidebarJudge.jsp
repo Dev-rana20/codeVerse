@@ -45,7 +45,7 @@
 						<nav class="cv-nav-section">
 							<div class="cv-nav-section-label">Main</div>
 
-							<a href="judge-dashboard" class="cv-nav-item ${activePage == 'dashboard' ? 'active' : ''}"
+							<a href="/judge/dashboard" class="cv-nav-item ${activePage == 'dashboard' ? 'active' : ''}"
 								data-page="dashboard">
 								<i class="bi bi-speedometer2"></i>
 								<span class="cv-nav-label">Dashboard</span>

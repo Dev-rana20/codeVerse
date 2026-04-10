@@ -14,6 +14,10 @@ import com.Grownited.entity.UserEntity;
 
 import jakarta.mail.internet.MimeMessage;
 
+import com.Grownited.entity.HackathonEntity;
+import com.Grownited.entity.HackathonTeamEntity;
+import com.Grownited.entity.SubmissionEntity;
+
 @Service
 public class MailerService {
 
@@ -81,4 +85,47 @@ public class MailerService {
 		    javaMailSender.send(message);
 		}
 
+	public void sendTeamInviteMail(UserEntity invitee, HackathonTeamEntity team) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(invitee.getEmail());
+		message.setSubject("CodeVerse - Team Invitation");
+		message.setText("Hello " + invitee.getFirstName() + ",\n\n" + "You have been invited to join the team \""
+				+ team.getTeamName() + "\" for the hackathon \"" + team.getHackathon().getTitle() + "\".\n\n"
+				+ "Login to CodeVerse to accept or reject the invitation: http://localhost:9999/login");
+		javaMailSender.send(message);
+	}
+
+	public void sendInviteAcceptedMail(UserEntity leader, UserEntity member, HackathonTeamEntity team) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(leader.getEmail());
+		message.setSubject("CodeVerse - Invitation Accepted");
+		message.setText("Hello " + leader.getFirstName() + ",\n\n" + member.getFirstName() + " (" + member.getEmail()
+				+ ") has accepted your invitation to join team \"" + team.getTeamName() + "\".");
+		javaMailSender.send(message);
+	}
+
+	public void sendSubmissionConfirmationMail(UserEntity uploader, HackathonTeamEntity team,
+			SubmissionEntity submission) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(uploader.getEmail());
+		message.setSubject("CodeVerse - Submission Confirmation");
+		message.setText("Hello " + uploader.getFirstName() + ",\n\n" + "Your submission for team \""
+				+ team.getTeamName() + "\" has been successfully received.\n\n" + "Type: " + submission.getType()
+				+ "\n" + "Description: " + submission.getDescription() + "\n\n" + "You can view your submission details on the CodeVerse dashboard.");
+		javaMailSender.send(message);
+	}
+
+	public void sendHackathonReminderMail(UserEntity user, HackathonEntity hackathon, String reminderType) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(user.getEmail());
+		message.setSubject("CodeVerse - " + reminderType + " Reminder");
+
+		String content = reminderType.equals("HACKATHON_START")
+				? "Get ready! The hackathon \"" + hackathon.getTitle() + "\" starts tomorrow."
+				: "Clock is ticking! The submission deadline for \"" + hackathon.getTitle() + "\" is tomorrow.";
+
+		message.setText("Hello " + user.getFirstName() + ",\n\n" + content + "\n\n"
+				+ "Visit the dashboard for more details: http://localhost:9999/login");
+		javaMailSender.send(message);
+	}
 }

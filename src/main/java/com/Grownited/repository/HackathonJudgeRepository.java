@@ -15,5 +15,6 @@ public interface HackathonJudgeRepository extends JpaRepository<HackathonJudgeEn
 	List<HackathonJudgeEntity> findAllWithDetails();
 	@Query("SELECT hj FROM HackathonJudgeEntity hj JOIN FETCH hj.hackathon WHERE hj.user.userId = :userId")
 	List<HackathonJudgeEntity> findByUserWithHackathon(Integer userId);
-	
+
+	long countByStatus(com.Grownited.enums.AssignmentStatus status);
 }

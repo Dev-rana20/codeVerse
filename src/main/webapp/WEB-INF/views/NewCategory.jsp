@@ -1,94 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<%-- ── Page Identity ── --%>
+<c:set var="pageTitle" value="New Category" scope="request" />
+<c:set var="activePage" value="newCategory" scope="request" />
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page="newCategory">
 
 <head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>CodeVerse</title>
-	<!-- plugins:css -->
-
-	<jsp:include page="AdminCSS.jsp"></jsp:include>
+<%@ include file="/WEB-INF/views/components/Head.jsp"%>
 </head>
 
-<body>
-	<div class="container-scroller">
-		<!-- partial:partials/_navbar.html -->
-		<jsp:include page="AdminHeader.jsp"></jsp:include>
-		<!-- partial -->
-		<div class="container-fluid page-body-wrapper">
-			<!-- partial:partials/_sidebar.html -->
-			<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-			<!-- partial -->
-			<div class="main-panel">
-				<div class="content-wrapper">
-					<div class="row">
-						<div class="col-md-12 grid-margin">
-							<div class="row">
-								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold text-center">New Category</h3>
+<body data-page="newCategory">
 
-								</div>
+	<%-- Navbar --%>
+	<%@ include file="/WEB-INF/views/components/navbar.jsp"%>
 
-							</div>
-						</div>
+	<div class="cv-shell">
+
+		<%-- Sidebar --%>
+		<%@ include file="/WEB-INF/views/components/SidebarAdmin.jsp"%>
+
+		<main class="cv-content">
+
+			<!-- Page Header -->
+			<div class="cv-page-header mb-4">
+				<div>
+					<div class="cv-page-eyebrow">
+						<i class="bi bi-tags"></i> Categories
 					</div>
-
-
-					<div class="row">
-						<div class="col-md-6 mx-auto grid-margin stretch-card">
-							<div class="card">
-								<div class="card-body">
-									<div class="d-flex justify-content-between">
-										<p class="card-title">Add New Category</p>
-										<a href="listCategory" class="text-info">View all</a>
-									</div>
-									<form action="saveCategory" method="post">
-
-										<!-- Category Name -->
-										<div class="mb-3">
-											<label class="form-label">Category Name</label> <input type="text"
-												name="categoryName" class="form-control"
-												placeholder="Enter category name" required>
-										</div>
-
-										<!-- Buttons -->
-
-										<button type="submit" class="btn btn-primary">Save
-											Category</button>
-										<a href="admin-dashboard" class="btn btn-secondary">
-											Cancel </a>
-
-
-									</form>
-
-
-
-
-								</div>
-							</div>
-						</div>
-					</div>
-
-
+					<h1 class="cv-page-title">New Category</h1>
 				</div>
-				<!-- content-wrapper ends -->
-				<!-- partial:partials/_footer.html -->
 
-				<jsp:include page="AdminFooter.jsp"></jsp:include>
-				<!-- partial -->
+				<a href="listCategory" class="btn-cv btn-cv-ghost"> <i
+					class="bi bi-list-ul"></i> View All
+				</a>
 			</div>
-			<!-- main-panel ends -->
-		</div>
-		<!-- page-body-wrapper ends -->
+
+			<!-- Form Card -->
+			
+
+					<div class="cv-card" style="max-width: 520px;">
+
+						<div class="cv-card__header">
+							<i class="bi bi-plus-circle"></i>
+							<h3>Add Category</h3>
+						</div>
+
+						<div class="cv-card__body">
+							<form action="saveCategory" method="post">
+								
+
+								<div class="cv-form-group">
+									<label class="cv-label"> Category Name <span
+										class="req">*</span>
+									</label> <input type="text" name="categoryName" class="cv-input"
+										placeholder="Enter category name" required>
+								</div>
+
+								<div class="cv-actions">
+									<button type="submit" class="btn-cv btn-cv-primary">
+										<i class="bi bi-save"></i> Save Category
+									</button>
+
+									<a href="listCategory" class="btn-cv btn-cv-ghost"> Cancel
+									</a>
+								</div>
+
+							</form>
+						</div>
+
+					</div>
+
+				
+
+		</main>
 	</div>
-	<!-- container-scroller -->
-	<!-- plugins:js -->
 
+	<%-- Footer + Scripts --%>
+	<%@ include file="/WEB-INF/views/components/Footer.jsp"%>
+	<%@ include file="/WEB-INF/views/components/Scripts.jsp"%>
 
-
-
-	<!-- End custom js for this page-->
 </body>
-
 </html>

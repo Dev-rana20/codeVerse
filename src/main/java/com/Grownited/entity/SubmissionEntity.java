@@ -11,6 +11,9 @@ import jakarta.persistence.Table;
 import com.Grownited.enums.SubmissionType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 @Entity
 @Table(name = "submissions")
 public class SubmissionEntity {
@@ -32,10 +35,15 @@ public class SubmissionEntity {
     @Enumerated(EnumType.STRING)
     private SubmissionType type;
     
+    @NotBlank(message = "Description is required")
+    @Size(min = 10, message = "Description must be at least 10 characters")
     private String description;
 
     private String status; 
-    // optional: SUBMITTED / REVIEWED
+    
+    private String fileUrl;
+    
+    private String videoUrl;
 
 	public Integer getSubmissionId() {
 		return submissionId;
@@ -95,7 +103,21 @@ public class SubmissionEntity {
 		this.description = description;
 	}
 
-    // getters setters
+	public String getFileUrl() {
+		return fileUrl;
+	}
+
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
+
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
     
     
 }

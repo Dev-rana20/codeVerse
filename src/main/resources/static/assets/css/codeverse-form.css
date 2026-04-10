@@ -1,17 +1,17 @@
-/* ===============================
-   CODEVERSE SCOPED UI (NO CONFLICT)
-   =============================== */
+/* codeverse-form.css — Auth page layout styles
+   Full component styles live in Codeverse.css */
 
-.cv-scope {
-    background: #0a0e18;
-    color: #fff;
-    font-family: 'Syne', sans-serif;
+body {
     display: flex;
     min-height: 100vh;
+    background: var(--bg-base, #090c12);
+    color: var(--text-primary, #e8eaf6);
+    font-family: var(--font-display, 'Syne', sans-serif);
+    margin: 0;
 }
 
-/* LEFT */
-.cv-scope .auth-left {
+/* LEFT panel */
+.auth-left {
     flex: 1;
     display: flex;
     align-items: center;
@@ -19,168 +19,158 @@
     padding: 2rem;
 }
 
-/* RIGHT */
-.cv-scope .auth-right {
+/* RIGHT decorative panel */
+.auth-right {
     width: 45%;
     background: linear-gradient(145deg, #0a0e18, #111827);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
     padding: 2rem;
+    overflow: hidden;
 }
 
-/* TAGLINE */
-.cv-scope .auth-tagline {
-    font-size: 34px;
+.auth-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 60% 40%, rgba(0,255,224,0.06), transparent 60%),
+                radial-gradient(circle at 30% 80%, rgba(123,92,255,0.06), transparent 60%);
+    pointer-events: none;
+}
+
+.auth-tagline {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 800;
     text-align: center;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    position: relative;
 }
-.cv-scope .auth-tagline span {
-    color: #00ffe0;
-}
+
+.auth-tagline span { color: var(--accent, #00ffe0); }
 
 /* CARD */
-.cv-scope .auth-card {
+.auth-card {
     background: #111827;
+    border: 1px solid rgba(255,255,255,0.07);
     border-radius: 14px;
-    padding: 2rem;
+    padding: 2.5rem;
     width: 100%;
-    max-width: 650px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    max-width: 460px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5);
 }
+
+.auth-card.dark-form { background: #0d1117; }
 
 /* BRAND */
-.cv-scope .auth-brand {
-    font-family: 'Space Mono', monospace;
-    color: #00ffe0;
+.auth-brand {
+    font-family: var(--font-mono, 'Space Mono', monospace);
+    color: var(--accent, #00ffe0);
     font-weight: bold;
-    text-decoration: none;
     display: block;
-    margin-bottom: 15px;
-}
-.cv-scope .auth-brand span {
-    color: #fff;
-}
-
-/* INPUTS (FULL OVERRIDE) */
-.cv-scope input,
-.cv-scope select,
-.cv-scope textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #0a0e18 !important;
-    color: #ffffff !important;
-    margin-bottom: 12px;
-}
-
-/* FOCUS */
-.cv-scope input:focus,
-.cv-scope select:focus {
-    border-color: #00ffe0;
-    outline: none;
-}
-
-/* PLACEHOLDER */
-.cv-scope ::placeholder {
-    color: #888;
-}
-
-/* GRID */
-.cv-scope .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-/* BUTTON */
-.cv-scope .btn-submit {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    background: #00ffe0;
-    color: #000;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-}
-.cv-scope .btn-submit:hover {
-    background: #00ccbb;
-}
-
-/* RADIO */
-.cv-scope .gender-group {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 12px;
-}
-
-/* LINKS */
-.cv-scope .auth-switch {
-    text-align: center;
-    margin-top: 15px;
-}
-.cv-scope .auth-switch a {
-    color: #00ffe0;
-}
-
-/* FEATURES */
-.cv-scope .auth-feature {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    color: #aaa;
-}
-.cv-scope .auth-feature i {
-    color: #00ffe0;
-}
-
-.cv-scope .auth-tagline {
-    font-size: 36px;
-    font-weight: 800;
-    text-align: center;
-    line-height: 1.4;
+    margin-bottom: 1.25rem;
+    text-decoration: none;
+    font-size: 1.1rem;
     letter-spacing: -0.5px;
 }
+.auth-brand span { color: var(--text-primary, #e8eaf6); }
 
-.cv-scope .auth-tagline span {
-    display: inline-block;
-    margin-top: 5px;
-    color: #00ffe0;
+/* HEADINGS */
+.auth-card h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
 }
 
-.cv-scope .gender-group {
+/* GRID inside form */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+/* GENDER */
+.gender-group {
     display: flex;
-    gap: 22px;
-    margin-bottom: 15px;
+    gap: 1.2rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
 }
+.gender-group label { display: flex; align-items: center; gap: 0.35rem; cursor: pointer; }
 
-.cv-scope .gender-group label {
-    display: inline-flex;
-    align-items: center;   /* THIS is key */
-    gap: 8px;
-    font-size: 14px;
+/* SUBMIT BUTTON */
+.btn-submit {
+    width: 100%;
+    padding: 0.72rem;
+    border-radius: 8px;
+    background: var(--accent, #00ffe0);
+    color: #000;
+    border: none;
+    font-weight: 700;
+    font-family: var(--font-display, 'Syne', sans-serif);
+    font-size: 0.9rem;
     cursor: pointer;
-    color: #ccc;
-    line-height: 1;        /* prevents vertical shift */
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
 }
+.btn-submit:hover { background: #00d4bb; transform: translateY(-1px); }
 
-/* Fix radio alignment */
-.cv-scope .gender-group input[type="radio"] {
-    accent-color: #00ffe0;
-    margin: 0;             /* remove default browser margin */
+/* ROW (remember / forgot) */
+.auth-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    margin-bottom: 0.9rem;
+}
+.auth-row a { color: var(--accent, #00ffe0); text-decoration: none; }
+
+/* SWITCH line */
+.auth-switch {
+    text-align: center;
+    font-size: 0.82rem;
+    margin-top: 1rem;
+    color: rgba(232,234,246,0.6);
+}
+.auth-switch a { color: var(--accent, #00ffe0); text-decoration: none; }
+
+/* FEATURE items in right panel */
+.auth-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
     position: relative;
-    top: 1px;              /* tiny adjustment for perfect centering */
 }
+.auth-feature i { color: var(--accent, #00ffe0); font-size: 1.25rem; }
 
-/* MOBILE */
+/* cv-input, cv-select already covered by Codeverse.css; re-define here
+   for pages that load codeverse-form.css without Codeverse.css  */
+.cv-input, .cv-select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: #e8eaf6;
+    font-family: var(--font-mono, 'Space Mono', monospace);
+    font-size: 0.8rem;
+    padding: 0.6rem 0.9rem;
+    outline: none;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+}
+.cv-input:focus, .cv-select:focus { border-color: var(--accent, #00ffe0); }
+.cv-input::placeholder { color: rgba(232,234,246,0.3); }
+.cv-select { appearance: none; cursor: pointer; }
+
 @media (max-width: 768px) {
-    .cv-scope .auth-right {
-        display: none;
-    }
-    .cv-scope .grid-2 {
-        grid-template-columns: 1fr;
-    }
+    .auth-right { display: none; }
+    body { flex-direction: column; }
+    .grid-2 { grid-template-columns: 1fr; }
 }

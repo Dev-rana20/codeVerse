@@ -33,7 +33,8 @@
 							<!-- Bootstrap Icons -->
 							<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
 								rel="stylesheet" />
-							<link rel="stylesheet" href="assets/css/userHome.css">
+							<!-- CodeVerse Global CSS -->
+							<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Codeverse.css" />
 
 
 						</head>
@@ -559,7 +560,8 @@
 
 
 
-										<script src="assets/js/userHome.js"></script>
+										<!-- Bootstrap JS -->
+									<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 						</body>
 
 						</html>

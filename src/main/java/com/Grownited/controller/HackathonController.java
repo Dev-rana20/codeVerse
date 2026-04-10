@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +23,8 @@ import com.Grownited.repository.UserTypeRepository;
 import com.cloudinary.Cloudinary;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 @Controller
 public class HackathonController {
@@ -39,9 +40,6 @@ public class HackathonController {
 
 	@Autowired
 	Cloudinary cloudinary;
-//	
-//	@Autowired
-//	HackathonDescriptionEntity hackathonDescriptionEntity;
 
 	@GetMapping("newHackathon")
 	public String newHackathon(Model model) {
@@ -51,8 +49,25 @@ public class HackathonController {
 		return "NewHackathon";
 	}
 
+
+
 	@PostMapping("saveHackathon")
-	public String saveHackathon(HackathonEntity hackathonEntity, HttpSession session) {
+	public String saveHackathon(@Valid HackathonEntity hackathonEntity, BindingResult result, HttpSession session, Model model) {
+
+		if (result.hasErrors()) {
+			model.addAttribute("error", "Please correct the highlighted errors.");
+			model.addAttribute("allUserType", userTypeRepository.findAll());
+			return "NewHackathon";
+		}
+
+		// Server-side date consistency checks
+		if (hackathonEntity.getRegistrationStartDate() != null && hackathonEntity.getRegistrationEndDate() != null) {
+			if (hackathonEntity.getRegistrationEndDate().isBefore(hackathonEntity.getRegistrationStartDate())) {
+				model.addAttribute("error", "Registration end date cannot be before start date.");
+				model.addAttribute("allUserType", userTypeRepository.findAll());
+				return "NewHackathon";
+			}
+		}
 
 		UserEntity currentLogInUser = (UserEntity) session.getAttribute("user");
 
@@ -60,10 +75,14 @@ public class HackathonController {
 		hackathonRepository.save(hackathonEntity);
 		return "redirect:/addHackathonDescription";
 	}
-
 	@GetMapping("listHackathon")
 	public String listHackathon(Model model) {
-
+		java.time.LocalDate today = java.time.LocalDate.now();
+		
+		// Perform bulk updates in single DB calls instead of looping
+		hackathonRepository.updateStatusToClose(today);
+		hackathonRepository.updateStatusToInProgress(today);
+		
 		List<HackathonEntity> allHackathon = hackathonRepository.findAll();
 		model.addAttribute("allHackathon", allHackathon);
 		return "ListHackathon";
@@ -76,33 +95,6 @@ public class HackathonController {
 
 		return "redirect:/listHackathon";
 	}
-
-//	@GetMapping("viewHackathon")
-//	public String viewHackathon(Integer hackathonId, Integer hackathonDescriptionId, Model model) {
-//
-//		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
-//
-//		if (opHackathon.isEmpty()) {
-//			return "redirect:/listHackathon";
-//		}
-//
-//		HackathonEntity hackathonEntity = opHackathon.get();
-//		model.addAttribute("hackathon", hackathonEntity);
-//
-//		if (hackathonDescriptionId != null) {
-//			Optional<HackathonDescriptionEntity> opDetails = hackathonDescriptionRepository
-//					.findById(hackathonDescriptionId);
-//
-//			if (opDetails.isPresent()) {
-//				HackathonDescriptionEntity hackathonDescriptionEntity = opDetails.get();
-//				model.addAttribute("hackathonDescriptionEntity", hackathonDescriptionEntity);
-//				System.out.println(hackathonDescriptionEntity.getHackathonDetailsURL());
-//			}
-//
-//		}
-//
-//		return "ViewHackathon";
-//	}
 
 	@GetMapping("viewHackathon")
 	public String viewHackathon(Integer hackathonId, Model model) {
@@ -151,13 +143,15 @@ public class HackathonController {
 	    description.setHackathonDetailsText(hackathonDetailsText);
 
 	    // 2️⃣ Upload file to Cloudinary
-	    try {
-	        Map<?, ?> map = cloudinary.uploader().upload(hackathonDetails.getBytes(), null);
-	        String uploadedURL = map.get("secure_url").toString();
-	        description.setHackathonDetailsURL(uploadedURL);
-	        System.out.println("Uploaded URL: " + uploadedURL);
-	    } catch (IOException e) {
-	        e.printStackTrace();
+	    if (hackathonDetails != null && !hackathonDetails.isEmpty()) {
+		    try {
+		        Map<?, ?> map = cloudinary.uploader().upload(hackathonDetails.getBytes(), null);
+		        String uploadedURL = map.get("secure_url").toString();
+		        description.setHackathonDetailsURL(uploadedURL);
+		        System.out.println("Uploaded URL: " + uploadedURL);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
 	    }
 
 	    // 3️⃣ Fetch the Hackathon entity and set it
@@ -172,8 +166,44 @@ public class HackathonController {
 
 	    return "redirect:/listHackathon";
 	}
-	
 
+	// ── Edit Hackathon ──────────────────────────────────────────────
+
+	@GetMapping("editHackathon")
+	public String editHackathon(@org.springframework.web.bind.annotation.RequestParam Integer hackathonId, Model model) {
+
+		HackathonEntity hackathon = hackathonRepository.findById(hackathonId)
+				.orElseThrow(() -> new RuntimeException("Hackathon not found: " + hackathonId));
+
+		List<UserTypeEntity> allUserType = userTypeRepository.findAll();
+		model.addAttribute("hackathon", hackathon);
+		model.addAttribute("allUserType", allUserType);
+		return "EditHackathon";
 	}
 
+	@PostMapping("updateHackathon")
+	public String updateHackathon(@Valid HackathonEntity hackathonEntity, BindingResult result, Model model) {
 
+		if (result.hasErrors()) {
+			model.addAttribute("error", "Please correct the highlighted errors.");
+			model.addAttribute("hackathon", hackathonEntity);
+			model.addAttribute("allUserType", userTypeRepository.findAll());
+			return "EditHackathon";
+		}
+
+		// Server-side date consistency checks
+		if (hackathonEntity.getRegistrationStartDate() != null && hackathonEntity.getRegistrationEndDate() != null) {
+			if (hackathonEntity.getRegistrationEndDate().isBefore(hackathonEntity.getRegistrationStartDate())) {
+				model.addAttribute("error", "Registration end date cannot be before start date.");
+				model.addAttribute("hackathon", hackathonEntity);
+				model.addAttribute("allUserType", userTypeRepository.findAll());
+				return "EditHackathon";
+			}
+		}
+
+		// Ensure we are updating the existing one (the ID should be in the entity from the hidden form field)
+		hackathonRepository.save(hackathonEntity);
+		return "redirect:/listHackathon";
+	}
+
+}

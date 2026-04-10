@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 		<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+		<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 			<c:set var="pageTitle" value="Hackathons" scope="request" />
 			<c:set var="activePage" value="hackathons" scope="request" />
@@ -26,18 +27,20 @@
 							<main class="cv-content">
 
 								<c:if test="${not empty success}">
-									<div class="alert alert-success cv-msg">${success}</div>
+									<div class="alert alert-success cv-msg" role="alert">
+										<i class="bi bi-check-circle-fill" aria-hidden="true"></i> ${success}</div>
 								</c:if>
 
 								<c:if test="${not empty error}">
-									<div class="alert alert-danger cv-msg">${error}</div>
+									<div class="alert alert-danger" role="alert">
+										<i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> ${error}</div>
 								</c:if>
 
 								<!-- PAGE HEADER -->
 								<div class="cv-page-header">
 									<div class="cv-page-header__left">
 										<div class="cv-page-eyebrow">
-											<i class="bi bi-collection"></i> Explore
+											<i class="bi bi-collection" aria-hidden="true"></i> Explore
 										</div>
 										<h1 class="cv-page-title">All Hackathons</h1>
 										<p class="cv-page-subtitle">Browse, filter and register for
@@ -53,27 +56,27 @@
 
 											<div class="position-relative" style="min-width: 220px;">
 												<i
-													class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"></i>
+													class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted" aria-hidden="true"></i>
 												<input type="text" id="searchInput" class="cv-input ps-4"
-													placeholder="Search hackathons...">
+													placeholder="Search hackathons..." aria-label="Search hackathons by title">
 											</div>
 
-											<select class="cv-select" id="filterStatus">
+											<select class="cv-select" id="filterStatus" aria-label="Filter by Status">
 												<option value="">All Status</option>
 												<option value="open">Open</option>
 												<option value="ongoing">Ongoing</option>
 												<option value="upcoming">Upcoming</option>
-												<option value="closed">Closed</option>
-											</select> <select class="cv-select" id="filterType">
+												<option value="close">Closed</option>
+											</select> <select class="cv-select" id="filterType" aria-label="Filter by Event Type">
 												<option value="">All Types</option>
 												<option value="online">Online</option>
 												<option value="offline">Offline</option>
 												<option value="hybrid">Hybrid</option>
-											</select> <select class="cv-select" id="filterPayment">
+											</select> <select class="cv-select" id="filterPayment" aria-label="Filter by Payment">
 												<option value="">Free & Paid</option>
 												<option value="free">Free</option>
 												<option value="paid">Paid</option>
-											</select> <select class="cv-select" id="filterTeam">
+											</select> <select class="cv-select" id="filterTeam" aria-label="Filter by Team Size">
 												<option value="">Team Size</option>
 												<option value="solo">Solo</option>
 												<option value="duo">Duo</option>
@@ -81,8 +84,9 @@
 												<option value="large">5+</option>
 											</select>
 
-											<div class="ms-auto text-muted font-mono small">
+											<div class="ms-auto text-muted font-mono small" aria-live="polite">
 												<span id="visibleCount">0</span>/<span id="totalCount">0</span>
+												<span class="sr-only"> hackathons showing</span>
 											</div>
 
 										</div>
@@ -134,8 +138,8 @@
 
 															<c:choose>
 																<c:when
-																	test="${hack.status == 'open' || hack.status == 'upcoming'}">
-																	<a href="/participant/hackathon/${hack.hackathonId}/join"
+																	test="${fn:toLowerCase(hack.status) == 'open' || fn:toLowerCase(hack.status) == 'upcoming'}">
+																	<a href="/hackathonDetail/${hack.hackathonId}"
 																		class="btn-cv btn-cv--ghost btn-cv--sm">
 																		Register </a>
 																</c:when>

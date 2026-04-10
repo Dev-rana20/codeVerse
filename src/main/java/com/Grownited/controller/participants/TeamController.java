@@ -21,9 +21,17 @@ import com.Grownited.repository.HackathonRepository;
 import com.Grownited.repository.HackathonTeamMemberRepository;
 import com.Grownited.repository.HackathonTeamRepository;
 import com.Grownited.repository.UserRepository;
+import com.Grownited.repository.SubmissionRepository;
+import com.Grownited.repository.EvaluationRepository;
+import com.Grownited.entity.SubmissionEntity;
+import com.Grownited.entity.EvaluationEntity;
+import com.Grownited.enums.SubmissionType;
+import com.Grownited.service.MailerService;
 import com.Grownited.service.NotificationService;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 @Controller
 public class TeamController {
@@ -46,7 +54,16 @@ public class TeamController {
 	@Autowired
 	NotificationService notificationService;
 
-	@GetMapping("/register")
+	@Autowired
+	MailerService mailerService;
+
+	@Autowired
+	SubmissionRepository submissionRepository;
+
+	@Autowired
+	EvaluationRepository evaluationRepository;
+
+	@GetMapping("/participant/team-register")
 	public String openTeamRegister(@RequestParam Integer hackathonId, HttpSession session, Model model) {
 
 		UserEntity user = (UserEntity) session.getAttribute("user");
@@ -78,10 +95,26 @@ public class TeamController {
 		return "participants/teamRegister";
 	}
 
+
 	@PostMapping("/team/create")
-	public String createTeam(@RequestParam Integer hackathonId, @RequestParam String teamName,
+	public String createTeam(@Valid HackathonTeamEntity team, BindingResult result, @RequestParam Integer hackathonId,
 			@RequestParam(required = false) List<Integer> memberIds, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+			Model model, RedirectAttributes redirectAttributes) {
+
+		if (result.hasErrors()) {
+			UserEntity user = (UserEntity) session.getAttribute("user");
+			HackathonEntity hackathon = hackathonRepository.findById(hackathonId).orElseThrow();
+			List<HackathonRegistrationEntity> registrations = registrationRepository.findByHackathon_HackathonId(hackathonId);
+			List<UserEntity> registeredUsers = registrations.stream().map(HackathonRegistrationEntity::getUser)
+					.filter(u -> !u.getUserId().equals(user.getUserId())).filter(u -> !"ADMIN".equalsIgnoreCase(u.getRole())).toList();
+			List<HackathonTeamEntity> teams = hackathonTeamRepository.findByHackathon_HackathonId(hackathonId);
+			
+			model.addAttribute("hackathon", hackathon);
+			model.addAttribute("users", registeredUsers);
+			model.addAttribute("teams", teams);
+			model.addAttribute("error", "Team name is required and must be at least 3 characters.");
+			return "participants/teamRegister";
+		}
 
 		UserEntity currentUser = (UserEntity) session.getAttribute("user");
 
@@ -91,19 +124,28 @@ public class TeamController {
 
 		HackathonEntity hackathon = hackathonRepository.findById(hackathonId).orElseThrow();
 
-		// Check if user already created a team for this hackathon
+		// Check if user already created or joined a team for this hackathon
 		boolean hasTeam = hackathonTeamRepository.existsByHackathon_HackathonIdAndTeamLeader_UserId(hackathonId,
 				currentUser.getUserId());
+		boolean alreadyInTeam = hackathonTeamMemberRepository.existsByMember_UserIdAndTeam_Hackathon_HackathonId(
+				currentUser.getUserId(), hackathonId);
 
-		if (hasTeam) {
+		if (hasTeam || alreadyInTeam) {
 			redirectAttributes.addFlashAttribute("error",
-					"You have already created a team for this hackathon. You can join other teams instead.");
-			return "redirect:/register?hackathonId=" + hackathonId;
+					"You are already part of a team or have pending invites/requests for this hackathon.");
+			return "redirect:/participant/team-register?hackathonId=" + hackathonId;
 		}
 
-		// 1. CREATE TEAM
-		HackathonTeamEntity team = new HackathonTeamEntity();
-		team.setTeamName(teamName);
+		// ✅ Enforce max team size at creation
+		int invitedCount = (memberIds != null) ? memberIds.size() : 0;
+		int totalOnCreate = 1 + invitedCount; // leader + invitees
+		if (hackathon.getMaxTeamSize() != null && totalOnCreate > hackathon.getMaxTeamSize()) {
+			redirectAttributes.addFlashAttribute("error",
+					"Team size exceeds the maximum allowed (" + hackathon.getMaxTeamSize() + " members).");
+			return "redirect:/participant/team-register?hackathonId=" + hackathonId;
+		}
+
+		// 1. CREATE TEAM (team object already bound from request)
 		team.setHackathon(hackathon);
 		team.setTeamLeader(currentUser);
 
@@ -133,6 +175,7 @@ public class TeamController {
 					hackathonTeamMemberRepository.save(tm);
 					notificationService.createNotification(user,
 							"You have been invited to join team " + team.getTeamName(), "INVITE", "/participant/team");
+					mailerService.sendTeamInviteMail(user, team);
 				}
 			}
 		}
@@ -170,6 +213,7 @@ public class TeamController {
 		if (tm != null && "PENDING".equals(tm.getStatus())) {
 			tm.setStatus("ACCEPTED");
 			hackathonTeamMemberRepository.save(tm);
+			mailerService.sendInviteAcceptedMail(tm.getTeam().getTeamLeader(), user, tm.getTeam());
 			redirectAttributes.addFlashAttribute("success", "Invitation accepted!");
 		}
 
@@ -206,11 +250,64 @@ public class TeamController {
 		List<HackathonTeamMembersEntity> requests = members.stream().filter(m -> "REQUESTED".equals(m.getStatus()))
 				.toList();
 
+		// 🎁 FETCH ELIGIBLE USERS TO INVITE (Registered but not in any team for this hackathon)
+		List<HackathonRegistrationEntity> registrations = registrationRepository
+				.findByHackathon_HackathonId(team.getHackathon().getHackathonId());
+
+		List<UserEntity> eligibleUsers = registrations.stream().map(HackathonRegistrationEntity::getUser)
+				.filter(u -> !u.getUserId().equals(user.getUserId())) // not self
+				.filter(u -> !"ADMIN".equalsIgnoreCase(u.getRole())) // not admin
+				.filter(u -> !hackathonTeamMemberRepository.existsByMember_UserIdAndTeam_Hackathon_HackathonId(u.getUserId(),
+						team.getHackathon().getHackathonId()))
+				.toList();
+
 		model.addAttribute("team", team);
 		model.addAttribute("members", members);
 		model.addAttribute("requests", requests);
+		model.addAttribute("eligibleUsers", eligibleUsers);
 
 		return "participants/TeamDetails";
+	}
+
+	@PostMapping("/team/invite")
+	public String inviteMember(@RequestParam Integer teamId, @RequestParam Integer memberId, HttpSession session,
+			RedirectAttributes ra) {
+
+		UserEntity currentUser = (UserEntity) session.getAttribute("user");
+		HackathonTeamEntity team = hackathonTeamRepository.findById(teamId).orElseThrow();
+
+		// ✅ Only leader
+		if (!team.getTeamLeader().getUserId().equals(currentUser.getUserId())) {
+			ra.addFlashAttribute("error", "Only leader can invite members");
+			return "redirect:/participant/team";
+		}
+
+		UserEntity userToInvite = userRepository.findById(memberId).orElseThrow();
+
+		// ❌ Check if already in a team
+		boolean alreadyInTeam = hackathonTeamMemberRepository.existsByMember_UserIdAndTeam_Hackathon_HackathonId(memberId,
+				team.getHackathon().getHackathonId());
+		if (alreadyInTeam) {
+			ra.addFlashAttribute("error", "User is already part of a team or has a pending invite.");
+			return "redirect:/team/details/" + teamId;
+		}
+
+		// ✅ Create invite
+		HackathonTeamMembersEntity invite = new HackathonTeamMembersEntity();
+		invite.setTeam(team);
+		invite.setMember(userToInvite);
+		invite.setStatus("PENDING");
+		invite.setRoleTitle("MEMBER");
+
+		hackathonTeamMemberRepository.save(invite);
+
+		notificationService.createNotification(userToInvite, "You have been invited to join team " + team.getTeamName(),
+				"INVITE", "/participant/team");
+		mailerService.sendTeamInviteMail(userToInvite, team);
+
+		ra.addFlashAttribute("success", "Invitation sent to " + userToInvite.getFirstName());
+
+		return "redirect:/team/details/" + teamId;
 	}
 
 	// Delete Team
@@ -227,6 +324,25 @@ public class TeamController {
 			return "redirect:/participant/myTeam";
 		}
 
+		// ❌ Check for final submissions
+		List<SubmissionEntity> finalSubmissions = submissionRepository.findByTeamAndType(team, SubmissionType.FINAL);
+		if (finalSubmissions != null && !finalSubmissions.isEmpty()) {
+			ra.addFlashAttribute("error", "Team cannot be deleted after making a final submission.");
+			return "redirect:/participant/team";
+		}
+
+		// 🔥 delete evaluations first
+		List<EvaluationEntity> evaluations = evaluationRepository.findByTeam(team);
+		if (evaluations != null && !evaluations.isEmpty()) {
+			evaluationRepository.deleteAll(evaluations);
+		}
+
+		// 🔥 delete submissions
+		List<SubmissionEntity> submissions = submissionRepository.findByTeam(team);
+		if (submissions != null && !submissions.isEmpty()) {
+			submissionRepository.deleteAll(submissions);
+		}
+
 		// 🔥 delete members first
 		hackathonTeamMemberRepository.deleteAll(team.getMembers());
 
@@ -235,7 +351,7 @@ public class TeamController {
 
 		ra.addFlashAttribute("success", "Team deleted successfully");
 
-		return "redirect:/userHome";
+		return "redirect:/participant/team";
 	}
 
 	@PostMapping("/team/removeMember")
@@ -261,7 +377,7 @@ public class TeamController {
 
 		ra.addFlashAttribute("success", "Member removed");
 
-		return "/participants/MyTeam";
+		return "redirect:/participant/team";
 	}
 
 	@PostMapping("/team/requestJoin")
@@ -274,12 +390,13 @@ public class TeamController {
 
 		HackathonTeamEntity team = hackathonTeamRepository.findById(teamId).orElseThrow();
 
-		// ❌ prevent duplicate
-		boolean exists = hackathonTeamMemberRepository.existsByTeamAndMember(team, user);
+		// ❌ prevent duplicate in the same hackathon
+		boolean alreadyInTeam = hackathonTeamMemberRepository.existsByMember_UserIdAndTeam_Hackathon_HackathonId(
+				user.getUserId(), team.getHackathon().getHackathonId());
 
-		if (exists) {
-			ra.addFlashAttribute("error", "Already requested or member of team");
-			return "redirect:/register?hackathonId=" + team.getHackathon().getHackathonId();
+		if (alreadyInTeam) {
+			ra.addFlashAttribute("error", "You are already part of a team or have pending invites/requests for this hackathon.");
+			return "redirect:/participant/team-register?hackathonId=" + team.getHackathon().getHackathonId();
 		}
 
 		// ✅ create request
@@ -299,7 +416,7 @@ public class TeamController {
 
 		ra.addFlashAttribute("success", "Request sent to team leader!");
 
-		return "redirect:/register?hackathonId=" + team.getHackathon().getHackathonId();
+		return "redirect:/participant/team-register?hackathonId=" + team.getHackathon().getHackathonId();
 	}
 
 	// by team leader
@@ -317,6 +434,15 @@ public class TeamController {
 			return "redirect:/participant/team";
 		}
 
+		// ✅ Enforce max team size before accepting
+		long acceptedCount = hackathonTeamMemberRepository.findByTeam(team).stream()
+				.filter(m -> "ACCEPTED".equals(m.getStatus())).count();
+		Integer maxSize = team.getHackathon().getMaxTeamSize();
+		if (maxSize != null && acceptedCount >= maxSize) {
+			ra.addFlashAttribute("error", "Team is full. Maximum " + maxSize + " members allowed.");
+			return "redirect:/team/details/" + teamId;
+		}
+
 		HackathonTeamMembersEntity tm = hackathonTeamMemberRepository.findByTeam_HackathonTeamIdAndMember_UserId(teamId,
 				memberId);
 
@@ -325,6 +451,7 @@ public class TeamController {
 			hackathonTeamMemberRepository.save(tm);
 			notificationService.createNotification(tm.getMember(),
 					"Your request accepted for team " + team.getTeamName(), "REQUEST_ACCEPT", "/participant/team");
+			mailerService.sendInviteAcceptedMail(team.getTeamLeader(), tm.getMember(), team);
 		}
 
 		return "redirect:/team/details/" + teamId;

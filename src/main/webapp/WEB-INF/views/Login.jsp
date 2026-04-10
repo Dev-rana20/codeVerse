@@ -194,25 +194,32 @@ body {
 
 		<!-- ERROR -->
 		<c:if test="${not empty error}">
-			<div class="cv-alert cv-alert--error">
-				<i class="bi bi-exclamation-triangle-fill"></i> ${error}
+			<div class="cv-alert cv-alert--error" role="alert">
+				<i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> ${error}
+			</div>
+		</c:if>
+
+		<!-- SUCCESS -->
+		<c:if test="${not empty success}">
+			<div class="cv-alert" role="alert" style="background: rgba(0, 255, 224, 0.1); color: #00ffe0; border: 1px solid rgba(0, 255, 224, 0.2);">
+				<i class="bi bi-check-circle-fill" aria-hidden="true"></i> ${success}
 			</div>
 		</c:if>
 
 		<form action="authenticate" method="post">
 
 			<!-- EMAIL -->
-			<label>Email</label>
+			<label for="email">Email</label>
 			<div class="cv-input-wrap">
-				<i class="bi bi-envelope"></i>
-				<input type="email" name="email" class="cv-input" placeholder="you@example.com" required>
+				<i class="bi bi-envelope" aria-hidden="true"></i>
+				<input type="email" id="email" name="email" class="cv-input" placeholder="you@example.com" required>
 			</div>
 
 			<!-- PASSWORD -->
-			<label>Password</label>
+			<label for="password">Password</label>
 			<div class="cv-input-wrap">
-				<i class="bi bi-lock"></i>
-				<input type="password" name="password" class="cv-input" placeholder="••••••••" required>
+				<i class="bi bi-lock" aria-hidden="true"></i>
+				<input type="password" id="password" name="password" class="cv-input" placeholder="••••••••" required>
 			</div>
 
 			<!-- ROW -->
@@ -222,8 +229,8 @@ body {
 			</div>
 
 			<!-- BUTTON -->
-			<button type="submit" class="btn-login">
-				<i class="bi bi-box-arrow-in-right"></i> Sign In
+			<button type="submit" class="btn-login" aria-label="Sign in to your account">
+				<i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Sign In
 			</button>
 
 		</form>

@@ -43,12 +43,13 @@
 																<main class="cv-content">
 
 																	<c:if test="${not empty success}">
-																		<div class="alert alert-success cv-msg">
-																			${success}</div>
+																		<div class="alert alert-success cv-msg" role="alert">
+																			<i class="bi bi-check-circle-fill" aria-hidden="true"></i> ${success}</div>
 																	</c:if>
 
 																	<c:if test="${not empty error}">
-																		<div class="alert alert-danger cv-msg">${error}
+																		<div class="alert alert-danger cv-msg" role="alert">
+																			<i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> ${error}
 																		</div>
 																	</c:if>
 
@@ -56,7 +57,7 @@
 																		<div class="cv-page-header">
 																			<div class="cv-page-header__left">
 																				<div class="cv-page-eyebrow">
-																					<i class="bi bi-grid-1x2"></i>
+																					<i class="bi bi-grid-1x2" aria-hidden="true"></i>
 																					Overview
 																				</div>
 																				<h1 class="cv-page-title">
@@ -71,8 +72,8 @@
 																			</div>
 																			<div class="cv-page-header__actions">
 																				<a href="/hackathons"
-																					class="btn-cv btn-cv--primary"> <i
-																						class="bi bi-lightning-charge-fill"></i>
+																					class="btn-cv btn-cv--primary" aria-label="Explore Hackathons"> <i
+																						class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
 																					Explore Hackathons
 																				</a>
 																			</div>
@@ -82,16 +83,16 @@
 																			from controller) --%>
 																			<c:if test="${not empty successMsg}">
 																				<div class="cv-alert cv-alert--success"
-																					data-cv-dismiss="5000">
+																					data-cv-dismiss="5000" role="alert">
 																					<i
-																						class="bi bi-check-circle-fill"></i>${successMsg}
+																						class="bi bi-check-circle-fill" aria-hidden="true"></i>${successMsg}
 																				</div>
 																			</c:if>
 																			<c:if test="${not empty errorMsg}">
 																				<div class="cv-alert cv-alert--error"
-																					data-cv-dismiss="5000">
+																					data-cv-dismiss="5000" role="alert">
 																					<i
-																						class="bi bi-exclamation-triangle-fill"></i>${errorMsg}
+																						class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>${errorMsg}
 																				</div>
 																			</c:if>
 
@@ -103,26 +104,20 @@
 																						class="col-6 col-xl-3 cv-fade-up">
 																						<div class="cv-stat">
 																							<div
-																								class="cv-stat__icon cv-stat__icon--cyan">
+																								class="cv-stat__icon cv-stat__icon--orange">
 																								<i
-																									class="bi bi-trophy"></i>
+																									class="bi bi-bell" aria-hidden="true"></i>
 																							</div>
 																							<div>
 																								<div
 																									class="cv-stat__val">
 																									<c:out
-																										value="${userPoints}"
+																										value="${fn:length(notifications)}"
 																										default="0" />
 																								</div>
 																								<div
 																									class="cv-stat__label">
-																									Points</div>
-																								<div
-																									class="cv-stat__trend up">
-																									<i
-																										class="bi bi-arrow-up"></i>
-																									+120 this week
-																								</div>
+																									Unread Notifications</div>
 																							</div>
 																						</div>
 																					</div>
@@ -172,21 +167,20 @@
 																						class="col-6 col-xl-3 cv-fade-up">
 																						<div class="cv-stat">
 																							<div
-																								class="cv-stat__icon cv-stat__icon--red">
+																								class="cv-stat__icon cv-stat__icon--info">
 																								<i
-																									class="bi bi-bar-chart-line"></i>
+																									class="bi bi-people"></i>
 																							</div>
 																							<div>
 																								<div
 																									class="cv-stat__val">
-																									#
 																									<c:out
-																										value="${userRank}"
-																										default="—" />
+																										value="${fn:length(myRegistrations)}"
+																										default="0" />
 																								</div>
 																								<div
 																									class="cv-stat__label">
-																									Global Rank</div>
+																									Active Teams</div>
 																							</div>
 																						</div>
 																					</div>
@@ -197,7 +191,7 @@
 																					<c:if
 																						test="${not empty upcomingHackathon}">
 																						<div class="cv-countdown mb-4 cv-fade-up"
-																							data-cv-countdown="${upcomingHackathon.deadlineMillis}"
+																							data-cv-countdown="${registrationDeadlineMillis}"
 																							data-cv-cd-d="#cdDays"
 																							data-cv-cd-h="#cdHrs"
 																							data-cv-cd-m="#cdMin"
@@ -206,8 +200,7 @@
 																								<div
 																									class="cv-countdown__label">
 																									<i
-																										class="bi bi-alarm me-1"></i>Next
-																									Deadline
+																										class="bi bi-hourglass-split me-1 text-warn"></i>Registration Closing Soon
 																								</div>
 																								<div
 																									class="cv-countdown__name">
@@ -283,14 +276,14 @@
 																															<div
 																																class="cv-card cv-card--lift">
 																																<div
-																																	class="cv-card__banner cv-card__banner--${h.status}">
+																																	class="cv-card__banner cv-card__banner--${fn:toLowerCase(h.status)}">
 																																</div>
 																																<div
 																																	class="cv-card__body">
 																																	<div
 																																		class="d-flex gap-2 mb-2 flex-wrap">
 																																		<span
-																																			class="cv-badge cv-badge--${h.status}">
+																																			class="cv-badge cv-badge--${fn:toLowerCase(h.status)}">
 																																			<span
 																																				class="cv-badge__dot"></span>${h.status}
 																																		</span>
@@ -384,19 +377,12 @@
 																															class="cv-table">
 																															<thead>
 																																<tr>
-																																	<th>#
-																																	</th>
-																																	<th>Hackathon
-																																	</th>
-																																	<th>Team
-																																	</th>
-																																	<th>Date
-																																	</th>
-																																	<th>Submit
-																																	</th>
-																																	<th>Action
-																																	</th>
-																																	<!-- ✅ NEW -->
+																																	<th>#</th>
+																																	<th>Hackathon</th>
+																																	<th>Team</th>
+																																	<th>Event Dates</th>
+																																	<th>Sub. Deadline</th>
+																																	<th>Action</th>
 																																</tr>
 																															</thead>
 																															<tbody>
@@ -422,19 +408,22 @@
 																																				default="—" />
 																																		</td>
 
-																																		<td class="font-mono text-muted-cv"
-																																			style="font-size: .75rem">
-																																			${r.registrationDate}
+																																		<td class="font-mono" style="font-size: .75rem">
+																																			<div class="text-accent">${r.hackathon.eventStartDate != null ? r.hackathon.eventStartDate : 'TBA'}</div>
+																																			<div class="text-muted-cv">${r.hackathon.eventEndDate != null ? r.hackathon.eventEndDate : 'TBA'}</div>
 																																		</td>
 
-																																		<!-- Submit Button -->
-																																		<td><a href="/participant/submissions/${r.hackathon.hackathonId}"
-																																				class="btn-cv btn-cv--ghost btn-cv--sm">
-																																				<i
-																																					class="bi bi-upload"></i>
-																																				Submit
-																																			</a>
+																																		<td class="font-mono text-danger" style="font-size: .75rem">
+																																			${r.hackathon.submissionDeadline != null ? r.hackathon.submissionDeadline : 'TBA'}
 																																		</td>
+
+																																		<!-- Actions -->
+																																		<td>
+																																			<div class="d-flex gap-2">
+																																				<a href="/participant/submissions/${r.hackathon.hackathonId}"
+																																					class="btn-cv btn-cv--ghost btn-cv--sm" title="Submit Project">
+																																					<i class="bi bi-upload"></i>
+																																				</a>
 
 																																		<!-- ✅ Cancel Button -->
 																																		<td>
@@ -500,94 +489,62 @@
 																										<div
 																											class="col-12 col-lg-4">
 
-																											<%-- XP
-																												Progress
-																												card
-																												--%>
-																												<div
-																													class="cv-card mb-3 cv-fade-up">
-																													<div
-																														class="cv-card__header">
-																														<i
-																															class="bi bi-stars"></i>
-																														<h2>XP
-																															Progress
-																														</h2>
-																														<div
-																															class="cv-card__header-actions">
-																															<span
-																																class="cv-badge cv-badge--upcoming">Rank
-																																#${userRank}</span>
+																																	<%-- My Team Status (Quick Access) --%>
+																												<div class="cv-card mb-3 cv-fade-up">
+																													<div class="cv-card__header">
+																														<i class="bi bi-people-fill"></i>
+																														<h2>Current Team</h2>
+																														<div class="cv-card__header-actions">
+																															<c:choose>
+																																<c:when test="${not empty latestTeam}">
+																																	<span class="cv-badge cv-badge--success">Joined</span>
+																																</c:when>
+																																<c:otherwise>
+																																	<span class="cv-badge cv-badge--danger">No Team</span>
+																																</c:otherwise>
+																															</c:choose>
 																														</div>
 																													</div>
-																													<div
-																														class="cv-card__body">
-																														<div class="d-flex justify-content-between mb-1"
-																															style="font-family: var(--font-mono); font-size: .72rem; color: var(--text-muted)">
-																															<span>${userPoints}
-																																pts</span>
-																															<span>Next:
-																																${500
-																																-
-																																(userPoints
-																																%
-																																500)}
-																																pts</span>
-																														</div>
-																														<div
-																															class="cv-progress cv-progress--md">
-																															<div class="cv-progress__bar"
-																																data-width="${(userPoints % 500) / 5}%">
-																															</div>
-																														</div>
-																														<div
-																															class="cv-kv-list mt-3">
-																															<div
-																																class="cv-kv-item">
-																																<span
-																																	class="cv-kv-label"><i
-																																		class="bi bi-mortarboard"></i>College</span>
-																																<span
-																																	class="cv-kv-val">
-																																	<c:out
-																																		value="${sessionScope.userCollege}"
-																																		default="—" />
-																																</span>
-																															</div>
-																															<div
-																																class="cv-kv-item">
-																																<span
-																																	class="cv-kv-label"><i
-																																		class="bi bi-code-square"></i>Skills</span>
-																																<span
-																																	class="cv-kv-val">
-																																	<c:out
-																																		value="${sessionScope.userSkills}"
-																																		default="—" />
-																																</span>
-																															</div>
-																															<div
-																																class="cv-kv-item">
-																																<span
-																																	class="cv-kv-label"><i
-																																		class="bi bi-calendar-check"></i>Joined</span>
-																																<span
-																																	class="cv-kv-val">
-																																	<fmt:formatDate
-																																		value="${sessionScope.joinedDate}"
-																																		pattern="MMM yyyy" />
-																																</span>
-																															</div>
-																														</div>
-																														<a href="/profile"
+																													<div class="cv-card__body">
+																														<c:choose>
+																															<c:when test="${not empty latestTeam}">
+																																<div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem;">
+																																	${latestTeam.team.teamName}
+																																</div>
+																																<div class="text-muted-cv" style="font-size: 0.75rem; margin-bottom: 1rem;">
+																																	Registered for: ${latestTeam.team.hackathon.title}
+																																</div>
+																																<div class="cv-kv-list mt-2">
+																																	<div class="cv-kv-item">
+																																		<span class="cv-kv-label">Role</span>
+																																		<span class="cv-kv-val text-accent">${latestTeam.roleTitle}</span>
+																																	</div>
+																																	<div class="cv-kv-item">
+																																		<span class="cv-kv-label">Status</span>
+																																		<span class="cv-kv-val">${latestTeam.status}</span>
+																																	</div>
+																																</div>
+																															</c:when>
+																															<c:otherwise>
+																																<p class="text-muted-cv" style="font-size: 0.8rem;">
+																																	You are not currently part of any team. Join or create one to participate.
+																																</p>
+																															</c:otherwise>
+																														</c:choose>
+																														
+																														<a href="/participant/team" class="btn-cv btn-cv--primary btn-cv--block mt-3">
+																															<i class="bi bi-people"></i> Manage Teams
+																														</a>
+																													</div>
+																												</div>
+																												<a href="/profile"
 																															class="btn-cv btn-cv--ghost btn-cv--block mt-3">
 																															<i
 																																class="bi bi-pencil-square"></i>
 																															Edit
 																															Profile
 																														</a>
-																													</div>
-																												</div>
+
 
 																												<%-- Quick
 																													Links
@@ -651,7 +608,7 @@
 																																		<div
 																																			class="cv-announce__meta">
 																																			<i
-																																				class="bi bi-calendar2 me-1"></i>
+																																				class="bi bi-calendar2 me-1" aria-hidden="true"></i>
 																																			<fmt:formatDate
 																																				value="${ann.postedOn}"
 																																				pattern="dd MMM yyyy" />

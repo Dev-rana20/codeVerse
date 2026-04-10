@@ -39,6 +39,8 @@ public class NotificationApiController {
 			dto.setId(n.getNotificationId());
 			dto.setMessage(n.getMessage());
 			dto.setRead(n.isRead());
+			dto.setRedirectUrl(n.getRedirectUrl());
+			dto.setType(n.getType());
 			dto.setFormattedDate(n.getCreatedAt().format(formatter));
 			return dto;
 		}).collect(Collectors.toList());
@@ -51,11 +53,34 @@ public class NotificationApiController {
 	@GetMapping("/participant/notification/read")
 	public String readNotification(@RequestParam("id") Integer notificationId, HttpSession session) {
 
-		NotificationEntity notification = notificationRepository.findById(notificationId).orElse(null);
+		NotificationEntity n = notificationRepository.findById(notificationId).orElse(null);
 
-		if (notification != null) {
-			notification.setRead(true);
-			notificationRepository.save(notification);
+		if (n != null) {
+			n.setRead(true);
+			notificationRepository.save(n);
+
+			// 🔥 Smart Redirect
+			if (n.getRedirectUrl() != null && !n.getRedirectUrl().isEmpty()) {
+				return "redirect:" + n.getRedirectUrl();
+			}
+		}
+
+		return "redirect:/participant/notifications";
+	}
+
+	@GetMapping("/participant/notifications/mark-all-read")
+	public String markAllAsRead(HttpSession session) {
+
+		UserEntity user = (UserEntity) session.getAttribute("user");
+
+		if (user != null) {
+			List<NotificationEntity> unread = notificationRepository.findByUserUserIdAndIsReadFalse(user.getUserId());
+
+			for (NotificationEntity n : unread) {
+				n.setRead(true);
+			}
+
+			notificationRepository.saveAll(unread);
 		}
 
 		return "redirect:/participant/notifications";

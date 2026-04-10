@@ -1,165 +1,249 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<%-- ── Page Identity ── --%>
+<c:set var="pageTitle" value="New Hackathon" scope="request" />
+<c:set var="activePage" value="newHackathon" scope="request" />
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page="newHackathon">
+
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>CodeVerse</title>
-<!-- plugins:css -->
-
-<jsp:include page="AdminCSS.jsp"></jsp:include>
+<%@ include file="/WEB-INF/views/components/Head.jsp"%>
 </head>
-<body>
-	<div class="container-scroller">
-		<!-- partial:partials/_navbar.html -->
-		<jsp:include page="AdminHeader.jsp"></jsp:include>
-		<!-- partial -->
-		<div class="container-fluid page-body-wrapper">
-			<!-- partial:partials/_sidebar.html -->
-			<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-			<!-- partial -->
-			<div class="main-panel">
-				<div class="content-wrapper">
-					<div class="row">
-						<div class="col-md-12 grid-margin">
-							<div class="row">
-								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold text-center">New Hackathon</h3>
 
+<body data-page="newHackathon">
+
+	<%-- Navbar --%>
+	<%@ include file="/WEB-INF/views/components/navbar.jsp"%>
+
+	<div class="cv-shell">
+
+		<%-- Sidebar --%>
+		<%@ include file="/WEB-INF/views/components/SidebarAdmin.jsp"%>
+
+		<main class="cv-content">
+
+			<!-- Page Header -->
+			<div class="cv-page-header mb-4">
+				<div>
+					<div class="cv-page-eyebrow">
+						<i class="bi bi-lightning-charge"></i> Hackathons
+					</div>
+					<h1 class="cv-page-title">New Hackathon</h1>
+				</div>
+
+				<a href="listHackathon" class="btn-cv btn-cv-ghost"> <i
+					class="bi bi-list-ul"></i> View All
+				</a>
+			</div>
+
+			<!-- Form Card -->
+			<div class="row">
+				<div class="col-md-8 mx-auto">
+
+					<div class="cv-card">
+
+						<div class="cv-card__header">
+							<i class="bi bi-plus-circle"></i>
+							<h3>Add New Hackathon</h3>
+						</div>
+
+						<div class="cv-card__body">
+
+							<form action="saveHackathon" method="post">
+							
+
+								<!-- Title -->
+								<div class="cv-form-group">
+									<label class="cv-label">Hackathon Title</label> <input
+										type="text" name="title" class="cv-input" required />
 								</div>
 
-							</div>
-						</div>
-					</div>
+								<!-- Status -->
+								<div class="cv-form-group">
+									<label class="cv-label">Status</label> <select name="status"
+										class="cv-select" required>
+										<option value="">-- Select Status --</option>
+										<option value="UPCOMING">Upcoming</option>
+										<option value="ONGOING">Ongoing</option>
+										<option value="COMPLETED">Completed</option>
+									</select>
+								</div>
 
+								<!-- Event Type -->
+								<div class="cv-form-group">
+									<label class="cv-label">Event Type</label> <select
+										name="eventType" class="cv-select" required>
+										<option value="">-- Select Event Type --</option>
+										<option value="ONLINE">Online</option>
+										<option value="OFFLINE">Offline</option>
+										<option value="HYBRID">Hybrid</option>
+									</select>
+								</div>
 
-					<div class="row ">
-						<div class="col-md-6 mx-auto grid-margin stretch-card">
-							<div class="card">
-								<div class="card-body">
-									<div class="d-flex justify-content-between">
-										<p class="card-title">Add New Hackathon</p>
-										<a href="listHackathon" class="text-info">View all</a>
+								<!-- Payment -->
+								<div class="cv-form-group">
+									<label class="cv-label">Payment</label> <select name="payment"
+										id="paymentSelect" class="cv-select" required>
+										<option value="">-- Select Payment Type --</option>
+										<option value="FREE">Free</option>
+										<option value="PAID">Paid</option>
+									</select>
+								</div>
+
+								<!-- Entry Fee -->
+								<div class="cv-form-group" id="feeGroup" style="display: none;">
+									<label class="cv-label">Entry Fee</label> <input type="number"
+										name="fee" id="feeInput" class="cv-input" min="0" placeholder="Enter entry fee" />
+								</div>
+
+								<!-- Team Size -->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="cv-form-group">
+											<label class="cv-label">Min Team Size</label> <input
+												type="number" name="minTeamSize" class="cv-input" min="1"
+												required />
+										</div>
 									</div>
 
-									<form action="saveHackathon" method="post">
-
-										<!-- Title -->
-										<div class="form-group">
-											<label>Hackathon Title</label> <input type="text"
-												class="form-control" name="title" required />
+									<div class="col-md-6">
+										<div class="cv-form-group">
+											<label class="cv-label">Max Team Size</label> <input
+												type="number" name="maxTeamSize" class="cv-input" min="1"
+												required />
 										</div>
-
-										<!-- Status -->
-										<div class="form-group">
-											<label>Status</label> <select name="status" required
-												class="form-control">
-												<option value="">-- Select Status --</option>
-												<option value="UPCOMING">Upcoming</option>
-												<option value="ONGOING">Ongoing</option>
-												<option value="COMPLETED">Completed</option>
-											</select>
-										</div>
-
-										<!-- Event Type -->
-										<div class="form-group">
-											<label>Event Type</label> <select name="eventType"
-												class="form-control" required>
-												<option value="">-- Select Event Type --</option>
-												<option value="ONLINE">Online</option>
-												<option value="OFFLINE">Offline</option>
-												<option value="HYBRID">Hybrid</option>
-											</select>
-										</div>
-
-										<!-- Payment -->
-										<div class="form-group">
-											<label>Payment</label> <select name="payment"
-												class="form-control" required>
-												<option value="">-- Select Payment Type --</option>
-												<option value="FREE">Free</option>
-												<option value="PAID">Paid</option>
-											</select>
-										</div>
-
-										<!-- Team Size -->
-										<div class="row">
-											<div class="form-group">
-												<label>Minimum Team Size</label> <input class="form-control"
-													type="number" name="minTeamSize" min="1" required />
-											</div>
-
-											<div class="form-group">
-												<label>Maximum Team Size</label> <input class="form-control"
-													type="number" name="maxTeamSize" min="1" required />
-											</div>
-										</div>
-
-										<!-- Location -->
-										<div class="form-group">
-											<label>Location</label> <input type="text"
-												class="form-control" name="location" />
-										</div>
-
-										<!-- User Type -->
-										<div class="form-group">
-											<label>User Type</label> <select class="form-control"
-												name="userTypeId" required>
-												<option value="">-- Select User Type --</option>
-												<c:forEach items="${allUserType}" var="u" >
-													<option value="${u.userTypeId}">${u.userType}</option>
-												</c:forEach>
-											</select>
-										</div>
-
-										<!-- Registration Dates -->
-										<div class="row">
-											<div class="form-group">
-												<label>Registration Start Date</label> <input
-													class="form-control" type="date"
-													name="registrationStartDate" required />
-											</div>
-
-											<div class="form-group">
-												<label>Registration End Date</label> <input
-													class="form-control" type="date" name="registrationEndDate"
-													required />
-											</div>
-										</div>
-
-										<!-- Submit -->
-										<div style="text-align: center; margin-top: 20px;">
-											<button type="submit" class="btn btn-primary">Save
-												Hackathon</button>
-										</div>
-
-									</form>
+									</div>
 								</div>
-							</div>
+
+								<!-- Location -->
+								<div class="cv-form-group">
+									<label class="cv-label">Location</label> <input type="text"
+										name="location" class="cv-input" />
+								</div>
+
+								<!-- User Type -->
+								<div class="cv-form-group">
+									<label class="cv-label">User Type</label> <select
+										name="userTypeId" class="cv-select" required>
+										<option value="">-- Select User Type --</option>
+										<c:forEach items="${allUserType}" var="u">
+											<option value="${u.userTypeId}">${u.userType}</option>
+										</c:forEach>
+									</select>
+								</div>
+
+								<!-- Registration Dates -->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="cv-form-group">
+											<label class="cv-label">Registration Start</label> <input
+												type="date" name="registrationStartDate" id="regStartDate" class="cv-input"
+												required />
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="cv-form-group">
+											<label class="cv-label">Registration End</label> <input
+												type="date" name="registrationEndDate" id="regEndDate" class="cv-input"
+												required />
+										</div>
+									</div>
+								</div>
+
+								<!-- Event Dates -->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="cv-form-group">
+											<label class="cv-label">Event Start Date</label>
+											<input type="date" name="eventStartDate" id="eventStartDate" class="cv-input" />
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="cv-form-group">
+											<label class="cv-label">Event End Date</label>
+											<input type="date" name="eventEndDate" id="eventEndDate" class="cv-input" />
+										</div>
+									</div>
+								</div>
+
+								<!-- Submission Deadline -->
+								<div class="cv-form-group">
+									<label class="cv-label">Submission Deadline</label>
+									<input type="date" name="submissionDeadline" id="submissionDeadline" class="cv-input" />
+									<small class="cv-hint">Teams cannot submit work after this date.</small>
+								</div>
+
+								<!-- Submit -->
+								<div class="cv-actions mt-3">
+									<button type="submit" class="btn-cv btn-cv-primary">
+										<i class="bi bi-save"></i> Save Hackathon
+									</button>
+
+									<a href="listHackathon" class="btn-cv btn-cv-ghost"> Cancel
+									</a>
+								</div>
+
+							</form>
+
 						</div>
+
 					</div>
 
-
 				</div>
-				<!-- content-wrapper ends -->
-				<!-- partial:partials/_footer.html -->
-
-				<jsp:include page="AdminFooter.jsp"></jsp:include>
-				<!-- partial -->
 			</div>
-			<!-- main-panel ends -->
-		</div>
-		<!-- page-body-wrapper ends -->
+
+		</main>
 	</div>
-	<!-- container-scroller -->
-	<!-- plugins:js -->
 
+	<%-- Footer + Scripts --%>
+	<%@ include file="/WEB-INF/views/components/Footer.jsp"%>
+	<%@ include file="/WEB-INF/views/components/Scripts.jsp"%>
 
-
-
-	<!-- End custom js for this page-->
 </body>
+<script>
+	document.querySelector("form").addEventListener("submit", function(e) {
+		const min = parseInt(document.querySelector("[name='minTeamSize']").value);
+		const max = parseInt(document.querySelector("[name='maxTeamSize']").value);
+		if (min > max) {
+			alert("Min team size cannot be greater than max team size.");
+			e.preventDefault(); return;
+		}
+
+		const regEnd   = document.getElementById("regEndDate").value;
+		const evStart  = document.getElementById("eventStartDate").value;
+		const evEnd    = document.getElementById("eventEndDate").value;
+		const subDL    = document.getElementById("submissionDeadline").value;
+
+		if (evStart && evEnd && evStart > evEnd) {
+			alert("Event Start Date must be before Event End Date.");
+			e.preventDefault(); return;
+		}
+		if (evStart && regEnd && evStart < regEnd) {
+			alert("Event Start Date should be on or after Registration End Date.");
+			e.preventDefault(); return;
+		}
+		if (subDL && evStart && subDL < evStart) {
+			alert("Submission Deadline must be on or after the Event Start Date.");
+			e.preventDefault(); return;
+		}
+	});
+
+	document.getElementById("paymentSelect").addEventListener("change", function() {
+		const feeGroup = document.getElementById("feeGroup");
+		const feeInput = document.getElementById("feeInput");
+		if (this.value === "PAID") {
+			feeGroup.style.display = "block";
+			feeInput.required = true;
+		} else {
+			feeGroup.style.display = "none";
+			feeInput.required = false;
+			feeInput.value = "";
+		}
+	});
+</script>
 </html>

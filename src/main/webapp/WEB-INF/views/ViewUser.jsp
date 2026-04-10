@@ -1,154 +1,149 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-		<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 
-			<!DOCTYPE html>
-			<html lang="en">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-			<head>
-				<!-- Required meta tags -->
-				<meta charset="utf-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-				<title>CodeVerse</title>
-				<!-- plugins:css -->
+<%-- Page Identity --%>
+<c:set var="pageTitle" value="User Details" scope="request" />
+<c:set var="activePage" value="users" scope="request" />
 
-				<jsp:include page="AdminCSS.jsp"></jsp:include>
-			</head>
+<!DOCTYPE html>
+<html lang="en" data-page="users">
 
-			<body>
-				<div class="container-scroller">
-					<!-- partial:partials/_navbar.html -->
-					<jsp:include page="AdminHeader.jsp"></jsp:include>
-					<!-- partial -->
-					<div class="container-fluid page-body-wrapper">
-						<!-- partial:partials/_sidebar.html -->
-						<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-						<!-- partial -->
-						<div class="main-panel">
-							<div class="content-wrapper">
+<head>
+<%@ include file="/WEB-INF/views/components/Head.jsp"%>
+</head>
 
-								<div class="row">
-									<div class="col-md-12 grid-margin stretch-card">
-										<div class="card">
-											<div class="card-body">
+<body data-page="users">
 
-												<div class="card shadow">
-													<div class="card-header bg-dark text-white">
-														<h4 class="mb-0">User Details</h4>
-													</div>
+	<%@ include file="/WEB-INF/views/components/navbar.jsp"%>
 
-													<div class="card-body">
-														<div class="row">
+	<div class="cv-shell">
 
-															<!-- Profile Picture -->
-															<div class="col-md-3 text-center">
-																<c:choose>
-																	<c:when test="${not empty user.profilePicURL}">
-																		<img src="${user.profilePicURL}"
-																			class="profile-pic">
-																	</c:when>
-																	<c:otherwise>
-																		<img src="https://via.placeholder.com/120"
-																			class="profile-pic">
-																	</c:otherwise>
-																</c:choose>
+		<%@ include file="/WEB-INF/views/components/SidebarAdmin.jsp"%>
 
-																<div class="mt-2">
-																	<span class="badge bg-info text-dark"> ${user.role}
-																	</span>
-																</div>
-															</div>
+		<main class="cv-content">
 
-															<!-- User Info -->
-															<div class="col-md-9">
-																<table class="table table-borderless">
-																	<tr>
-																		<td class="label">User ID</td>
-																		<td>${user.userId}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Full Name</td>
-																		<td>${user.firstName}${user.lastName}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Email</td>
-																		<td>${user.email}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Gender</td>
-																		<td>${user.gender}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Birth Year</td>
-																		<td>${user.birthYear}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Contact Number</td>
-																		<td>${user.contactNum}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Created At</td>
-																		<td>${user.createdAt}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">Status</td>
-																		<td>
-																			<c:choose>
-																				<c:when test="${user.active}">
-																					<span
-																						class="badge bg-success">Active</span>
-																				</c:when>
-																				<c:otherwise>
-																					<span
-																						class="badge bg-danger">Inactive</span>
-																				</c:otherwise>
-																			</c:choose>
-																		</td>
-																	</tr>
+			<!-- Page Header -->
+			<div class="cv-page-header mb-4">
+				<div>
+					<div class="cv-page-eyebrow">
+						<i class="bi bi-person"></i> Users
+					</div>
+					<h1 class="cv-page-title">User Details</h1>
+				</div>
 
-																	<tr>
-																		<td class="label">Country</td>
-																		<td>${userDetail.country}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">State</td>
-																		<td>${userDetail.state}</td>
-																	</tr>
-																	<tr>
-																		<td class="label">City</td>
-																		<td>${userDetail.city}</td>
-																	</tr>
+				<div>
+					<a href="listUser" class="btn-cv btn-cv-ghost"> <i
+						class="bi bi-arrow-left"></i> Back
+					</a> <a href="editUser?userId=${user.userId}"
+						class="btn-cv btn-cv-warning"> <i class="bi bi-pencil"></i>
+						Edit
+					</a>
+				</div>
+			</div>
 
+			<!-- User Card -->
+			<div class="cv-card">
 
-																</table>
-															</div>
+				<div class="cv-card__body">
 
-														</div>
-													</div>
+					<div class="row g-4">
 
-													<div class="card-footer text-end">
-														<a href="listUser" class="btn btn-secondary">Back</a> <a
-															href="editUser?userId=${user.userId}"
-															class="btn btn-warning">Edit</a>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
+						<!-- Profile -->
+						<div class="col-md-3 text-center">
+
+							<c:choose>
+								<c:when test="${not empty user.profilePicURL}">
+									<img src="${user.profilePicURL}" class="cv-avatar-lg">
+								</c:when>
+								<c:otherwise>
+									<img
+										src="https://api.dicebear.com/7.x/initials/svg?seed=${user.firstName}"
+										class="cv-avatar-lg">
+								</c:otherwise>
+							</c:choose>
+
+							<div class="mt-3">
+								<span class="cv-badge"> ${user.role} </span>
+							</div>
+
+						</div>
+
+						<!-- Details -->
+						<div class="col-md-9">
+
+							<div class="row g-3">
+
+								<div class="col-md-6">
+									<b>User ID:</b> ${user.userId}
 								</div>
 
+								<div class="col-md-6">
+									<b>Full Name:</b> ${user.firstName} ${user.lastName}
+								</div>
+
+								<div class="col-md-6">
+									<b>Email:</b> ${user.email}
+								</div>
+
+								<div class="col-md-6">
+									<b>Gender:</b> ${user.gender}
+								</div>
+
+								<div class="col-md-6">
+									<b>Birth Year:</b> ${user.birthYear}
+								</div>
+
+								<div class="col-md-6">
+									<b>Contact:</b> ${user.contactNum}
+								</div>
+
+								<div class="col-md-6">
+									<b>Created At:</b> ${user.createdAt}
+								</div>
+
+								<div class="col-md-6">
+									<b>Status:</b>
+									<c:choose>
+										<c:when test="${user.active}">
+											<span class="cv-badge" style="background: var(--success)">
+												Active </span>
+										</c:when>
+										<c:otherwise>
+											<span class="cv-badge" style="background: var(--danger)">
+												Inactive </span>
+										</c:otherwise>
+									</c:choose>
+								</div>
+
+								<div class="col-md-6">
+									<b>Country:</b> ${userDetail.country}
+								</div>
+
+								<div class="col-md-6">
+									<b>State:</b> ${userDetail.state}
+								</div>
+
+								<div class="col-md-6">
+									<b>City:</b> ${userDetail.city}
+								</div>
 
 							</div>
-							<!-- content-wrapper ends -->
-							<!-- partial:partials/_footer.html -->
 
-							<jsp:include page="AdminFooter.jsp"></jsp:include>
-							<!-- partial -->
 						</div>
-						<!-- main-panel ends -->
-					</div>
-					<!-- page-body-wrapper ends -->
-				</div>
-			</body>
 
-			</html>
+					</div>
+
+				</div>
+
+			</div>
+
+		</main>
+	</div>
+
+	<%@ include file="/WEB-INF/views/components/Footer.jsp"%>
+	<%@ include file="/WEB-INF/views/components/Scripts.jsp"%>
+
+</body>
+</html>

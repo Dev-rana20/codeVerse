@@ -22,9 +22,17 @@ import com.Grownited.repository.HackathonTeamMemberRepository;
 import com.Grownited.repository.HackathonTeamRepository;
 import com.Grownited.repository.SubmissionRepository;
 
+import com.Grownited.service.MailerService;
 import com.Grownited.service.NotificationService;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.Map;
 
 @Controller
 public class SubmissionController {
@@ -44,6 +52,12 @@ public class SubmissionController {
 
 	@Autowired
 	NotificationService notificationService;
+
+	@Autowired
+	MailerService mailerService;
+
+	@Autowired
+	Cloudinary cloudinary;
 
 	@GetMapping("/participant/submissions/{hackId}")
 	public String submissionPage(@PathVariable Integer hackId, HttpSession session, Model model) {
@@ -98,23 +112,66 @@ public class SubmissionController {
 		return "participants/submissionHome"; // NEW JSP
 	}
 
+
 	@PostMapping("/team/upload")
-	public String uploadWork(@RequestParam Integer teamId, @RequestParam String link, @RequestParam String description,
-			HttpSession session, RedirectAttributes ra) {
+	public String uploadWork(@Valid SubmissionEntity submission, BindingResult result, @RequestParam Integer teamId,
+			@RequestParam(required = false) String link,
+			@RequestParam(required = false) MultipartFile projectFile,
+			@RequestParam(required = false) MultipartFile projectVideo, HttpSession session, RedirectAttributes ra) {
 
 		UserEntity user = (UserEntity) session.getAttribute("user");
-
 		HackathonTeamEntity team = hackathonTeamRepository.findById(teamId).orElseThrow();
 
-		SubmissionEntity submission = new SubmissionEntity();
+		if (result.hasErrors()) {
+			ra.addFlashAttribute("error", result.getFieldError("description").getDefaultMessage());
+			return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
+		}
+
+		// 🚫 Enforce submission deadline
+		java.time.LocalDate deadline = team.getHackathon().getSubmissionDeadline();
+		if (deadline != null && java.time.LocalDate.now().isAfter(deadline)) {
+			ra.addFlashAttribute("error", "Submission deadline has passed for this hackathon.");
+			return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
+		}
+
 		submission.setTeam(team);
 		submission.setUser(user);
 		submission.setGithubLink(link);
-		submission.setDescription(description);
 		submission.setType(SubmissionType.MEMBER);
 		submission.setStatus("ACTIVE");
 
+		// 📁 HANDLE FILE UPLOAD (Max 10MB)
+		if (projectFile != null && !projectFile.isEmpty()) {
+			if (projectFile.getSize() > 10 * 1024 * 1024) {
+				ra.addFlashAttribute("error", "Project file exceeds 10MB limit.");
+				return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
+			}
+			try {
+				Map<?, ?> uploadResult = cloudinary.uploader().upload(projectFile.getBytes(),
+						ObjectUtils.asMap("resource_type", "auto", "transformation", "q_auto,f_auto"));
+				submission.setFileUrl(uploadResult.get("secure_url").toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// 🎥 HANDLE VIDEO UPLOAD (Max 50MB)
+		if (projectVideo != null && !projectVideo.isEmpty()) {
+			if (projectVideo.getSize() > 50 * 1024 * 1024) {
+				ra.addFlashAttribute("error", "Demo video exceeds 50MB limit.");
+				return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
+			}
+			try {
+				Map<?, ?> uploadResult = cloudinary.uploader().upload(projectVideo.getBytes(),
+						ObjectUtils.asMap("resource_type", "video", "transformation", "w_720"));
+				submission.setVideoUrl(uploadResult.get("secure_url").toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		submissionRepository.save(submission);
+		mailerService.sendSubmissionConfirmationMail(user, team, submission);
 		// 🔔 Notify Team Members
 		List<HackathonTeamMembersEntity> members = hackathonTeamMemberRepository.findByTeam(team);
 
@@ -137,12 +194,25 @@ public class SubmissionController {
 	}
 
 	@PostMapping("/team/finalSubmit")
-	public String finalSubmit(@RequestParam Integer teamId, @RequestParam String finalLink,@RequestParam String description, HttpSession session,
-			RedirectAttributes ra) {
+	public String finalSubmit(@Valid SubmissionEntity submission, BindingResult result, @RequestParam Integer teamId, 
+			@RequestParam(required = false) String finalLink,
+			@RequestParam(required = false) MultipartFile projectFile,
+			@RequestParam(required = false) MultipartFile projectVideo, HttpSession session, RedirectAttributes ra) {
 
 		UserEntity user = (UserEntity) session.getAttribute("user");
-
 		HackathonTeamEntity team = hackathonTeamRepository.findById(teamId).orElseThrow();
+
+		if (result.hasErrors()) {
+			ra.addFlashAttribute("error", result.getFieldError("description").getDefaultMessage());
+			return "redirect:/team/details/" + teamId;
+		}
+
+		// 🚫 Enforce submission deadline
+		java.time.LocalDate deadline = team.getHackathon().getSubmissionDeadline();
+		if (deadline != null && java.time.LocalDate.now().isAfter(deadline)) {
+			ra.addFlashAttribute("error", "Submission deadline has passed for this hackathon.");
+			return "redirect:/team/details/" + teamId;
+		}
 
 		// leader check
 		if (!team.getTeamLeader().getUserId().equals(user.getUserId())) {
@@ -150,42 +220,79 @@ public class SubmissionController {
 			return "redirect:/team/details/" + teamId;
 		}
 
+		// 👥 MIN TEAM SIZE CHECK
+		long acceptedCount = hackathonTeamMemberRepository.findByTeam(team).stream()
+				.filter(m -> "ACCEPTED".equals(m.getStatus())).count();
+		Integer minSize = team.getHackathon().getMinTeamSize();
+		
+		if (minSize != null && acceptedCount < minSize) {
+			ra.addFlashAttribute("error", "Team does not meet minimum size requirement. At least " + minSize + " members must have accepted the invitation.");
+			return "redirect:/team/details/" + teamId;
+		}
+
 		List<SubmissionEntity> finals = submissionRepository.findByTeamAndTypeAndStatus(team, SubmissionType.FINAL,
 				"SUBMITTED");
 
-		SubmissionEntity existingFinal = null;
-
+		SubmissionEntity subToSave = finals.isEmpty() ? submission : finals.get(0);
+		
 		if (!finals.isEmpty()) {
-			existingFinal = finals.get(0);
+			subToSave.setDescription(submission.getDescription());
+			// other fields would be updated below
 		}
 
-		if (existingFinal != null) {
-			existingFinal.setGithubLink(finalLink);
-			existingFinal.setDescription(description); 
-			submissionRepository.save(existingFinal);
-		} else {
-			SubmissionEntity finalSubmission = new SubmissionEntity();
-			finalSubmission.setTeam(team);
-			finalSubmission.setUser(user);
-			finalSubmission.setGithubLink(finalLink);
-			finalSubmission.setDescription(description);
-			finalSubmission.setType(SubmissionType.FINAL);
-			finalSubmission.setStatus("SUBMITTED");
+		subToSave.setTeam(team);
+		subToSave.setUser(user);
+		subToSave.setGithubLink(finalLink);
+		subToSave.setType(SubmissionType.FINAL);
+		subToSave.setStatus("SUBMITTED");
 
-			submissionRepository.save(finalSubmission);
+		// 📁 HANDLE FILE UPLOAD (Max 10MB)
+		if (projectFile != null && !projectFile.isEmpty()) {
+			if (projectFile.getSize() > 10 * 1024 * 1024) {
+				ra.addFlashAttribute("error", "Project file exceeds 10MB limit.");
+				return "redirect:/team/details/" + teamId;
+			}
+			try {
+				Map<?, ?> uploadResult = cloudinary.uploader().upload(projectFile.getBytes(),
+						ObjectUtils.asMap("resource_type", "auto", "transformation", "q_auto,f_auto"));
+				subToSave.setFileUrl(uploadResult.get("secure_url").toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
+		// 🎥 HANDLE VIDEO UPLOAD (Max 50MB)
+		if (projectVideo != null && !projectVideo.isEmpty()) {
+			if (projectVideo.getSize() > 50 * 1024 * 1024) {
+				ra.addFlashAttribute("error", "Demo video exceeds 50MB limit.");
+				return "redirect:/team/details/" + teamId;
+			}
+			try {
+				Map<?, ?> uploadResult = cloudinary.uploader().upload(projectVideo.getBytes(),
+						ObjectUtils.asMap("resource_type", "video", "transformation", "w_720"));
+				subToSave.setVideoUrl(uploadResult.get("secure_url").toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		submissionRepository.save(subToSave);
+		mailerService.sendSubmissionConfirmationMail(user, team, subToSave);
+
+		if (finals.isEmpty()) {
 			// 🔔 Notify Team Members
 			List<HackathonTeamMembersEntity> members = hackathonTeamMemberRepository.findByTeam(team);
-
 			for (HackathonTeamMembersEntity m : members) {
-
 				notificationService.createNotification(m.getMember(),
 						"Final submission submitted for team " + team.getTeamName(), "FINAL_SUBMISSION",
 						"/team/details/" + teamId);
 			}
 		}
-		team.setFinalSubmissionLink(finalLink);
-		hackathonTeamRepository.save(team);
+
+		if (finalLink != null) {
+			team.setFinalSubmissionLink(finalLink);
+			hackathonTeamRepository.save(team);
+		}
 
 		ra.addFlashAttribute("success", "Final submission done!");
 		return "redirect:/team/details/" + teamId;

@@ -15,6 +15,8 @@ public interface EvaluationRepository extends JpaRepository<EvaluationEntity, In
 	// prevent duplicate evaluation
 	EvaluationEntity findByTeamAndJudge(HackathonTeamEntity team, UserEntity judge);
 
+	List<EvaluationEntity> findByTeam(HackathonTeamEntity team);
+
 	@Query("""
 			SELECT new com.Grownited.dto.LeaderboardDTO(
 			    e.team.teamName,

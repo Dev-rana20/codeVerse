@@ -26,6 +26,8 @@ public class HackathonRegistrationEntity {
     private HackathonEntity hackathon;
 
     private LocalDate registrationDate;
+    private String paymentId;
+    private Integer amount;
 
     
 
@@ -70,5 +72,21 @@ public class HackathonRegistrationEntity {
 
 	public void setRegistrationDate(LocalDate registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
 }

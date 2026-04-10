@@ -11,7 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.cloudinary.Cloudinary;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
 
 import com.Grownited.dto.LeaderboardDTO;
 import com.Grownited.entity.HackathonDescriptionEntity;
@@ -20,6 +26,7 @@ import com.Grownited.entity.HackathonRegistrationEntity;
 import com.Grownited.entity.HackathonTeamEntity;
 import com.Grownited.entity.HackathonTeamMembersEntity;
 import com.Grownited.entity.NotificationEntity;
+import com.Grownited.entity.UserDetailEntity;
 import com.Grownited.entity.UserEntity;
 import com.Grownited.repository.EvaluationRepository;
 import com.Grownited.repository.HackathonDescriptionRepository;
@@ -29,9 +36,12 @@ import com.Grownited.repository.HackathonTeamMemberRepository;
 import com.Grownited.repository.HackathonTeamRepository;
 import com.Grownited.repository.NotificationRepository;
 import com.Grownited.repository.UserRepository;
+import com.Grownited.repository.UserDetailRepository;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 @Controller
 public class ParticipantController {
@@ -55,33 +65,79 @@ public class ParticipantController {
 	 @Autowired
 	 EvaluationRepository evaluationRepo;
 
+	@Autowired
+	private UserDetailRepository userDetailRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private Cloudinary cloudinary;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 
 	@GetMapping("userHome")
 	public String userHomePage(Model model, HttpSession session) {
 
 		UserEntity currentUser = (UserEntity) session.getAttribute("user");
+		if (currentUser == null) return "redirect:/login";
 
+		// 1. All Hackathons (for discovery)
 		List<HackathonEntity> hackathonList = hackathonRepository.findAll();
-
+		
+		// 2. My Registrations
 		List<HackathonRegistrationEntity> myRegistrations = registrationRepository
 				.findByUserUserId(currentUser.getUserId());
-		// 🔥 Attach teamName dynamically
-		for (HackathonRegistrationEntity reg : myRegistrations) {
+		
+		// 3. Count Stats
+		int hackathonCount = myRegistrations.size();
+		long submissionsCount = 0; // Will be calculated below
 
+		// 4. Closest Registration Deadline
+		HackathonEntity nextDeadlineHack = null;
+		LocalDate today = LocalDate.now();
+		
+		for (HackathonRegistrationEntity reg : myRegistrations) {
+			HackathonEntity h = reg.getHackathon();
+			
+			// Attach teamName dynamically
 			HackathonTeamMembersEntity tm = hackathonTeamMemberRepository
-					.findByMember_UserIdAndTeam_Hackathon_HackathonId(currentUser.getUserId(),
-							reg.getHackathon().getHackathonId());
+					.findByMember_UserIdAndTeam_Hackathon_HackathonId(currentUser.getUserId(), h.getHackathonId());
 
 			if (tm != null) {
-				reg.setTeamName(tm.getTeam().getTeamName()); // ✔ from your entity
+				reg.setTeamName(tm.getTeam().getTeamName());
+				if (tm.getTeam().getFinalSubmissionLink() != null) submissionsCount++;
 			} else {
 				reg.setTeamName("—");
 			}
+			
+			// Find closest registration end date
+			if (h.getRegistrationEndDate() != null && !h.getRegistrationEndDate().isBefore(today)) {
+				if (nextDeadlineHack == null || h.getRegistrationEndDate().isBefore(nextDeadlineHack.getRegistrationEndDate())) {
+					nextDeadlineHack = h;
+				}
+			}
 		}
+
+		// 5. My Team Status (for Quick Access card)
+		// Get most recent team membership
+		List<HackathonTeamMembersEntity> myTeams = hackathonTeamMemberRepository.findByMember(currentUser);
+		HackathonTeamMembersEntity latestTeam = myTeams.isEmpty() ? null : myTeams.get(myTeams.size() - 1);
 
 		model.addAttribute("user", currentUser);
 		model.addAttribute("hackathonList", hackathonList);
 		model.addAttribute("myRegistrations", myRegistrations);
+		model.addAttribute("hackathonCount", hackathonCount);
+		model.addAttribute("submissionsCount", submissionsCount);
+		model.addAttribute("upcomingHackathon", nextDeadlineHack);
+		model.addAttribute("latestTeam", latestTeam);
+		
+		if (nextDeadlineHack != null && nextDeadlineHack.getRegistrationEndDate() != null) {
+			long millis = nextDeadlineHack.getRegistrationEndDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+			model.addAttribute("registrationDeadlineMillis", millis);
+		}
 
 		return "/participants/DashBoard";
 	}
@@ -90,6 +146,12 @@ public class ParticipantController {
 	@GetMapping("hackathons")
 	public String hackathonList(Model model, HttpSession session) {
 		UserEntity currentUser = (UserEntity) session.getAttribute("user");
+		java.time.LocalDate today = java.time.LocalDate.now();
+		
+		// Bulk update statuses efficiently
+		hackathonRepository.updateStatusToClose(today);
+		hackathonRepository.updateStatusToInProgress(today);
+		
 		List<HackathonEntity> hackathonList = hackathonRepository.findAll();
 
 		// Check which hackathons the user has registered for
@@ -117,6 +179,17 @@ public class ParticipantController {
 			redirectAttributes.addFlashAttribute("error", "Already registered!");
 		} else {
 			HackathonEntity hackathon = hackathonRepository.findById(hackathonId).get();
+            
+            // Check if registration is closed
+			if ("Close".equalsIgnoreCase(hackathon.getStatus())) {
+				redirectAttributes.addFlashAttribute("error", "Registration is closed for this hackathon!");
+				return "redirect:/hackathons";
+			}
+
+			// Security Check: If PAID, must go through payment flow
+			if ("PAID".equalsIgnoreCase(hackathon.getPayment())) {
+				return "redirect:/hackathons/" + hackathonId + "/checkout";
+			}
 
 			HackathonRegistrationEntity reg = new HackathonRegistrationEntity();
 			reg.setUser(user);
@@ -172,8 +245,103 @@ public class ParticipantController {
 
 	// Profile page
 	@GetMapping("profile")
-	public String profile() {
+	public String profile(HttpSession session, Model model) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if (user == null) return "redirect:/login";
+		
+		Optional<UserDetailEntity> opUserDetail = userDetailRepository.findByUserId(user.getUserId());
+		if (opUserDetail.isPresent()) {
+			model.addAttribute("userDetail", opUserDetail.get());
+		} else {
+			model.addAttribute("userDetail", new UserDetailEntity());
+		}
+
+		List<HackathonRegistrationEntity> registrations = registrationRepository.findByUserUserId(user.getUserId());
+		model.addAttribute("registrations", registrations);
+		
 		return "/participants/profile";
+	}
+
+
+	@PostMapping("updateProfile")
+	public String updateProfile(UserEntity userEntity, UserDetailEntity userDetailEntity, @RequestParam("profilePic") MultipartFile profilePic, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+		UserEntity currentUser = (UserEntity) session.getAttribute("user");
+		if (currentUser == null) return "redirect:/login";
+
+		// Update UserEntity
+		currentUser.setFirstName(userEntity.getFirstName());
+		currentUser.setLastName(userEntity.getLastName());
+		currentUser.setGender(userEntity.getGender());
+		currentUser.setBirthYear(userEntity.getBirthYear());
+		currentUser.setContactNum(userEntity.getContactNum());
+
+		// Handle Profile Picture
+		if (profilePic != null && !profilePic.isEmpty()) {
+			try {
+				Map<String, Object> map = cloudinary.uploader().upload(profilePic.getBytes(), null);
+				String profilePicURL = map.get("secure_url").toString();
+				currentUser.setProfilePicURL(profilePicURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		userRepository.save(currentUser);
+		session.setAttribute("user", currentUser);
+
+		// Update UserDetailEntity
+		Optional<UserDetailEntity> opUserDetail = userDetailRepository.findByUserId(currentUser.getUserId());
+		UserDetailEntity dbDetail;
+		if (opUserDetail.isPresent()) {
+			dbDetail = opUserDetail.get();
+		} else {
+			dbDetail = new UserDetailEntity();
+			dbDetail.setUserId(currentUser.getUserId());
+		}
+
+		dbDetail.setQualification(userDetailEntity.getQualification());
+		dbDetail.setCity(userDetailEntity.getCity());
+		dbDetail.setState(userDetailEntity.getState());
+		dbDetail.setCountry(userDetailEntity.getCountry());
+		dbDetail.setWorkExperience(userDetailEntity.getWorkExperience());
+		dbDetail.setBio(userDetailEntity.getBio());
+		dbDetail.setGithubLink(userDetailEntity.getGithubLink());
+		dbDetail.setSkills(userDetailEntity.getSkills());
+
+		userDetailRepository.save(dbDetail);
+
+		redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
+		return "redirect:/profile";
+	}
+
+	@GetMapping("settings")
+	public String settings(HttpSession session, Model model) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if (user == null) return "redirect:/login";
+		return "/participants/settings";
+	}
+
+	@PostMapping("participant/updatePassword")
+	public String updatePassword(@RequestParam String currentPassword, @RequestParam String newPassword, @RequestParam String confirmPassword, HttpSession session, RedirectAttributes redirectAttributes) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if (user == null) return "redirect:/login";
+
+		if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+			redirectAttributes.addFlashAttribute("error", "Incorrect current password!");
+			return "redirect:/settings";
+		}
+
+		if (!newPassword.equals(confirmPassword)) {
+			redirectAttributes.addFlashAttribute("error", "New passwords do not match!");
+			return "redirect:/settings";
+		}
+
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+		session.setAttribute("user", user);
+
+		redirectAttributes.addFlashAttribute("success", "Password updated successfully!");
+		return "redirect:/settings";
 	}
 
 	@GetMapping("/hackathonDetail/{id}")
@@ -251,6 +419,34 @@ public class ParticipantController {
 	     model.addAttribute("hackathons", hackathons);
 
 	     return "/participants/leaderboardList";
+	 }
+
+	 // Discovery & Public Profile
+	 @GetMapping("/participant/discovery")
+	 public String discovery(Model model, HttpSession session) {
+		 UserEntity currentUser = (UserEntity) session.getAttribute("user");
+		 if (currentUser == null) return "redirect:/login";
+
+		 List<UserEntity> participants = userRepository.findByRole("PARTICIPANT");
+		 // Optionally, you could Map them to DTOs or just pass entities and fetch details in JSP
+		 model.addAttribute("participants", participants);
+		 model.addAttribute("userDetailRepo", userDetailRepository); // Hacky for JSP but works if needed
+		 return "/participants/Discovery";
+	 }
+
+	 @GetMapping("/participant/profile/{userId}")
+	 public String publicProfile(@PathVariable Integer userId, Model model, HttpSession session) {
+		 UserEntity currentUser = (UserEntity) session.getAttribute("user");
+		 if (currentUser == null) return "redirect:/login";
+
+		 UserEntity user = userRepository.findById(userId).orElseThrow();
+		 UserDetailEntity userDetail = userDetailRepository.findByUserId(userId).orElse(new UserDetailEntity());
+		 List<HackathonRegistrationEntity> registrations = registrationRepository.findByUserUserId(userId);
+
+		 model.addAttribute("publicUser", user);
+		 model.addAttribute("publicUserDetail", userDetail);
+		 model.addAttribute("registrations", registrations);
+		 return "/participants/PublicProfile";
 	 }
 
 }

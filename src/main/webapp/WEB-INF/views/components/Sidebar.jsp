@@ -15,7 +15,7 @@
 		============================================================ --%>
 		<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-			<aside class="cv-sidebar" id="cvSidebar">
+			<aside class="cv-sidebar" id="cvSidebar" role="complementary" aria-label="Sidebar Navigation">
 
 				<%-- ── PROFILE STRIP ───────────────────────────────────────── --%>
 					<div class="cv-sidebar-profile">
@@ -23,11 +23,11 @@
 							<c:choose>
 								<c:when test="${not empty sessionScope.user.profilePicURL}">
 									<img src="${sessionScope.user.profilePicURL}"
-										alt="${sessionScope.user.firstName}" />
+										alt="${sessionScope.user.firstName}'s Profile Picture" />
 								</c:when>
 								<c:otherwise>
 									<img src="https://api.dicebear.com/7.x/initials/svg?seed=${sessionScope.user.firstName}&backgroundColor=0b0f1a&textColor=00ffe0"
-										alt="${sessionScope.user.firstName}" />
+										alt="${sessionScope.user.firstName}'s Initials" />
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -42,19 +42,25 @@
 					</div>
 
 					<%-- ── MAIN NAVIGATION ─────────────────────────────────────── --%>
-						<nav class="cv-nav-section">
-							<div class="cv-nav-section-label">Main</div>
+						<nav class="cv-nav-section" aria-label="Main Navigation">
+							<div class="cv-nav-section-label" aria-hidden="true">Main</div>
 
 							<a href="/userHome" class="cv-nav-item ${activePage == 'dashboard' ? 'active' : ''}"
-								data-page="dashboard">
-								<i class="bi bi-speedometer2"></i>
+								data-page="dashboard" ${activePage == 'dashboard' ? 'aria-current="page"' : ''}>
+								<i class="bi bi-speedometer2" aria-hidden="true"></i>
 								<span class="cv-nav-label">Dashboard</span>
 							</a>
 
 							<a href="/hackathons" class="cv-nav-item ${activePage == 'hackathons' ? 'active' : ''}"
-								data-page="hackathons">
-								<i class="bi bi-lightning-charge"></i>
+								data-page="hackathons" ${activePage == 'hackathons' ? 'aria-current="page"' : ''}>
+								<i class="bi bi-lightning-charge" aria-hidden="true"></i>
 								<span class="cv-nav-label">Hackathons</span>
+							</a>
+
+							<a href="/participant/discovery" class="cv-nav-item ${activePage == 'discovery' ? 'active' : ''}"
+								data-page="discovery" ${activePage == 'discovery' ? 'aria-current="page"' : ''}>
+								<i class="bi bi-people-fill" aria-hidden="true"></i>
+								<span class="cv-nav-label">Discover</span>
 							</a>
 
 							<a href="/myTeam" class="cv-nav-item ${activePage == 'team' ? 'active' : ''}"
@@ -109,16 +115,23 @@
 										<span class="cv-nav-badge">${sessionScope.notifCount}</span>
 									</c:if>
 								</a>
+
+								<a href="/paymentHistory"
+									class="cv-nav-item ${activePage == 'payments' ? 'active' : ''}"
+									data-page="payments">
+									<i class="bi bi-credit-card"></i>
+									<span class="cv-nav-label">Payments</span>
+								</a>
 							</nav>
 
 							<%-- ── HELP ─────────────────────────────────────────────────── --%>
 								<nav class="cv-nav-section">
 									<div class="cv-nav-section-label">Support</div>
-									<a href="/faq" class="cv-nav-item" data-page="faq">
+									<a href="/faq" class="cv-nav-item ${activePage == 'faq' ? 'active' : ''}" data-page="faq">
 										<i class="bi bi-question-circle"></i>
 										<span class="cv-nav-label">FAQ</span>
 									</a>
-									<a href="/contact" class="cv-nav-item" data-page="contact">
+									<a href="/contact" class="cv-nav-item ${activePage == 'contact' ? 'active' : ''}" data-page="contact">
 										<i class="bi bi-envelope"></i>
 										<span class="cv-nav-label">Contact Us</span>
 									</a>
@@ -127,8 +140,8 @@
 								<%-- ── SIDEBAR FOOTER ────────────────────────────────────────── --%>
 									<div class="cv-sidebar-footer">
 										<a href="/logout" class="cv-nav-item" style="color:var(--danger)"
-											data-cv-confirm="Are you sure you want to logout?">
-											<i class="bi bi-box-arrow-right"></i>
+											data-cv-confirm="Are you sure you want to logout?" aria-label="Logout from your account">
+											<i class="bi bi-box-arrow-right" aria-hidden="true"></i>
 											<span class="cv-nav-label">Logout</span>
 										</a>
 									</div>

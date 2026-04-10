@@ -12,7 +12,33 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- CodeVerse Global JS -->
+<!-- CodeVerse Global JS -->
 <script src="/assets/js/Codeverse.js"></script>
+
+<!-- Theme Toggle Logic -->
+<script>
+    (function() {
+        const themeToggles = document.querySelectorAll('[data-cv-theme-toggle]');
+        
+        const updateTheme = (isLight) => {
+            if (isLight) {
+                document.documentElement.classList.add('light-mode');
+                localStorage.setItem('cv-theme', 'light');
+            } else {
+                document.documentElement.classList.remove('light-mode');
+                localStorage.setItem('cv-theme', 'dark');
+            }
+        };
+
+        themeToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const isLight = !document.documentElement.classList.contains('light-mode');
+                updateTheme(isLight);
+            });
+        });
+    })();
+</script>
+
 <script>
     setTimeout(() => {
         const success = document.querySelector('.alert-success');
@@ -94,7 +120,19 @@ document.addEventListener("DOMContentLoaded", function () {
       let show = true;
 
       if (q && !title.includes(q)) show = false;
-      if (status && cStat !== status) show = false;
+      if (status) {
+          let matches = false;
+          if (status === 'open') {
+              matches = (cStat === 'upcoming' || cStat === 'ongoing');
+          } else if (status === 'ongoing') {
+              matches = (cStat === 'ongoing' || cStat === 'in_progress');
+          } else if (status === 'upcoming') {
+              matches = (cStat === 'upcoming');
+          } else if (status === 'close' || status === 'closed') {
+              matches = (cStat === 'close' || cStat === 'completed');
+          }
+          if (!matches) show = false;
+      }
       if (type && cType !== type) show = false;
       if (payment && cPay !== payment) show = false;
 
@@ -107,12 +145,17 @@ document.addEventListener("DOMContentLoaded", function () {
       if (show) visible++;
     });
 
-    visibleEl.textContent = visible;
-    if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
+    if (visibleEl) visibleEl.textContent = visible;
+    if (noResults) noResults.style.display = (visible === 0 && cards.length > 0) ? 'block' : 'none';
   }
 
   [searchInput, filterStatus, filterType, filterPayment, filterTeam]
-    .forEach(el => el.addEventListener('input', applyFilters));
+    .forEach(el => {
+        if (el) {
+            el.addEventListener('input', applyFilters);
+            el.addEventListener('change', applyFilters);
+        }
+    });
 
   applyFilters();
 })();

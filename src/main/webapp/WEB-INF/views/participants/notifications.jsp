@@ -119,9 +119,16 @@
 
 								<div class="cv-card cv-fade-up">
 
-									<div class="cv-card__header">
-										<i class="bi bi-bell"></i>
-										<h2>Recent Notifications</h2>
+									<div class="cv-card__header d-flex justify-content-between align-items-center">
+										<div class="d-flex align-items-center gap-2">
+											<i class="bi bi-bell"></i>
+											<h2 class="mb-0">Recent Notifications</h2>
+										</div>
+										<c:if test="${not empty notifications}">
+											<a href="/participant/notifications/mark-all-read" class="btn-cv btn-cv--sm btn-cv--ghost">
+												<i class="bi bi-check-all"></i> Mark all as read
+											</a>
+										</c:if>
 									</div>
 
 									<div class="cv-card__body">
@@ -134,25 +141,39 @@
 
 													<c:forEach var="n" items="${notifications}">
 
-														<div
-															class="cv-notification ${!n.read ? 'cv-notification--unread' : ''}">
+														<a href="/participant/notification/read?id=${n.notificationId}"
+															class="cv-notification ${!n.isRead() ? 'cv-notification--unread' : ''}" style="text-decoration: none;">
 
 															<div class="cv-notification__icon">
-																<i class="bi bi-bell"></i>
+																<c:choose>
+																	<c:when test="${n.type == 'INVITE'}">
+																		<i class="bi bi-person-plus-fill"></i>
+																	</c:when>
+																	<c:when test="${n.type == 'REQUEST_ACCEPT'}">
+																		<i class="bi bi-check-circle-fill"></i>
+																	</c:when>
+																	<c:when test="${n.type == 'SUBMISSION'}">
+																		<i class="bi bi-file-earmark-code-fill"></i>
+																	</c:when>
+																	<c:otherwise>
+																		<i class="bi bi-bell-fill"></i>
+																	</c:otherwise>
+																</c:choose>
 															</div>
 
 															<div class="cv-notification__content">
 																<div class="cv-notification__message">${n.message}</div>
 																<div class="cv-notification__time">
-																	${n.createdAt}
+																	<fmt:parseDate value="${n.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both" />
+																	<fmt:formatDate value="${parsedDate}" pattern="dd MMM yyyy • hh:mm a" />
 																</div>
 															</div>
 
-															<c:if test="${!n.read}">
+															<c:if test="${!n.isRead()}">
 																<div class="cv-notification__badge">NEW</div>
 															</c:if>
 
-														</div>
+														</a>
 
 													</c:forEach>
 

@@ -89,6 +89,7 @@
 
 								<c:otherwise>
 									<form method="post" action="/team/create">
+									
 
 										<input type="hidden" name="hackathonId"
 											value="${hackathon.hackathonId}" />
@@ -161,6 +162,7 @@
 
 									<div style="font-weight: 600;">${t.teamName}</div>
 									<form action="/team/requestJoin" method="post">
+									
 										<input type="hidden" name="teamId"
 											value="${t.hackathonTeamId}" />
 										<button class="btn-cv btn-cv--ghost btn-cv--sm">Request

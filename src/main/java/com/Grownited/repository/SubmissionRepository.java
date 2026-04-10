@@ -16,6 +16,8 @@ public interface SubmissionRepository extends JpaRepository<SubmissionEntity, In
             HackathonTeamEntity team,
             SubmissionType type);
 
+    List<SubmissionEntity> findByTeam(HackathonTeamEntity team);
+
     // ✅ Only active submissions
     List<SubmissionEntity> findByTeamAndTypeAndStatus(
             HackathonTeamEntity team,

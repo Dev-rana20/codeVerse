@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="hackathon_team")
@@ -27,6 +29,8 @@ public class HackathonTeamEntity {
     @JoinColumn(name = "team_leader_id")
     private UserEntity teamLeader;
 
+    @NotBlank(message = "Team name is required")
+    @Size(min = 3, max = 50, message = "Team name must be between 3 and 50 characters")
     private String teamName;
 
     private boolean teamStatus;

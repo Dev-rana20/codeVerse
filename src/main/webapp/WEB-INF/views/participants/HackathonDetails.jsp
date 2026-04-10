@@ -258,6 +258,11 @@
 														<div>
 															<strong>Payment:</strong> ${hack.payment}
 														</div>
+														<c:if test="${fn:toUpperCase(hack.payment) == 'PAID'}">
+															<div>
+																<strong>Fee:</strong> ₹ ${hack.fee}
+															</div>
+														</c:if>
 														<div>
 															<strong>Location:</strong> ${hack.location}
 														</div>
@@ -270,14 +275,26 @@
 
 												<!-- DATES -->
 												<div class="cv-card">
-													<div class="cv-section-title">Registration</div>
+													<div class="cv-section-title">Timeline</div>
 
 													<div class="cv-grid-2">
 														<div>
-															<strong>Start:</strong> ${hack.registrationStartDate}
+															<p class="cv-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Registration</p>
+															<strong>Starts:</strong> ${hack.registrationStartDate}<br>
+															<strong>Ends:</strong> ${hack.registrationEndDate}
 														</div>
 														<div>
-															<strong>End:</strong> ${hack.registrationEndDate}
+															<p class="cv-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Event Period</p>
+															<strong>Starts:</strong> ${hack.eventStartDate != null ? hack.eventStartDate : 'TBA'}<br>
+															<strong>Ends:</strong> ${hack.eventEndDate != null ? hack.eventEndDate : 'TBA'}
+														</div>
+													</div>
+													
+													<div class="mt-3 pt-3" style="border-top: 1px dashed var(--border-color);">
+														<p class="cv-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Submission Deadline</p>
+														<div class="d-flex align-items-center gap-2">
+															<i class="bi bi-alarm text-danger"></i>
+															<strong class="text-danger">${hack.submissionDeadline != null ? hack.submissionDeadline : 'TBA'}</strong>
 														</div>
 													</div>
 												</div>
@@ -288,7 +305,7 @@
 													<p class="cv-desc">${description.hackathonDetailsText}</p>
 													<c:if test="${not empty description.hackathonDetailsURL}">
 														<a href="${description.hackathonDetailsURL}" target="_blank"
-															class="cv-btn cv-btn-small"> View Full Details </a>
+															class="btn-cv btn-cv--primary btn-cv--block"> View Full Details </a>
 													</c:if>
 
 												</div>
@@ -314,14 +331,34 @@
 															</c:when>
 
 															<c:otherwise>
-																<form action="/hackathons/${hack.hackathonId}/register"
-																	method="post">
-
-																	<button
-																		class="btn-cv btn-cv--primary btn-cv--block">
-																		Register Now</button>
-
-																</form>
+                                                                <c:choose>
+                                                                    <c:when test="${fn:toLowerCase(hack.status) == 'close'}">
+                                                                        <div class="alert alert-danger">Registration is closed for this hackathon.</div>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <c:choose>
+                                                                            <c:when test="${fn:toUpperCase(hack.payment) == 'PAID'}">
+                                                                                <form action="/hackathons/${hack.hackathonId}/checkout"
+                                                                                    method="get">
+                                                                                    <div class="mb-3">
+                                                                                        <span class="badge bg-warning text-dark">Required Fee: ₹ ${hack.fee}</span>
+                                                                                    </div>
+                                                                                    <button
+                                                                                        class="btn-cv btn-cv--primary btn-cv--block">
+                                                                                        Pay & Register</button>
+                                                                                </form>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <form action="/hackathons/${hack.hackathonId}/register"
+                                                                                    method="post">
+                                                                                    <button
+                                                                                        class="btn-cv btn-cv--primary btn-cv--block">
+                                                                                        Register Now</button>
+                                                                                </form>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </c:otherwise>
+                                                                </c:choose>
 															</c:otherwise>
 
 														</c:choose>
@@ -384,7 +421,7 @@
 
 															<c:otherwise>
 
-																<a href="/register?hackathonId=${hack.hackathonId}"
+																<a href="/participant/team-register?hackathonId=${hack.hackathonId}"
 																	class="btn-cv btn-cv--ghost btn-cv--block"> Create
 																	Team </a>
 
@@ -497,7 +534,7 @@
 											error.style.opacity = "0";
 											setTimeout(() => error.remove(), 500);
 										}
-									}, 2000);
+									}, 3000);
 								</script>
 				</body>
 

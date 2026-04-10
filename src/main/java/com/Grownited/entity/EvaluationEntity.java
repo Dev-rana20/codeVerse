@@ -8,6 +8,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "evaluations",
@@ -26,11 +29,28 @@ public class EvaluationEntity {
     @JoinColumn(name = "judge_id")
     private UserEntity judge;
 
+    @NotNull(message = "Innovation score is required")
+    @Min(0) @Max(100)
     private Integer innovation;
+
+    @NotNull(message = "Technical score is required")
+    @Min(0) @Max(100)
     private Integer technical;
+
+    @NotNull(message = "UI/UX score is required")
+    @Min(0) @Max(100)
     private Integer uiUx;
+
+    @NotNull(message = "Functionality score is required")
+    @Min(0) @Max(100)
     private Integer functionality;
+
+    @NotNull(message = "Presentation score is required")
+    @Min(0) @Max(100)
     private Integer presentation;
+
+    @NotNull(message = "Impact score is required")
+    @Min(0) @Max(100)
     private Integer impact;
 
     private Integer totalScore;

@@ -139,6 +139,7 @@
 																		style="margin-top: 10px; display: flex; gap: 10px;">
 
 																		<form method="post" action="/team/accept">
+											
 																			<input type="hidden" name="teamId"
 																				value="${tm.team.hackathonTeamId}" />
 
@@ -149,6 +150,7 @@
 																		</form>
 
 																		<form method="post" action="/team/reject">
+																			
 																			<input type="hidden" name="teamId"
 																				value="${tm.team.hackathonTeamId}" />
 

@@ -1,187 +1,176 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-		<!DOCTYPE html>
-		<html lang="en">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-		<head>
-			<!-- Required meta tags -->
-			<meta charset="utf-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<title>Skydash Admin</title>
-			<!-- plugins:css -->
+<%-- ── Page Identity ── --%>
+<c:set var="pageTitle" value="List User" scope="request" />
+<c:set var="activePage" value="userList" scope="request" />
 
-			<jsp:include page="AdminCSS.jsp"></jsp:include>
+<!DOCTYPE html>
+<html lang="en" data-page="userList">
 
-			<style>
-				.UPCOMING {
-					background: #17a2b8;
-				}
+<head>
+<%@ include file="/WEB-INF/views/components/Head.jsp"%>
 
-				.ONGOING {
-					background: #28a745;
-				}
+<style>
+.cv-badge.ACTIVE { background: var(--success); }
+.cv-badge.INACTIVE { background: var(--danger); }
+.cv-badge.ROLE { background: var(--info); color: #000; }
 
-				.COMPLETED {
-					background: #6c757d;
-				}
+.profile-pic {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+</style>
 
-				.FREE {
-					background: #28a745;
-				}
+</head>
 
-				.PAID {
-					background: #dc3545;
-				}
+<body data-page="userList">
 
-				.btn-add {
-					background: #28a745;
-				}
+	<%-- Navbar --%>
+	<%@ include file="/WEB-INF/views/components/navbar.jsp"%>
 
-				.btn-edit {
-					background: #ffc107;
-					color: black;
-				}
+	<div class="cv-shell">
 
-				.btn-delete {
-					background: #dc3545;
-				}
+		<%-- Sidebar --%>
+		<%@ include file="/WEB-INF/views/components/SidebarAdmin.jsp"%>
 
-				.btn-view {
-					background: #007bff;
-				}
-			</style>
+		<main class="cv-content">
 
-		</head>
-
-		<body>
-			<div class="container-scroller">
-				<!-- partial:partials/_navbar.html -->
-				<jsp:include page="AdminHeader.jsp"></jsp:include>
-				<!-- partial -->
-				<div class="container-fluid page-body-wrapper">
-					<!-- partial:partials/_sidebar.html -->
-					<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-					<!-- partial -->
-					<div class="main-panel">
-						<div class="content-wrapper">
-							<div class="row">
-								<div class="col-md-12 grid-margin">
-									<div class="row">
-										<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-											<h3 class="font-weight-bold">List User</h3>
-
-										</div>
-
-									</div>
-								</div>
-							</div>
-
-
-							<div class="row">
-								<div class="col-md-12">
-									<div class="card">
-										<div class="card-body">
-											<div class="d-flex justify-content-between">
-												<p class="card-title">All Users</p>
-												<a href="signup" class="text-info">New</a>
-											</div>
-											<div class="table-responsive">
-												<table class="table table-bordered table-hover table-striped">
-													<thead class="table-dark">
-														<tr>
-															<th>SrNo</th>
-															<th>Name</th>
-															<th>Email</th>
-															<th>Role</th>
-															<th>Gender</th>
-															<th>Birth Year</th>
-															<th>Profile</th>
-															<th>Status</th>
-															<th>Action</th>
-														</tr>
-													</thead>
-
-													<tbody>
-														<c:forEach var="user" items="${userList}" varStatus="s">
-															<tr>
-
-																<td>${s.count}</td>
-
-																<td>${user.firstName}${user.lastName}</td>
-																<td>${user.email}</td>
-																<td><span
-																		class="badge bg-info text-dark">${user.role}</span>
-																</td>
-																<td>${user.gender}</td>
-																<td>${user.birthYear}</td>
-																<td class="text-center">
-																	<c:if test="${not empty user.profilePicURL}">
-																		<img src="${user.profilePicURL}"
-																			class="profile-pic" />
-																	</c:if>
-																</td>
-
-
-																<td>
-																	<c:choose>
-																		<c:when test="${user.active}">
-																			<span class="badge bg-success">Active</span>
-																		</c:when>
-																		<c:otherwise>
-																			<span
-																				class="badge bg-danger">Inactive</span>
-																		</c:otherwise>
-																	</c:choose>
-																</td>
-
-																<td><a href="editUser?userId=${user.userId}"
-																		class="btn btn-sm btn-warning">Edit</a> <a
-																		href="deleteUser?userId=${user.userId}"
-																		class="btn btn-sm btn-danger"
-																		onclick="return confirm('Are you sure?');">
-																		Delete </a> <a class="btn btn-sm btn-secondary"
-																		href="viewUser?userId=${user.userId}">View</a>
-																</td>
-															</tr>
-														</c:forEach>
-
-														<c:if test="${empty userList}">
-															<tr>
-																<td colspan="11" class="text-center text-muted">No
-																	users found</td>
-															</tr>
-														</c:if>
-													</tbody>
-												</table>
-											</div>
-
-
-
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-						</div>
-						<!-- content-wrapper ends -->
-						<!-- partial:partials/_footer.html -->
-
-						<jsp:include page="AdminFooter.jsp"></jsp:include>
-						<!-- partial -->
+			<!-- Page Header -->
+			<div class="cv-page-header mb-4">
+				<div>
+					<div class="cv-page-eyebrow">
+						<i class="bi bi-people"></i> Users
 					</div>
-					<!-- main-panel ends -->
+					<h1 class="cv-page-title">All Users</h1>
 				</div>
-				<!-- page-body-wrapper ends -->
+
+				<a href="signup" class="btn-cv btn-cv-primary">
+					<i class="bi bi-person-plus"></i> New User
+				</a>
 			</div>
-			<!-- container-scroller -->
-			<!-- plugins:js -->
 
+			<!-- Table Card -->
+			<div class="cv-card">
 
+				<div class="cv-card__header">
+					<i class="bi bi-person-lines-fill"></i>
+					<h3>User List</h3>
+				</div>
 
+				<div class="cv-card__body">
 
-			<!-- End custom js for this page-->
-		</body>
+					<div class="cv-table-wrap">
+						<table class="cv-table">
 
-		</html>
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Name</th>
+									<th>Email</th>
+									<th>Role</th>
+									<th>Gender</th>
+									<th>Birth Year</th>
+									<th>Profile</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+
+							<tbody>
+
+								<c:forEach var="user" items="${userList}" varStatus="s">
+									<tr>
+
+										<td>${s.count}</td>
+
+										<td>${user.firstName} ${user.lastName}</td>
+
+										<td>${user.email}</td>
+
+										<td>
+											<span class="cv-badge ROLE">
+												${user.role}
+											</span>
+										</td>
+
+										<td>${user.gender}</td>
+
+										<td>${user.birthYear}</td>
+
+										<td class="text-center">
+											<c:choose>
+												<c:when test="${not empty user.profilePicURL}">
+													<img src="${user.profilePicURL}" class="profile-pic" />
+												</c:when>
+												<c:otherwise>
+													<img src="https://api.dicebear.com/7.x/initials/svg?seed=${user.firstName}"
+														class="profile-pic" />
+												</c:otherwise>
+											</c:choose>
+										</td>
+
+										<td>
+											<c:choose>
+												<c:when test="${user.active}">
+													<span class="cv-badge ACTIVE">Active</span>
+												</c:when>
+												<c:otherwise>
+													<span class="cv-badge INACTIVE">Inactive</span>
+												</c:otherwise>
+											</c:choose>
+										</td>
+
+										<td>
+
+											<a href="viewUser?userId=${user.userId}"
+												class="btn-cv btn-cv-info btn-sm">
+												<i class="bi bi-eye"></i>
+											</a>
+
+											<a href="editUser?userId=${user.userId}"
+												class="btn-cv btn-cv-warning btn-sm">
+												<i class="bi bi-pencil"></i>
+											</a>
+
+											<a href="deleteUser?userId=${user.userId}"
+												class="btn-cv btn-cv-danger btn-sm"
+												onclick="return confirm('Delete this user?')">
+												<i class="bi bi-trash"></i>
+											</a>
+
+										</td>
+
+									</tr>
+								</c:forEach>
+
+								<c:if test="${empty userList}">
+									<tr>
+										<td colspan="9" class="text-center text-muted">
+											No users found
+										</td>
+									</tr>
+								</c:if>
+
+							</tbody>
+
+						</table>
+					</div>
+
+				</div>
+
+			</div>
+
+		</main>
+	</div>
+
+	<%-- Footer + Scripts --%>
+	<%@ include file="/WEB-INF/views/components/Footer.jsp"%>
+	<%@ include file="/WEB-INF/views/components/Scripts.jsp"%>
+
+</body>
+</html>

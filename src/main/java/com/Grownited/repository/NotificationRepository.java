@@ -15,4 +15,6 @@ public interface NotificationRepository
     
     List<NotificationEntity>
     findTop5ByUserUserIdOrderByCreatedAtDesc(Integer userId);
+
+    List<NotificationEntity> findByUserUserIdAndIsReadFalse(Integer userId);
 }

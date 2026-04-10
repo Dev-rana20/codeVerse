@@ -18,7 +18,7 @@
 <!-- External CSS -->
 <link rel="stylesheet" href="<c:url value='/assets/css/codeverse-form.css'/>">
 
-<jsp:include page="AdminCSS.jsp"></jsp:include>
+
 
 </head>
 
@@ -29,21 +29,27 @@
 
 		<a href="/" class="auth-brand">CODE<span>VERSE</span></a>
 
-		<h2>Create Account</h2>
+		<h2>Forget Password</h2>
 		<p style="color:#aaa; font-size:13px;">Join CodeVerse and start competing</p>
+
+		<c:if test="${not empty error}">
+			<div class="alert alert-danger" role="alert" style="color: #ff5252; background: rgba(255,82,82,0.1); padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; border: 1px solid rgba(255,82,82,0.2);">
+				<i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> ${error}
+			</div>
+		</c:if>
 
 		<form action="resetPassword" method="post">
 
 								<!-- Email -->
 								<div class="mb-3">
-									<label class="form-label">Email Address</label> <input
-										type="email" class="form-control" name="email"
-										placeholder="Enter email" required>
+									<label for="email" class="form-label">Email Address</label> <input
+										type="email" id="email" class="form-control" name="email"
+										placeholder="Enter email" required aria-label="Email Address">
 								</div>
 
 								<!-- Submit Button -->
 								<div class="d-grid">
-									<button type="submit" class="btn-submit">Reset
+									<button type="submit" class="btn-submit" aria-label="Reset Password">Reset
 										Password</button>
 								</div>
 
@@ -62,17 +68,17 @@
 	<p class="auth-tagline">Build.<br>Compete.<br><span>Win.</span></p>
 
 	<div class="auth-feature">
-		<i class="bi bi-lightning-charge-fill"></i>
+		<i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
 		<div>Real Hackathons</div>
 	</div>
 
 	<div class="auth-feature">
-		<i class="bi bi-people-fill"></i>
+		<i class="bi bi-people-fill" aria-hidden="true"></i>
 		<div>Team Up</div>
 	</div>
 
 	<div class="auth-feature">
-		<i class="bi bi-trophy-fill"></i>
+		<i class="bi bi-trophy-fill" aria-hidden="true"></i>
 		<div>Win Prizes</div>
 	</div>
 </div>

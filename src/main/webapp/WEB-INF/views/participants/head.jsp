@@ -33,4 +33,4 @@
 					rel="stylesheet" />
 
 				<!-- CodeVerse Global CSS -->
-				<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/oneForAll.css" />
+				<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Codeverse.css" />

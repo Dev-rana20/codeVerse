@@ -61,41 +61,43 @@
 			</style>
 
 
-			<nav class="cv-navbar">
+			<nav class="cv-navbar" role="navigation" aria-label="Main Application Navigation">
 				<div class="cv-navbar__inner">
 
 					<%-- Sidebar toggle (works for both desktop collapse & mobile open) --%>
 						<button class="cv-sidebar-toggle" data-cv-sidebar-toggle aria-label="Toggle sidebar"
 							data-cv-tip="Toggle sidebar">
-							<i class="bi bi-layout-sidebar-inset"></i>
+							<i class="bi bi-layout-sidebar-inset" aria-hidden="true"></i>
 						</button>
 
 						<%-- Brand --%>
 							<a href="/userHome" class="cv-brand">CODE<span>VERSE</span></a>
 
-							<%-- Global search (optional — wire to your search controller) --%>
-								<div class="cv-navbar-search d-none d-md-block">
-									<i class="bi bi-search"></i> <input type="text" placeholder="Search hackathons…"
-										id="cvGlobalSearch" autocomplete="off" />
-								</div>
+							
 
 								<%-- Right side controls --%>
 									<div class="cv-navbar-right">
 
 										<div class="cv-navbar-right">
 
+											<%-- Theme Toggle --%>
+											<button class="cv-icon-btn" data-cv-theme-toggle title="Toggle Theme" data-cv-tip="Toggle Theme" aria-label="Toggle Light and Dark Mode">
+												<i class="bi bi-moon-stars-fill show-dark" aria-hidden="true"></i>
+												<i class="bi bi-sun-fill show-light" aria-hidden="true"></i>
+											</button>
+
 											<%-- Notification bell --%>
 												<div class="cv-dropdown">
 
 													<div class="cv-icon-btn" data-cv-dropdown="cvNotifMenu"
-														data-cv-tip="Notifications">
+														data-cv-tip="Notifications" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="View notifications">
 
-														<i class="bi bi-bell"></i>
+														<i class="bi bi-bell" aria-hidden="true"></i>
 
 														<c:choose>
-															<c:when test="${sessionScope.notifCount > 0}">
+															<c:when test="${notifCount > 0}">
 																<span id="cvNotifBadge" class="cv-notif-badge">
-																	${sessionScope.notifCount} </span>
+																	<span class="sr-only">You have </span>${notifCount}<span class="sr-only"> notifications</span> </span>
 															</c:when>
 														</c:choose>
 
@@ -123,16 +125,16 @@
 												<%-- Avatar dropdown --%>
 													<div class="cv-dropdown">
 														<div class="cv-nav-avatar" data-cv-dropdown="cvUserMenu"
-															data-cv-tip="Account">
+															data-cv-tip="Account" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="User account menu">
 															<c:choose>
 																<c:when
 																	test="${not empty sessionScope.user.profilePicURL}">
 																	<img src="${sessionScope.user.profilePicURL}"
-																		alt="${sessionScope.user.firstName}" />
+																		alt="${sessionScope.user.firstName}'s Profile Picture" />
 																</c:when>
 																<c:otherwise>
 																	<img src="https://api.dicebear.com/7.x/initials/svg?seed=${sessionScope.user.firstName}&backgroundColor=0f1420&textColor=00ffe0"
-																		alt="${sessionScope.user.firstName}" />
+																		alt="${sessionScope.user.firstName}'s Initials Avatar" />
 																</c:otherwise>
 															</c:choose>
 														</div>
@@ -147,15 +149,15 @@
 																</div>
 															</div>
 															<a href="/profile" class="cv-dropdown-item"> <i
-																	class="bi bi-person-circle"></i> My Profile
-															</a> <a href="/participant/settings"
-																class="cv-dropdown-item"> <i class="bi bi-gear"></i>
+																	class="bi bi-person-circle" aria-hidden="true"></i> My Profile
+															</a> 
+															<a href="/settings" class="cv-dropdown-item"> <i class="bi bi-gear" aria-hidden="true"></i>
 																Settings
 															</a>
 															<div class="cv-dropdown-divider"></div>
 															<a href="/logout" class="cv-dropdown-item danger"
 																data-cv-confirm="Are you sure you want to logout?"> <i
-																	class="bi bi-box-arrow-right"></i> Logout
+																	class="bi bi-box-arrow-right" aria-hidden="true"></i> Logout
 															</a>
 														</div>
 													</div>

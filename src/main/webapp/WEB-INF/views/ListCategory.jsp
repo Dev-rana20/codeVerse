@@ -2,164 +2,127 @@
 	pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>CodeVerse</title>
-<!-- plugins:css -->
 
-<jsp:include page="AdminCSS.jsp"></jsp:include>
+<%-- ── Page Identity ── --%>
+<c:set var="pageTitle" value="List Category" scope="request" />
+<c:set var="activePage" value="listCategory" scope="request" />
+
+<!DOCTYPE html>
+<html lang="en" data-page="listCategory">
+
+<head>
+<%@ include file="/WEB-INF/views/components/Head.jsp"%>
 
 <style>
-.UPCOMING {
-	background: #17a2b8;
+.cv-badge.ACTIVE {
+	background: var(--success);
 }
 
-.ONGOING {
-	background: #28a745;
-}
-
-.COMPLETED {
-	background: #6c757d;
-}
-
-.FREE {
-	background: #28a745;
-}
-
-.PAID {
-	background: #dc3545;
-}
-
-.btn-add {
-	background: #28a745;
-}
-
-.btn-edit {
-	background: #ffc107;
-	color: black;
-}
-
-.btn-delete {
-	background: #dc3545;
-}
-
-.btn-view {
-	background: #007bff;
+.cv-badge.INACTIVE {
+	background: var(--danger);
 }
 </style>
 
 </head>
-<body>
-	<div class="container-scroller">
-		<!-- partial:partials/_navbar.html -->
-		<jsp:include page="AdminHeader.jsp"></jsp:include>
-		<!-- partial -->
-		<div class="container-fluid page-body-wrapper">
-			<!-- partial:partials/_sidebar.html -->
-			<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-			<!-- partial -->
-			<div class="main-panel">
-				<div class="content-wrapper">
-					<div class="row">
-						<div class="col-md-12 grid-margin">
-							<div class="row">
-								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold">List Category</h3>
 
-								</div>
+<body data-page="listCategory">
 
-							</div>
-						</div>
+	<%-- Navbar --%>
+	<%@ include file="/WEB-INF/views/components/navbar.jsp"%>
+
+	<div class="cv-shell">
+
+		<%-- Sidebar --%>
+		<%@ include file="/WEB-INF/views/components/SidebarAdmin.jsp"%>
+
+		<main class="cv-content">
+
+			<!-- Page Header -->
+			<div class="cv-page-header mb-4">
+				<div>
+					<div class="cv-page-eyebrow">
+						<i class="bi bi-tags"></i> Category
 					</div>
+					<h1 class="cv-page-title">All Categories</h1>
+				</div>
 
+				<a href="newCategory" class="btn-cv btn-cv-primary"> <i
+					class="bi bi-plus-circle"></i> New Category
+				</a>
+			</div>
 
-					<div class="row">
-						<div class="col-md-12">
-							<div class="card">
-								<div class="card-body">
-									<div class="d-flex justify-content-between">
-										<p class="card-title">All Category</p>
-										<a href="newCategory" class="text-info">New</a>
-									</div>
-									<div class="table-responsive">
+			<!-- Table Card -->
+			<div class="cv-card">
 
+				<div class="cv-card__header">
+					<i class="bi bi-list-ul"></i>
+					<h3>Category List</h3>
+				</div>
 
+				<div class="cv-card__body">
 
-										<table class="table table-bordered table-striped">
-											<thead class="table-dark">
-												<tr>
-													<th>#</th>
-													<th>Category Name</th>
-													<th>Status</th>
-													<th>Action</th>
-												</tr>
-											</thead>
-											<tbody>
+					<div class="cv-table-wrap">
+						<table class="cv-table">
 
-												<c:if test="${empty categoryList}">
-													<tr>
-														<td colspan="4" class="text-center text-muted">No
-															categories found</td>
-													</tr>
-												</c:if>
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Category Name</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
 
-												<c:forEach var="cat" items="${categoryList}" varStatus="i">
-													<tr>
-														<td>${i.index + 1}</td>
-														<td>${cat.categoryName}</td>
+							<tbody>
 
-														<td><c:choose>
-																<c:when test="${cat.active}">
-																	<span class="badge bg-success">Active</span>
-																</c:when>
-																<c:otherwise>
-																	<span class="badge bg-danger">Inactive</span>
-																</c:otherwise>
-															</c:choose></td>
+								<c:if test="${empty categoryList}">
+									<tr>
+										<td colspan="4" class="text-center text-muted">No
+											categories found</td>
+									</tr>
+								</c:if>
 
-														<td><a href="editCategory?id=${cat.categoryId}"
-															class="btn btn-sm btn-warning">Edit</a> <a
-															href="deleteCategory?id=${cat.categoryId}"
-															class="btn btn-sm btn-danger"
-															onclick="return confirm('Are you sure you want to delete this category?')">
-																Delete </a></td>
-													</tr>
-												</c:forEach>
+								<c:forEach var="cat" items="${categoryList}" varStatus="i">
+									<tr>
+										<td>${i.index + 1}</td>
 
-											</tbody>
-										</table>
-									</div>
+										<td>${cat.categoryName}</td>
 
+										<td><c:choose>
+												<c:when test="${cat.active}">
+													<span class="cv-badge ACTIVE">Active</span>
+												</c:when>
+												<c:otherwise>
+													<span class="cv-badge INACTIVE">Inactive</span>
+												</c:otherwise>
+											</c:choose></td>
 
+										<td><a href="editCategory?id=${cat.categoryId}"
+											class="btn-cv btn-cv-warning btn-sm"> <i
+												class="bi bi-pencil"></i>
+										</a> <a href="deleteCategory?id=${cat.categoryId}"
+											class="btn-cv btn-cv-danger btn-sm"
+											onclick="return confirm('Delete this category?')"> <i
+												class="bi bi-trash"></i>
+										</a></td>
+									</tr>
+								</c:forEach>
 
-								</div>
-							</div>
-						</div>
+							</tbody>
+
+						</table>
 					</div>
-
 
 				</div>
-				<!-- content-wrapper ends -->
-				<!-- partial:partials/_footer.html -->
 
-				<jsp:include page="AdminFooter.jsp"></jsp:include>
-				<!-- partial -->
 			</div>
-			<!-- main-panel ends -->
-		</div>
-		<!-- page-body-wrapper ends -->
+
+		</main>
 	</div>
-	<!-- container-scroller -->
-	<!-- plugins:js -->
 
+	<%-- Footer + Scripts --%>
+	<%@ include file="/WEB-INF/views/components/Footer.jsp"%>
+	<%@ include file="/WEB-INF/views/components/Scripts.jsp"%>
 
-
-
-	<!-- End custom js for this page-->
 </body>
 </html>

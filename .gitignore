@@ -37,3 +37,27 @@ src/main/resources/application.properties
 
 ###CodeverseApplivation.java ###
 src/main/java/com/CodeVerseApplication.java
+
+
+# Compiled class file
+**/target/
+**/bin/
+
+# Log files
+*.log
+
+# Sensitive properties
+src/main/resources/application.properties
+
+# IDE specific files
+.settings/
+.project
+.classpath
+.factorypath
+.idea/
+*.iml
+*.iws
+
+# OS specific files
+.DS_Store
+Thumbs.db

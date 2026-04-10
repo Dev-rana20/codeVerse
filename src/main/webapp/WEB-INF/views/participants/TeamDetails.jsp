@@ -21,6 +21,18 @@
 				<p class="cv-page-subtitle">Hackathon: ${team.hackathon.title}</p>
 			</div>
 
+			<c:if test="${not empty error}">
+				<div class="alert alert-danger"
+					style="padding: 10px; background: #f8d7da; color: #721c24; margin-bottom: 20px; border-radius: 5px;">
+					${error}</div>
+			</c:if>
+
+			<c:if test="${not empty success}">
+				<div class="alert alert-success"
+					style="padding: 10px; background: #d4edda; color: #155724; margin-bottom: 20px; border-radius: 5px;">
+					${success}</div>
+			</c:if>
+
 			<div class="row g-4">
 
 				<!-- LEFT SIDE -->
@@ -108,6 +120,41 @@
 
 						</div>
 					</div>
+
+					<!-- INVITE MEMBERS -->
+					<c:if test="${team.teamLeader.userId == sessionScope.user.userId}">
+						<div class="cv-card mt-4">
+							<div class="cv-card__header">
+								<i class="bi bi-envelope-plus"></i>
+								<h2>Invite Members</h2>
+							</div>
+
+							<div class="cv-card__body">
+								<c:choose>
+									<c:when test="${empty eligibleUsers}">
+										<div class="cv-empty">No registered users available to invite</div>
+									</c:when>
+									<c:otherwise>
+										<form action="/team/invite" method="post">
+											<input type="hidden" name="teamId" value="${team.hackathonTeamId}" />
+											<div class="mb-3">
+												<label class="form-label">Select User</label>
+												<select name="memberId" class="form-select bg-dark text-white border-secondary" required>
+													<option value="">-- Choose Member --</option>
+													<c:forEach var="u" items="${eligibleUsers}">
+														<option value="${u.userId}">${u.firstName} ${u.lastName} (${u.email})</option>
+													</c:forEach>
+												</select>
+											</div>
+											<button type="submit" class="btn-cv btn-cv--primary w-100">
+												Send Invitation
+											</button>
+										</form>
+									</c:otherwise>
+								</c:choose>
+							</div>
+						</div>
+					</c:if>
 
 				</div>
 

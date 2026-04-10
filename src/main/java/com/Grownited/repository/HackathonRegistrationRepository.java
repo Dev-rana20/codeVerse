@@ -20,4 +20,7 @@ public interface HackathonRegistrationRepository extends JpaRepository<Hackathon
 	    
 	    //delete registration
 	    void deleteByUserUserIdAndHackathonHackathonId(Integer userId, Integer hackathonId);
+
+	    @org.springframework.data.jpa.repository.Query("SELECT SUM(h.amount) FROM HackathonRegistrationEntity h")
+	    Long getTotalRevenue();
 }

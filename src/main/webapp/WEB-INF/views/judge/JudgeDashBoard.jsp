@@ -73,15 +73,30 @@
 
 														<div class="cv-card__body">
 
-															<div class="d-flex gap-2 mb-2">
-																<span class="cv-badge cv-badge--${a.status}">
-																	${a.status} </span>
+															<div class="d-flex justify-content-between align-items-start mb-2">
+																<span class="cv-badge cv-badge--${fn:toLowerCase(a.hackathon.status)}">
+																	${a.hackathon.status}
+																</span>
+																<span class="cv-badge cv-badge--cyan" style="font-size: 0.7rem;">
+																	Assigned: ${a.assignedAt}
+																</span>
 															</div>
 
-															<div style="font-weight: 700;">${a.hackathon.title}</div>
+															<div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">${a.hackathon.title}</div>
 
-															<div class="text-muted-cv" style="font-size: .75rem;">
+															<div class="text-muted-cv" style="font-size: .8rem; margin-bottom: 0.25rem;">
 																<i class="bi bi-geo-alt"></i> ${a.hackathon.location}
+															</div>
+															
+															<div class="lifecycle-info mt-3" style="font-size: 0.75rem; color: var(--text-muted);">
+																<div class="d-flex justify-content-between mb-1">
+																	<span>Reg. Deadline:</span>
+																	<span class="text-info">${a.hackathon.registrationEndDate}</span>
+																</div>
+																<div class="d-flex justify-content-between">
+																	<span>Sub. Deadline:</span>
+																	<span class="text-danger">${a.hackathon.submissionDeadline != null ? a.hackathon.submissionDeadline : 'TBA'}</span>
+																</div>
 															</div>
 
 														</div>

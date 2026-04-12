@@ -28,6 +28,8 @@ import com.Grownited.entity.EvaluationEntity;
 import com.Grownited.enums.SubmissionType;
 import com.Grownited.service.MailerService;
 import com.Grownited.service.NotificationService;
+import com.Grownited.repository.TeamCommunicationRepository;
+import com.Grownited.entity.TeamCommunicationEntity;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.validation.BindingResult;
@@ -62,6 +64,9 @@ public class TeamController {
 
 	@Autowired
 	EvaluationRepository evaluationRepository;
+
+	@Autowired
+	TeamCommunicationRepository teamCommunicationRepository;
 
 	@GetMapping("/participant/team-register")
 	public String openTeamRegister(@RequestParam Integer hackathonId, HttpSession session, Model model) {
@@ -261,10 +266,27 @@ public class TeamController {
 						team.getHackathon().getHackathonId()))
 				.toList();
 
+		// 🚀 FETCH SUBMISSIONS
+		List<SubmissionEntity> submissions = submissionRepository.findByTeam(team);
+		SubmissionEntity finalSubmission = submissions.stream()
+				.filter(s -> SubmissionType.FINAL.equals(s.getType()))
+				.findFirst()
+				.orElse(null);
+
+		// Check if team is evaluated (fallback check)
+		boolean isEvaluated = evaluationRepository.findByTeam(team) != null && !evaluationRepository.findByTeam(team).isEmpty();
+
+		// 💬 FETCH TEAM COMMUNICATIONS
+		List<TeamCommunicationEntity> communications = teamCommunicationRepository.findByTeamOrderByCreatedAtAsc(team);
+
 		model.addAttribute("team", team);
 		model.addAttribute("members", members);
 		model.addAttribute("requests", requests);
 		model.addAttribute("eligibleUsers", eligibleUsers);
+		model.addAttribute("submissions", submissions);
+		model.addAttribute("finalSubmission", finalSubmission);
+		model.addAttribute("isEvaluated", isEvaluated);
+		model.addAttribute("communications", communications);
 
 		return "participants/TeamDetails";
 	}

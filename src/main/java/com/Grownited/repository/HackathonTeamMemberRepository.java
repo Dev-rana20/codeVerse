@@ -29,4 +29,7 @@ public interface HackathonTeamMemberRepository
 	 boolean existsByMember_UserIdAndTeam_Hackathon_HackathonId(
 	            Integer userId,
 	            Integer hackathonId);
+
+	 // Feature 1: Cascade delete all team members for a hackathon
+	 void deleteByTeam_Hackathon_HackathonId(Integer hackathonId);
 }

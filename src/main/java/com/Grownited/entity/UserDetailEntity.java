@@ -113,4 +113,22 @@ public class UserDetailEntity {
 	public void setSkills(String skills) {
 		this.skills = skills;
 	}
+
+	// Feature 3: Social media links
+	private String linkedinLink;
+	private String twitterLink;
+
+	public String getLinkedinLink() {
+		return linkedinLink;
+	}
+	public void setLinkedinLink(String linkedinLink) {
+		this.linkedinLink = linkedinLink;
+	}
+
+	public String getTwitterLink() {
+		return twitterLink;
+	}
+	public void setTwitterLink(String twitterLink) {
+		this.twitterLink = twitterLink;
+	}
 }

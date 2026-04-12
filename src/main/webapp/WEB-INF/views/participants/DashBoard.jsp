@@ -304,6 +304,16 @@
 																																		<i
 																																			class="bi bi-people me-1"></i>${h.minTeamSize}–${h.maxTeamSize}
 																																	</div>
+																																	<div
+																																		style="font-family: var(--font-mono); font-size: .72rem; color: var(--text-muted); margin-top: .3rem">
+																																		<i class="bi bi-gift-fill text-accent me-1"></i>
+																																		1st: ${h.firstPrize != null ? h.firstPrize : 'TBA'} | 2nd: ${h.secondPrize != null ? h.secondPrize : 'TBA'} | 3rd: ${h.thirdPrize != null ? h.thirdPrize : 'TBA'}
+																																	</div>
+																																	<div
+																																		style="font-family: var(--font-mono); font-size: .72rem; color: var(--text-muted); margin-top: .3rem">
+																																		<i class="bi bi-person-fill text-accent me-1"></i>
+																																		${participantCounts[h.hackathonId] != null ? participantCounts[h.hackathonId] : 0} participants
+																																	</div>
 																																</div>
 																																<div
 																																	class="cv-card__footer">
@@ -424,7 +434,18 @@
 																																					class="btn-cv btn-cv--ghost btn-cv--sm" title="Submit Project">
 																																					<i class="bi bi-upload"></i>
 																																				</a>
-
+																																				
+																																				<c:if test="${fn:toLowerCase(r.hackathon.status) == 'completed'}">
+																																					<a href="/participant/certificate/${r.hackathon.hackathonId}" 
+																																					   class="btn-cv btn-cv--warning btn-cv--sm" 
+																																					   title="Download Certificate" 
+																																					   target="_blank">
+																																						<i class="bi bi-patch-check-fill"></i>
+																																					</a>
+																																				</c:if>
+																																			</div>
+																																		</td>
+																																		
 																																		<!-- ✅ Cancel Button -->
 																																		<td>
 																																			<form
@@ -532,7 +553,15 @@
 																															</c:otherwise>
 																														</c:choose>
 																														
-																														<a href="/participant/team" class="btn-cv btn-cv--primary btn-cv--block mt-3">
+																														<c:if test="${fn:toLowerCase(latestTeam.team.hackathon.status) == 'completed'}">
+																															<a href="/participant/certificate/${latestTeam.team.hackathon.hackathonId}" 
+																															   class="btn-cv btn-cv--warning btn-cv--block mt-2" 
+																															   target="_blank">
+																																<i class="bi bi-patch-check-fill"></i> Download Certificate
+																															</a>
+																														</c:if>
+																														
+																														<a href="/participant/team" class="btn-cv btn-cv--primary btn-cv--block mt-2">
 																															<i class="bi bi-people"></i> Manage Teams
 																														</a>
 																													</div>

@@ -22,14 +22,22 @@ public interface HackathonRepository extends JpaRepository<HackathonEntity, Inte
 
 	@Modifying(clearAutomatically = true)
 	@Transactional
-	@Query("UPDATE HackathonEntity h SET h.status = 'IN_PROGRESS' WHERE :today >= h.eventStartDate AND :today <= h.eventEndDate AND h.status != 'IN_PROGRESS'")
+	@Query("UPDATE HackathonEntity h SET h.status = 'IN_PROGRESS' WHERE :today >= h.eventStartDate AND :today <= h.eventEndDate AND h.status != 'IN_PROGRESS' AND h.status != 'COMPLETED'")
 	void updateStatusToInProgress(@Param("today") LocalDate today);
+
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	@Query("UPDATE HackathonEntity h SET h.status = 'COMPLETED' WHERE h.eventEndDate < :today AND h.status = 'IN_PROGRESS'")
+	void updateStatusToCompleted(@Param("today") LocalDate today);
 
 	@Query("SELECT h FROM HackathonEntity h WHERE h.eventStartDate = :tomorrow")
 	List<HackathonEntity> findHackathonsStartingOn(@Param("tomorrow") LocalDate tomorrow);
 
 	@Query("SELECT h FROM HackathonEntity h WHERE h.submissionDeadline = :tomorrow")
 	List<HackathonEntity> findHackathonsWithDeadlineOn(@Param("tomorrow") LocalDate tomorrow);
+
+	@Query("SELECT h FROM HackathonEntity h WHERE h.status != 'COMPLETED' AND h.eventEndDate < :today")
+	List<HackathonEntity> findFinishedHackathons(@Param("today") LocalDate today);
 
 	List<HackathonEntity> findByStatusIn(List<String> statuses);
 }

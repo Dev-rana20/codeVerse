@@ -17,6 +17,9 @@ public interface EvaluationRepository extends JpaRepository<EvaluationEntity, In
 
 	List<EvaluationEntity> findByTeam(HackathonTeamEntity team);
 
+	@Query("SELECT e.team FROM EvaluationEntity e WHERE e.team.hackathon.hackathonId = :hackathonId GROUP BY e.team ORDER BY SUM(e.totalScore) DESC")
+	List<HackathonTeamEntity> getRankedTeamsByHackathon(Integer hackathonId);
+
 	@Query("""
 			SELECT new com.Grownited.dto.LeaderboardDTO(
 			    e.team.teamName,
@@ -34,5 +37,8 @@ public interface EvaluationRepository extends JpaRepository<EvaluationEntity, In
 			ORDER BY e.totalScore DESC
 			""")
 	List<LeaderboardDTO> getLeaderboard(Integer hackathonId);
+
+	// Feature 1: Cascade delete all evaluations for a hackathon
+	void deleteByTeam_Hackathon_HackathonId(Integer hackathonId);
 
 }

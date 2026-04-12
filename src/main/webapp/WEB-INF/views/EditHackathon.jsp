@@ -181,6 +181,28 @@
 									<small class="cv-hint">Teams cannot submit work after this date.</small>
 								</div>
 
+								<!-- Prize Descriptions -->
+								<div class="row">
+									<div class="col-md-4">
+										<div class="cv-form-group">
+											<label class="cv-label">1st Prize</label>
+											<input type="text" name="firstPrize" class="cv-input" value="${hackathon.firstPrize}" placeholder="e.g. $10,000" required />
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="cv-form-group">
+											<label class="cv-label">2nd Prize</label>
+											<input type="text" name="secondPrize" class="cv-input" value="${hackathon.secondPrize}" placeholder="e.g. $5,000" required />
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="cv-form-group">
+											<label class="cv-label">3rd Prize</label>
+											<input type="text" name="thirdPrize" class="cv-input" value="${hackathon.thirdPrize}" placeholder="e.g. $2,000" required />
+										</div>
+									</div>
+								</div>
+
 								<!-- Actions -->
 								<div class="cv-actions mt-3">
 									<button type="submit" class="btn-cv btn-cv-primary">

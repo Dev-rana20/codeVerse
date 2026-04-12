@@ -24,4 +24,7 @@ public interface SubmissionRepository extends JpaRepository<SubmissionEntity, In
             SubmissionType type,
             String status);
 
+    // Feature 1: Cascade delete all submissions for a hackathon
+    void deleteByTeam_Hackathon_HackathonId(Integer hackathonId);
+
 }

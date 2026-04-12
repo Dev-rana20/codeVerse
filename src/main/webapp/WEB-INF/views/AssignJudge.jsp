@@ -99,7 +99,11 @@
 																	  a.status == 'IN_PROGRESS' ? 'bg-warning text-dark' :
 																	  'bg-success'}">
 
-																	${a.hackathon.title} (${a.status}) </span>
+																	${a.hackathon.title} (${a.status}) 
+																	<a href="/admin/remove-judge?assignmentId=${a.hackathonJudgeId}" class="text-white ms-2" title="Remove Assignment" onclick="return confirm('Remove judge from this hackathon?');">
+																		<i class="bi bi-x-circle-fill"></i>
+																	</a>
+																</span>
 
 															</div>
 														</c:if>
@@ -120,7 +124,7 @@
 																<%-- Check if judge is already assigned to this hackathon --%>
 																<c:set var="isAssigned" value="false" />
 																<c:forEach items="${assignments}" var="a">
-																	<c:if test="${a.user.userId == j.userId && a.hackathon.hackathonId == h.hackathonId}">
+																	<c:if test="${a.hackathon.hackathonId == h.hackathonId}">
 																		<c:set var="isAssigned" value="true" />
 																	</c:if>
 																</c:forEach>

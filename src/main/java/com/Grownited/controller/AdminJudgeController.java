@@ -16,6 +16,7 @@ import com.Grownited.entity.HackathonEntity;
 import com.Grownited.entity.HackathonJudgeEntity;
 import com.Grownited.entity.HackathonTeamEntity;
 import com.Grownited.entity.HackathonTeamMembersEntity;
+import com.Grownited.entity.SubmissionEntity;
 import com.Grownited.entity.UserEntity;
 import com.Grownited.enums.AssignmentStatus;
 import com.Grownited.enums.SubmissionType;
@@ -127,11 +128,11 @@ public class AdminJudgeController {
 			return "redirect:/admin/judge-management";
 		}
 
-		// 🚫 Prevent duplicate assignment
-		boolean exists = hackathonJudgeRepository.existsByUser_UserIdAndHackathon_HackathonId(judgeId, hackathonId);
+		// 🚫 Prevent assigning one hackathon to multiple judges
+		boolean exists = hackathonJudgeRepository.existsByHackathon_HackathonId(hackathonId);
 
 		if (exists) {
-			ra.addFlashAttribute("error", "Judge already assigned to this hackathon");
+			ra.addFlashAttribute("error", "This hackathon is already assigned to a judge");
 			return "redirect:/admin/judge-management";
 		}
 
@@ -146,6 +147,13 @@ public class AdminJudgeController {
 
 		ra.addFlashAttribute("success", "Judge assigned successfully!");
 
+		return "redirect:/admin/judge-management";
+	}
+
+	@GetMapping("/admin/remove-judge")
+	public String removeAssignedJudge(@RequestParam Integer assignmentId, RedirectAttributes ra) {
+		hackathonJudgeRepository.deleteById(assignmentId);
+		ra.addFlashAttribute("success", "Judge assignment removed successfully!");
 		return "redirect:/admin/judge-management";
 	}
 
@@ -233,6 +241,14 @@ public class AdminJudgeController {
 		eval.setTotalScore(total);
 
 		evaluationRepo.save(eval);
+
+		// ✅ Mark final submission as EVALUATED
+		List<SubmissionEntity> finalSubs = submissionRepository.findByTeamAndType(team, SubmissionType.FINAL);
+		if (finalSubs != null && !finalSubs.isEmpty()) {
+			SubmissionEntity finalSub = finalSubs.get(0);
+			finalSub.setStatus("EVALUATED");
+			submissionRepository.save(finalSub);
+		}
 
 		// 🔔 Notify all ACCEPTED team members
 		if (team.getMembers() != null) {

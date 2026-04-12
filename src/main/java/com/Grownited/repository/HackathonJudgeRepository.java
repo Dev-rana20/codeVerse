@@ -11,10 +11,14 @@ import com.Grownited.entity.HackathonJudgeEntity;
 @Repository
 public interface HackathonJudgeRepository extends JpaRepository<HackathonJudgeEntity, Integer> {
 	boolean existsByUser_UserIdAndHackathon_HackathonId(Integer userId, Integer hackathonId);
+	boolean existsByHackathon_HackathonId(Integer hackathonId);
 	@Query("SELECT hj FROM HackathonJudgeEntity hj JOIN FETCH hj.hackathon JOIN FETCH hj.user")
 	List<HackathonJudgeEntity> findAllWithDetails();
 	@Query("SELECT hj FROM HackathonJudgeEntity hj JOIN FETCH hj.hackathon WHERE hj.user.userId = :userId")
 	List<HackathonJudgeEntity> findByUserWithHackathon(Integer userId);
 
 	long countByStatus(com.Grownited.enums.AssignmentStatus status);
+
+	// Feature 1: Cascade delete all judge assignments for a hackathon
+	void deleteByHackathon_HackathonId(Integer hackathonId);
 }

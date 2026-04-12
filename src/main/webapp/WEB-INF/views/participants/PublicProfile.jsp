@@ -127,6 +127,16 @@
 								title="GitHub Profile"> <i class="bi bi-github"></i>
 							</a>
 						</c:if>
+						<c:if test="${not empty publicUserDetail.linkedinLink}">
+							<a href="${publicUserDetail.linkedinLink}" target="_blank"
+								title="LinkedIn Profile"> <i class="bi bi-linkedin"></i>
+							</a>
+						</c:if>
+						<c:if test="${not empty publicUserDetail.twitterLink}">
+							<a href="${publicUserDetail.twitterLink}" target="_blank"
+								title="Twitter / X Profile"> <i class="bi bi-twitter-x"></i>
+							</a>
+						</c:if>
 						<c:if test="${not empty publicUser.email}">
 							<a href="mailto:${publicUser.email}" title="Send Email"> <i
 								class="bi bi-envelope-fill"></i>

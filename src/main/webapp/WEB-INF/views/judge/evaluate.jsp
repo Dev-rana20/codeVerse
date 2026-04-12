@@ -88,12 +88,24 @@
 				<c:choose>
 					<c:when test="${not empty finalSubs}">
 						<c:forEach var="fs" items="${finalSubs}">
-							<div class="cv-alert" style="margin-bottom: 0.5rem; display:flex; align-items:center; gap:0.75rem;">
+							<div class="cv-alert" style="margin-bottom: 0.5rem; display:flex; align-items:flex-start; gap:0.75rem;">
 								<span class="cv-badge" style="background:var(--primary);">FINAL</span>
-								<div>
-									<a href="${fs.githubLink}" target="_blank" style="color:var(--primary);">
-										<i class="bi bi-link-45deg"></i> ${fs.githubLink}
-									</a>
+								<div style="flex-grow: 1;">
+									<div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+										<a href="${fs.githubLink}" target="_blank" style="color:var(--primary);">
+											<i class="bi bi-link-45deg"></i> ${fs.githubLink}
+										</a>
+										<c:if test="${not empty fs.fileUrl}">
+											<a href="${fs.fileUrl}" target="_blank" class="btn-cv btn-cv--sm btn-cv--ghost" style="font-size:0.75rem; padding:0.15rem 0.5rem; border: 1px solid var(--border-color);">
+												<i class="bi bi-file-earmark-arrow-down"></i> File
+											</a>
+										</c:if>
+										<c:if test="${not empty fs.videoUrl}">
+											<a href="${fs.videoUrl}" target="_blank" class="btn-cv btn-cv--sm btn-cv--ghost" style="font-size:0.75rem; padding:0.15rem 0.5rem; border: 1px solid var(--border-color);">
+												<i class="bi bi-play-circle"></i> Video
+											</a>
+										</c:if>
+									</div>
 									<c:if test="${not empty fs.description}">
 										<p style="margin:0.25rem 0 0; font-size:0.85rem; color:var(--text-muted);">${fs.description}</p>
 									</c:if>
@@ -110,16 +122,28 @@
 				<c:if test="${not empty memberSubs}">
 					<p class="cv-label" style="margin: 1rem 0 0.5rem;"><i class="bi bi-person-lines-fill"></i> Member Work Uploads</p>
 					<c:forEach var="ms" items="${memberSubs}">
-						<div style="display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:0.5rem;">
+						<div style="display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:0.75rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border-color);">
 							<span class="cv-badge" style="background:var(--secondary); flex-shrink:0;">
 								${ms.user.firstName}
 							</span>
-							<div>
-								<a href="${ms.githubLink}" target="_blank" style="color:var(--primary); font-size:0.9rem;">
-									<i class="bi bi-link-45deg"></i> ${ms.githubLink}
-								</a>
+							<div style="flex-grow: 1;">
+								<div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+									<a href="${ms.githubLink}" target="_blank" style="color:var(--primary); font-size:0.9rem;">
+										<i class="bi bi-link-45deg"></i> ${ms.githubLink}
+									</a>
+									<c:if test="${not empty ms.fileUrl}">
+										<a href="${ms.fileUrl}" target="_blank" class="btn-cv btn-cv--sm btn-cv--ghost" style="font-size:0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-color);">
+											<i class="bi bi-file-earmark-arrow-down"></i> File
+										</a>
+									</c:if>
+									<c:if test="${not empty ms.videoUrl}">
+										<a href="${ms.videoUrl}" target="_blank" class="btn-cv btn-cv--sm btn-cv--ghost" style="font-size:0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-color);">
+											<i class="bi bi-play-circle"></i> Video
+										</a>
+									</c:if>
+								</div>
 								<c:if test="${not empty ms.description}">
-									<p style="margin:0.2rem 0 0; font-size:0.82rem; color:var(--text-muted);">${ms.description}</p>
+									<p style="margin:0.25rem 0 0; font-size:0.82rem; color:var(--text-muted);">${ms.description}</p>
 								</c:if>
 							</div>
 						</div>

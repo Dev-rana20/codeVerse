@@ -36,9 +36,11 @@ public class HackathonTeamEntity {
     private boolean teamStatus;
     
     private String finalSubmissionLink;
-    
     @OneToMany(mappedBy = "team")
     private List<HackathonTeamMembersEntity> members;
+    
+    // 1st, 2nd, 3rd place, or null if no placement
+    private Integer placement;
 
 	public Integer getHackathonTeamId() {
 		return hackathonTeamId;
@@ -96,8 +98,12 @@ public class HackathonTeamEntity {
 		this.finalSubmissionLink = finalSubmissionLink;
 	}
 
-	
-    
-    
+	public Integer getPlacement() {
+		return placement;
+	}
+
+	public void setPlacement(Integer placement) {
+		this.placement = placement;
+	}
     
 }

@@ -12,5 +12,10 @@ public interface HackathonTeamRepository extends JpaRepository<HackathonTeamEnti
 
 	List<HackathonTeamEntity> findByHackathon_HackathonId(Integer hackathonId);
 
-	boolean existsByHackathon_HackathonIdAndTeamLeader_UserId(Integer id, Integer userId);	
+	HackathonTeamEntity findByHackathon_HackathonIdAndTeamLeader_UserId(Integer hackathonId, Integer userId);
+
+	boolean existsByHackathon_HackathonIdAndTeamLeader_UserId(Integer id, Integer userId);
+
+	// Feature 1: Cascade delete all teams for a hackathon
+	void deleteByHackathon_HackathonId(Integer hackathonId);
 }

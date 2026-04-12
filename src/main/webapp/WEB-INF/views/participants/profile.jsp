@@ -156,21 +156,20 @@ input[type="file"].form-control:hover {
 		</c:if>
 
 		<div class="profile-card">
-			<div class="text-center mb-4">
-				<c:choose>
-					<c:when test="${not empty user.profilePicURL}">
-						<img src="${user.profilePicURL}" alt="Profile Picture"
-							class="profile-pic">
-					</c:when>
-					<c:otherwise>
-						<img src="assets/default-profile.png" alt="Profile Picture"
-							class="profile-pic">
-					</c:otherwise>
-				</c:choose>
+			<div class="text-center mb-4" style="position:relative;display:inline-block;">
+				<img id="avatarPreview"
+					src="${not empty user.profilePicURL ? user.profilePicURL : 'https://api.dicebear.com/7.x/initials/svg?seed='.concat(user.firstName)}"
+					alt="Profile Picture" class="profile-pic" style="cursor:pointer;"
+					onclick="document.getElementById('profilePic').click()">
+				<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #00ffe0;"
+					onclick="document.getElementById('profilePic').click()">
+					<i class="bi bi-camera-fill" style="color:#00ffe0;font-size:0.85rem;"></i>
+				</div>
 			</div>
 
 			<form action="updateProfile" method="post"
-				enctype="multipart/form-data">
+				enctype="multipart/form-data" id="profileForm">
+				<input type="hidden" name="removeProfilePic" id="removeProfilePicField" value="false">
 				<div class="mb-3">
 					<label for="firstName" class="form-label">First Name</label> <input
 						type="text" class="form-control" id="firstName" name="firstName"
@@ -245,14 +244,36 @@ input[type="file"].form-control:hover {
 				</div>
 
 				<div class="mb-3">
-					<label for="githubLink" class="form-label">GitHub Portfolio
-						URL</label>
+					<label for="githubLink" class="form-label">GitHub Portfolio URL</label>
 					<div class="input-group">
 						<span class="input-group-text bg-dark border-secondary text-muted"><i
 							class="bi bi-github"></i></span> <input type="text" class="form-control"
 							id="githubLink" name="githubLink"
 							value="${userDetail.githubLink}"
 							placeholder="https://github.com/username">
+					</div>
+				</div>
+
+				<!-- Feature 3: Social Media Links -->
+				<div class="mb-3">
+					<label for="linkedinLink" class="form-label">LinkedIn URL</label>
+					<div class="input-group">
+						<span class="input-group-text bg-dark border-secondary text-muted"><i
+							class="bi bi-linkedin"></i></span> <input type="text" class="form-control"
+							id="linkedinLink" name="linkedinLink"
+							value="${userDetail.linkedinLink}"
+							placeholder="https://linkedin.com/in/username">
+					</div>
+				</div>
+
+				<div class="mb-3">
+					<label for="twitterLink" class="form-label">Twitter / X URL</label>
+					<div class="input-group">
+						<span class="input-group-text bg-dark border-secondary text-muted"><i
+							class="bi bi-twitter-x"></i></span> <input type="text" class="form-control"
+							id="twitterLink" name="twitterLink"
+							value="${userDetail.twitterLink}"
+							placeholder="https://x.com/username">
 					</div>
 				</div>
 
@@ -266,16 +287,69 @@ input[type="file"].form-control:hover {
 					</div>
 				</div>
 
+				<!-- Feature 2: Enhanced Profile Picture Upload -->
 				<div class="mb-3">
 					<label for="profilePic" class="form-label">Profile Picture</label>
 					<input type="file" class="form-control" id="profilePic"
-						name="profilePic">
+						name="profilePic" accept="image/jpeg,image/png,image/webp" style="display:none;">
+					<div class="d-flex gap-2 align-items-center">
+						<button type="button" class="btn btn-primary" style="flex:1;" onclick="document.getElementById('profilePic').click()">
+							<i class="bi bi-upload me-1"></i> Choose Image
+						</button>
+						<c:if test="${not empty user.profilePicURL}">
+							<button type="button" class="btn btn-primary" id="removePicBtn"
+								style="flex:1;background:rgba(255,82,82,0.15);border:1px solid rgba(255,82,82,0.3);color:#ff5252;"
+								onclick="removeProfilePic()">
+								<i class="bi bi-trash me-1"></i> Remove Picture
+							</button>
+						</c:if>
+					</div>
+					<div id="fileInfo" style="font-size:0.75rem;color:#6b7280;margin-top:6px;"></div>
 				</div>
 
 				<button type="submit" class="btn btn-primary">Update
 					Profile</button>
 			</form>
 		</div>
+
+		<script>
+		// Feature 2: Live preview and validation
+		document.getElementById('profilePic').addEventListener('change', function(e) {
+			var file = e.target.files[0];
+			if (!file) return;
+			// Validate size (5MB)
+			if (file.size > 5 * 1024 * 1024) {
+				alert('File size must be less than 5MB');
+				e.target.value = '';
+				return;
+			}
+			// Validate type
+			if (!file.type.startsWith('image/')) {
+				alert('Please select a valid image file (JPEG, PNG, WebP)');
+				e.target.value = '';
+				return;
+			}
+			// Live preview
+			var reader = new FileReader();
+			reader.onload = function(ev) {
+				document.getElementById('avatarPreview').src = ev.target.result;
+			};
+			reader.readAsDataURL(file);
+			document.getElementById('removeProfilePicField').value = 'false';
+			// Show file info
+			var sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+			document.getElementById('fileInfo').textContent = file.name + ' (' + sizeMB + ' MB)';
+		});
+
+		function removeProfilePic() {
+			if (confirm('Remove your profile picture?')) {
+				document.getElementById('removeProfilePicField').value = 'true';
+				document.getElementById('profilePic').value = '';
+				document.getElementById('avatarPreview').src = 'https://api.dicebear.com/7.x/initials/svg?seed=${user.firstName}';
+				document.getElementById('fileInfo').textContent = 'Picture will be removed on save.';
+			}
+		}
+		</script>
 
 		<%-- PAST PARTICIPATION SECTION --%>
 		<div class="profile-card mt-4" style="max-width: 650px;">

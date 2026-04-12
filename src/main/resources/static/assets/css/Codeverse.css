@@ -592,6 +592,9 @@ body.sidebar-collapsed .cv-footer { margin-left: 60px; }
 .btn-cv--danger  { background: var(--danger);  color: #fff; }
 .btn-cv--danger:hover { opacity: 0.85; color: #fff; }
 
+.btn-cv--warning { background: var(--warn); color: #000; }
+.btn-cv--warning:hover { opacity: 0.85; color: #000; }
+
 .btn-cv--purple  { background: var(--accent2); color: #fff; }
 .btn-cv--purple:hover { opacity: 0.85; color: #fff; }
 

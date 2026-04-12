@@ -68,11 +68,11 @@
 	<nav class="cv-nav-section">
 		<div class="cv-nav-section-label">Category</div>
 
-		<a href="newCategory"
+		<a href="/newCategory"
 			class="cv-nav-item ${activePage == 'newCategory' ? 'active' : ''}">
 			<i class="bi bi-plus-circle"></i> <span class="cv-nav-label">New
 				Category</span>
-		</a> <a href="listCategory"
+		</a> <a href="/listCategory"
 			class="cv-nav-item ${activePage == 'listCategory' ? 'active' : ''}">
 			<i class="bi bi-list-ul"></i> <span class="cv-nav-label">List
 				Category</span>
@@ -83,15 +83,15 @@
 	<nav class="cv-nav-section">
 		<div class="cv-nav-section-label">Hackathon</div>
 
-		<a href="newHackathon"
+		<a href="/newHackathon"
 			class="cv-nav-item ${activePage == 'newHackathon' ? 'active' : ''}">
 			<i class="bi bi-lightning-charge"></i> <span class="cv-nav-label">New
 				Hackathon</span>
-		</a> <a href="addHackathonDescription"
+		</a> <a href="/addHackathonDescription"
 			class="cv-nav-item ${activePage == 'hackathonDesc' ? 'active' : ''}">
 			<i class="bi bi-file-earmark-text"></i> <span class="cv-nav-label">Add
 				Description</span>
-		</a> <a href="listHackathon"
+		</a> <a href="/listHackathon"
 			class="cv-nav-item ${activePage == 'listHackathon' ? 'active' : ''}">
 			<i class="bi bi-list-check"></i> <span class="cv-nav-label">List
 				Hackathons</span>

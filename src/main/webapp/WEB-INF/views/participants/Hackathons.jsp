@@ -129,6 +129,10 @@
 																<i class="bi bi-people"></i>
 																${hack.minTeamSize}-${hack.maxTeamSize} members
 															</div>
+															<div class="text-muted-cv font-mono small mt-1">
+																<i class="bi bi-person-fill"></i>
+																${participantCounts[hack.hackathonId] != null ? participantCounts[hack.hackathonId] : 0} registered
+															</div>
 
 														</div>
 

@@ -1,541 +1,503 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-		<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-			<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-				<c:set var="pageTitle" value="Hackathon Details" scope="request" />
-				<c:set var="activePage" value="hackathons" scope="request" />
-
-				<c:set var="monthNum" value="${fn:substring(hack.registrationStartDate, 5, 7)}" />
-
-				<c:choose>
-					<c:when test="${monthNum == '01'}">
-						<c:set var="monthName" value="JAN" />
-					</c:when>
-					<c:when test="${monthNum == '02'}">
-						<c:set var="monthName" value="FEB" />
-					</c:when>
-					<c:when test="${monthNum == '03'}">
-						<c:set var="monthName" value="MAR" />
-					</c:when>
-					<c:when test="${monthNum == '04'}">
-						<c:set var="monthName" value="APR" />
-					</c:when>
-					<c:when test="${monthNum == '05'}">
-						<c:set var="monthName" value="MAY" />
-					</c:when>
-					<c:when test="${monthNum == '06'}">
-						<c:set var="monthName" value="JUN" />
-					</c:when>
-					<c:when test="${monthNum == '07'}">
-						<c:set var="monthName" value="JUL" />
-					</c:when>
-					<c:when test="${monthNum == '08'}">
-						<c:set var="monthName" value="AUG" />
-					</c:when>
-					<c:when test="${monthNum == '09'}">
-						<c:set var="monthName" value="SEP" />
-					</c:when>
-					<c:when test="${monthNum == '10'}">
-						<c:set var="monthName" value="OCT" />
-					</c:when>
-					<c:when test="${monthNum == '11'}">
-						<c:set var="monthName" value="NOV" />
-					</c:when>
-					<c:otherwise>
-						<c:set var="monthName" value="DEC" />
-					</c:otherwise>
-				</c:choose>
-
-				<!DOCTYPE html>
-				<html lang="en">
-
-				<head>
-					<%@ include file="../components/Head.jsp" %>
-				</head>
-				<style>
-					.poster-bg {
-						background: #4FA5A0;
-						padding: 40px;
-						display: flex;
-						justify-content: center;
-					}
-
-					.poster {
-						width: 600px;
-						background: #F7F9F9;
-						border-radius: 10px;
-						padding: 40px 30px;
-						position: relative;
-						box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-						text-align: center;
-					}
-
-					/* HEADER */
-					.poster-header {
-						background: linear-gradient(180deg, #159A8C, #1FB3A5);
-						padding: 15px;
-						border-radius: 0 0 50% 50%;
-						color: white;
-					}
-
-					.festival-tag {
-						font-size: 14px;
-					}
-
-					/* TITLE */
-					.poster-title h1 {
-						font-size: 40px;
-						font-weight: 800;
-						margin: 20px 0;
-						color: #222;
-					}
-
-					/* SOCIAL */
-					.social-icons {
-						position: absolute;
-						left: -25px;
-						top: 150px;
-						display: flex;
-						flex-direction: column;
-						gap: 10px;
-					}
-
-					.icon {
-						width: 35px;
-						height: 35px;
-						background: #1FB3A5;
-						color: white;
-						border-radius: 50%;
-						display: flex;
-						align-items: center;
-						justify-content: center;
-					}
-
-					/* INFO CARD */
-					.info-card {
-						background: #111;
-						color: white;
-						padding: 15px;
-						border-radius: 8px;
-						margin: 30px auto;
-					}
-
-					.browser-bar {
-						display: flex;
-						gap: 5px;
-						margin-bottom: 10px;
-					}
-
-					.browser-bar span {
-						width: 10px;
-						height: 10px;
-						background: #999;
-						border-radius: 50%;
-					}
-
-					/* DATE BADGE */
-					.date-badge {
-						position: absolute;
-						right: -30px;
-						top: 160px;
-						background: #159A8C;
-						color: white;
-						padding: 15px;
-						border-radius: 10px;
-						text-align: center;
-					}
-
-					.date-badge h2 {
-						font-size: 28px;
-					}
-
-					/* EXTRA */
-					.poster-extra {
-						margin-top: 20px;
-						font-weight: bold;
-					}
-
-					/* BUTTON */
-					.cv-btn {
-						padding: 10px 20px;
-						background: #00ffe0;
-						border: none;
-						border-radius: 8px;
-						cursor: pointer;
-					}
-
-					.date-badge h4 {
-						font-weight: 700;
-						letter-spacing: 1px;
-					}
-
-					.poster-title h1 {
-						font-size: 36px;
-						line-height: 1.2;
-					}
-
-					.cv-btn-small {
-						width: auto !important;
-						display: inline-block;
-						padding: 8px 16px;
-						font-size: 14px;
-					}
-
-					.team-box {
-						padding: 15px;
-						border: 1px solid #eee;
-						border-radius: 8px;
-						margin-bottom: 12px;
-					}
-
-					.team-box h4 {
-						margin: 0;
-						margin-bottom: 5px;
-					}
-
-					.team-members {
-						margin-top: 8px;
-						font-size: 13px;
-						color: #666;
-					}
-
-					.cv-hack-right .cv-card {
-						margin-bottom: 15px;
-					}
-				</style>
-
-				<body>
-
-
-					<%@ include file="../components/navbar.jsp" %>
-
-
-
-						<div class="cv-shell">
-							<%@ include file="../components/Sidebar.jsp" %>
-
-								<main class="cv-content">
-
-									<c:if test="${not empty success}">
-										<div class="alert alert-success cv-msg"
-											style="padding: 10px; background: #d4edda; color: #155724; margin-bottom: 10px; border-radius: 5px;">
-											${success}</div>
-									</c:if>
-
-									<c:if test="${not empty error}">
-										<div class="alert alert-danger cv-msg"
-											style="padding: 10px; background: #f8d7da; color: #721c24; margin-bottom: 10px; border-radius: 5px;">
-											${error}</div>
-									</c:if>
-
-									<div class="cv-hack-container">
-
-										<!-- 🔥 POSTER SECTION -->
-										<div class="cv-hack-hero poster-mode">
-											<div class="cv-hack-overlay"></div>
-
-											<div class="cv-hack-hero-content">
-												<h1>${hack.title}</h1>
-												<span class="cv-badge">${hack.status}</span>
-											</div>
-
-										</div>
-
-										<!-- 🔥 MAIN BODY -->
-										<div class="cv-hack-body">
-
-											<!-- LEFT CONTENT -->
-											<div class="cv-hack-left">
-
-												<!-- OVERVIEW -->
-												<div class="cv-card">
-													<div class="cv-section-title">Overview</div>
-
-													<div class="cv-grid-2">
-														<div>
-															<strong>Event Type:</strong> ${hack.eventType}
-														</div>
-														<div>
-															<strong>Payment:</strong> ${hack.payment}
-														</div>
-														<c:if test="${fn:toUpperCase(hack.payment) == 'PAID'}">
-															<div>
-																<strong>Fee:</strong> ₹ ${hack.fee}
-															</div>
-														</c:if>
-														<div>
-															<strong>Location:</strong> ${hack.location}
-														</div>
-														<div>
-															<strong>Team Size:</strong> ${hack.minTeamSize} -
-															${hack.maxTeamSize}
-														</div>
-													</div>
-												</div>
-
-												<!-- DATES -->
-												<div class="cv-card">
-													<div class="cv-section-title">Timeline</div>
-
-													<div class="cv-grid-2">
-														<div>
-															<p class="cv-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Registration</p>
-															<strong>Starts:</strong> ${hack.registrationStartDate}<br>
-															<strong>Ends:</strong> ${hack.registrationEndDate}
-														</div>
-														<div>
-															<p class="cv-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Event Period</p>
-															<strong>Starts:</strong> ${hack.eventStartDate != null ? hack.eventStartDate : 'TBA'}<br>
-															<strong>Ends:</strong> ${hack.eventEndDate != null ? hack.eventEndDate : 'TBA'}
-														</div>
-													</div>
-													
-													<div class="mt-3 pt-3" style="border-top: 1px dashed var(--border-color);">
-														<p class="cv-muted mb-1" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">Submission Deadline</p>
-														<div class="d-flex align-items-center gap-2">
-															<i class="bi bi-alarm text-danger"></i>
-															<strong class="text-danger">${hack.submissionDeadline != null ? hack.submissionDeadline : 'TBA'}</strong>
-														</div>
-													</div>
-												</div>
-
-												<!-- DESCRIPTION -->
-												<div class="cv-card">
-													<div class="cv-section-title">Description</div>
-													<p class="cv-desc">${description.hackathonDetailsText}</p>
-													<c:if test="${not empty description.hackathonDetailsURL}">
-														<a href="${description.hackathonDetailsURL}" target="_blank"
-															class="btn-cv btn-cv--primary btn-cv--block"> View Full Details </a>
-													</c:if>
-
-												</div>
-
-											</div>
-
-											<!-- RIGHT SIDE -->
-											<div class="cv-hack-right">
-
-												<div class="cv-hack-right">
-
-													<div class="cv-card cv-register-card">
-
-														<h3>Join this Hackathon 🚀</h3>
-														<p class="cv-muted">Register now and start building with
-															your team.</p>
-
-														<c:choose>
-
-															<c:when test="${isRegistered}">
-																<div class="alert alert-success">✅ You are already
-																	registered</div>
-															</c:when>
-
-															<c:otherwise>
-                                                                <c:choose>
-                                                                    <c:when test="${fn:toLowerCase(hack.status) == 'close'}">
-                                                                        <div class="alert alert-danger">Registration is closed for this hackathon.</div>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <c:choose>
-                                                                            <c:when test="${fn:toUpperCase(hack.payment) == 'PAID'}">
-                                                                                <form action="/hackathons/${hack.hackathonId}/checkout"
-                                                                                    method="get">
-                                                                                    <div class="mb-3">
-                                                                                        <span class="badge bg-warning text-dark">Required Fee: ₹ ${hack.fee}</span>
-                                                                                    </div>
-                                                                                    <button
-                                                                                        class="btn-cv btn-cv--primary btn-cv--block">
-                                                                                        Pay & Register</button>
-                                                                                </form>
-                                                                            </c:when>
-                                                                            <c:otherwise>
-                                                                                <form action="/hackathons/${hack.hackathonId}/register"
-                                                                                    method="post">
-                                                                                    <button
-                                                                                        class="btn-cv btn-cv--primary btn-cv--block">
-                                                                                        Register Now</button>
-                                                                                </form>
-                                                                            </c:otherwise>
-                                                                        </c:choose>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-															</c:otherwise>
-
-														</c:choose>
-
-													</div>
-
-
-													<!-- TEAM SECTION -->
-													<c:if test="${isRegistered}">
-
-														<div class="cv-card">
-
-															<div class="cv-section-title">Available Teams</div>
-
-															<c:if test="${empty teams}">
-																<p class="cv-muted">No teams created yet</p>
-															</c:if>
-
-
-															<c:forEach var="t" items="${teams}">
-
-																<div class="team-box">
-
-																	<h4>${t.teamName}</h4>
-
-																	<small> Leader: ${t.teamLeader.firstName}
-																		${t.teamLeader.lastName} </small>
-
-																	<div class="team-members">Members:
-																		${fn:length(t.members)} / ${hack.maxTeamSize}
-																	</div>
-
-																	<form action="/team/requestJoin" method="post">
-
-																		<input type="hidden" name="teamId"
-																			value="${t.hackathonTeamId}" />
-
-																		<button
-																			class="btn-cv btn-cv--primary btn-cv--sm">
-
-																			Request to Join</button>
-
-																	</form>
-
-																</div>
-
-															</c:forEach>
-
-														</div>
-
-
-														<c:choose>
-
-															<c:when test="${hasCreatedTeam}">
-
-																<div class="alert alert-info">✅ You already created a
-																	team</div>
-
-															</c:when>
-
-															<c:otherwise>
-
-																<a href="/participant/team-register?hackathonId=${hack.hackathonId}"
-																	class="btn-cv btn-cv--ghost btn-cv--block"> Create
-																	Team </a>
-
-															</c:otherwise>
-
-														</c:choose>
-
-													</c:if>
-
-
-													<a href="/hackathons" class="cv-btn-outline"> ← Back to
-														Hackathons </a>
-
-												</div>
-
-											</div>
-
-										</div>
-										<div id="poster" class="poster-bg">
-
-											<div class="poster">
-
-												<!-- HEADER -->
-												<div class="poster-header">
-													<p class="festival-tag">&lt; CodeVerse Hackathon &gt;</p>
-												</div>
-
-												<!-- TITLE -->
-												<div class="poster-title">
-													<h1>${hack.title}</h1>
-												</div>
-
-												<!-- SOCIAL (optional branding) -->
-												<div class="social-icons">
-													<div class="icon">
-														<i class="bi bi-facebook"></i>
-													</div>
-													<div class="icon">
-														<i class="bi bi-instagram"></i>
-													</div>
-													<div class="icon">
-														<i class="bi bi-twitter"></i>
-													</div>
-												</div>
-
-												<!-- INFO CARD -->
-												<div class="info-card">
-													<div class="browser-bar">
-														<span></span> <span></span> <span></span>
-													</div>
-
-													<div class="card-content">
-														<h3>${hack.eventType}•${hack.location}</h3>
-														<p>${description.hackathonDetailsText}</p>
-													</div>
-												</div>
-
-												<!-- DATE BADGE -->
-												<div class="date-badge">
-													<h2>${fn:substring(hack.registrationStartDate, 8, 10)}</h2>
-													<h4>${monthName}</h4>
-													<p>${hack.registrationStartDate}</p>
-												</div>
-
-												<!-- EXTRA INFO -->
-												<div class="poster-extra">Team: ${hack.minTeamSize} -
-													${hack.maxTeamSize}</div>
-
-											</div>
-
-										</div>
-
-										<!-- DOWNLOAD BUTTON -->
-										<div style="text-align: center; margin-top: 20px;">
-											<button onclick="downloadPoster()" class="cv-btn">Download
-												Poster</button>
-										</div>
-								</main>
-						</div>
-
-						<%@ include file="../components/Footer.jsp" %>
-							<%@ include file="../components/Scripts.jsp" %>
-								<script
-									src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-
-								<script>
-									function downloadPoster() {
-										html2canvas(document.getElementById("poster")).then(canvas => {
-											const link = document.createElement("a");
-											link.download = "codeverse-poster.png";
-											link.href = canvas.toDataURL();
-											link.click();
-										});
-									}
-								</script>
-								<script>
-									setTimeout(() => {
-										const success = document.querySelector('.alert-success');
-										const error = document.querySelector('.alert-danger');
-
-										if (success) {
-											success.style.transition = "0.5s";
-											success.style.opacity = "0";
-											setTimeout(() => success.remove(), 500);
-										}
-
-										if (error) {
-											error.style.transition = "0.5s";
-											error.style.opacity = "0";
-											setTimeout(() => error.remove(), 500);
-										}
-									}, 3000);
-								</script>
-				</body>
-
-				</html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<c:set var="pageTitle" value="${hack.title} - Details" scope="request" />
+<c:set var="activePage" value="hackathons" scope="request" />
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%@ include file="../components/Head.jsp" %>
+    <style>
+        .page-wrapper {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* --- HERO SECTION --- */
+        .hack-hero-banner {
+            position: relative;
+            background: linear-gradient(135deg, #161b2c 0%, #0b0f1a 100%), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2000');
+            background-blend-mode: overlay;
+            background-size: cover;
+            background-position: center;
+            border-radius: 24px;
+            padding: 80px 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .hack-hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(0, 255, 224, 0.1) 0%, transparent 60%);
+        }
+
+        .hack-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hack-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- INFO CARDS --- */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .details-grid { grid-template-columns: 1fr; }
+        }
+
+        .info-card-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-box:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 255, 224, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 255, 224, 0.1);
+            border: 1px solid rgba(0, 255, 224, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ffe0;
+            font-size: 1.25rem;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #f3f4f6;
+            font-size: 1.05rem;
+        }
+
+        /* --- PRIZE BLOCKS --- */
+        .prizes-wrap {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .prizes-wrap { grid-template-columns: 1fr; }
+        }
+
+        .prize-tile {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .prize-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .prize-1::before { background: #ffd700; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        .prize-2::before { background: #c0c0c0; box-shadow: 0 4px 15px rgba(192, 192, 192, 0.2); }
+        .prize-3::before { background: #cd7f32; box-shadow: 0 4px 15px rgba(205, 127, 50, 0.2); }
+
+        .prize-rank {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .prize-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* --- SIDEBAR COMPONENTS --- */
+        .register-box {
+            background: linear-gradient(180deg, rgba(79, 70, 229, 0.1) 0%, rgba(13, 16, 32, 0.5) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .team-mini-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .team-mini-card:hover { border-color: #00ffe0; }
+
+        .timeline-vertical { position: relative; padding-left: 20px; }
+        .timeline-vertical::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .timeline-node {
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .timeline-node::after {
+            content: '';
+            position: absolute;
+            left: -24.5px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4b5563;
+        }
+
+        .timeline-node.active::after {
+            background: #00ffe0;
+            box-shadow: 0 0 10px #00ffe0;
+        }
+
+        /* --- UTILS --- */
+        .desc-text {
+            color: #9ca3af;
+            line-height: 1.8;
+            font-size: 1rem;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+
+<%@ include file="../components/navbar.jsp" %>
+
+<div class="cv-shell">
+    <%@ include file="../components/Sidebar.jsp" %>
+
+    <main class="cv-content">
+        <div class="page-wrapper">
+
+            <c:if test="${not empty success}">
+                <div class="alert alert-success cv-msg mb-4">${success}</div>
+            </c:if>
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger cv-msg mb-4">${error}</div>
+            </c:if>
+
+            <!-- HERO -->
+            <div class="hack-hero-banner">
+                <div class="hack-hero-content">
+                    <div class="cv-page-eyebrow">
+                        <i class="bi bi-rocket-takeoff"></i> Active Challenge
+                    </div>
+                    <h1 class="hack-title">${hack.title}</h1>
+                    <div class="d-flex gap-3 align-items-center">
+                        <span class="cv-badge cv-badge--${fn:toLowerCase(hack.status)}">
+                            <span class="cv-badge__dot"></span> ${hack.status}
+                        </span>
+                        <div class="text-muted-cv small font-mono">
+                            <i class="bi bi-eye me-1"></i> Public Console
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <!-- MAIN CONTENT AREA -->
+                <div class="details-left">
+                    
+                    <!-- TOP STATS -->
+                    <div class="info-card-group">
+                        <div class="stat-box">
+                            <div class="stat-icon"><i class="bi bi-globe"></i></div>
+                            <div>
+                                <span class="stat-label">Format</span>
+                                <span class="stat-value">${hack.eventType}</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon"><i class="bi bi-people"></i></div>
+                            <div>
+                                <span class="stat-label">Participants</span>
+                                <span class="stat-value">${participantCount} Registered</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+                            <div>
+                                <span class="stat-label">Access</span>
+                                <span class="stat-value">${hack.payment}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LOGISTICS CARDS -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="cv-card h-100">
+                                <div class="cv-card__header">
+                                    <i class="bi bi-geo-alt-fill text-accent"></i>
+                                    <h3>Venue & Location</h3>
+                                </div>
+                                <div class="cv-card__body">
+                                    <p class="text-white mb-2" style="font-weight: 600;">${hack.location}</p>
+                                    <p class="text small">Check the event communication channel for physical venue access codes or digital meeting links.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cv-card h-100">
+                                <div class="cv-card__header">
+                                    <i class="bi bi-person-check-fill text-accent"></i>
+                                    <h3>Team Constraints</h3>
+                                </div>
+                                <div class="cv-card__body">
+                                    <p class="text-white mb-2" style="font-weight: 600;">${hack.minTeamSize} to ${hack.maxTeamSize} Members</p>
+                                    <p class="text small">Teams must stay within these limits to be eligible for official evaluation. Solo participation if min=1.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRIZES SECTION -->
+                    <div class="cv-card mb-4">
+                        <div class="cv-card__header">
+                            <i class="bi bi-trophy-fill text-accent"></i>
+                            <h3>Performance Incentives</h3>
+                        </div>
+                        <div class="cv-card__body">
+                            <div class="prizes-wrap">
+                                <div class="prize-tile prize-1">
+                                    <span class="prize-rank" style="color:#ffd700">🥇 First Place</span>
+                                    <div class="prize-amount">${hack.firstPrize != null ? hack.firstPrize : 'TBA'}</div>
+                                </div>
+                                <div class="prize-tile prize-2">
+                                    <span class="prize-rank" style="color:#c0c0c0">🥈 Second Place</span>
+                                    <div class="prize-amount">${hack.secondPrize != null ? hack.secondPrize : 'TBA'}</div>
+                                </div>
+                                <div class="prize-tile prize-3">
+                                    <span class="prize-rank" style="color:#cd7f32">🥉 Third Place</span>
+                                    <div class="prize-amount">${hack.thirdPrize != null ? hack.thirdPrize : 'TBA'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="cv-card mb-4">
+                        <div class="cv-card__header">
+                            <i class="bi bi-file-earmark-text text-accent"></i>
+                            <h3>Challenge Description</h3>
+                        </div>
+                        <div class="cv-card__body">
+                            <div class="desc-text">${description.hackathonDetailsText}</div>
+                            <c:if test="${not empty description.hackathonDetailsURL}">
+                                <div class="mt-4 pt-4" style="border-top: 1px solid rgba(255,255,255,0.05)">
+                                    <a href="${description.hackathonDetailsURL}" target="_blank" class="btn-cv btn-cv--ghost w-100">
+                                        <i class="bi bi-file-earmark-pdf me-2"></i> Download Guidelines & Assets
+                                    </a>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SIDEBAR / ACTIONS AREA -->
+                <div class="details-right">
+                    
+                    <!-- JOIN ACTION -->
+                    <div class="register-box">
+                        <h4 class="mb-2">Get Started</h4>
+                        <p class="small text-muted mb-4">Register to unlock team formation and submissions.</p>
+                        
+                        <c:choose>
+                            <c:when test="${isRegistered}">
+                                <div class="cv-pill cv-pill--ongoing w-100 py-3" style="border: 1px solid #00ffe0">
+                                    <i class="bi bi-check-circle-fill me-2"></i> You are Registered
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${fn:toLowerCase(hack.status) == 'close'}">
+                                        <div class="alert alert-secondary py-2 small">Registrations Closed</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${fn:toUpperCase(hack.payment) == 'PAID'}">
+                                                <div class="mb-3 font-mono text-accent" style="font-weight: 800;">Fee: ₹ ${hack.fee}</div>
+                                                <a href="/hackathons/${hack.hackathonId}/checkout" class="btn-cv btn-cv--primary w-100">Pay & Register</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <form action="/hackathons/${hack.hackathonId}/register" method="post">
+                                                    <button type="submit" class="btn-cv btn-cv--primary w-100">Register Now</button>
+                                                </form>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                    <!-- TIMELINE SIDEBAR -->
+                    <div class="cv-card mb-4">
+                        <div class="cv-card__header">
+                            <i class="bi bi-clock-history text-accent"></i>
+                            <h3>Milestones</h3>
+                        </div>
+                        <div class="cv-card__body">
+                            <div class="timeline-vertical">
+                                <div class="timeline-node ${isRegistered ? 'active' : ''}">
+                                    <div class="stat-label">Registration Starts</div>
+                                    <div class="text-white small">${hack.registrationStartDate}</div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="stat-label">Registration Deadline</div>
+                                    <div class="text-white small">${hack.registrationEndDate}</div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="stat-label">Hackathon Event</div>
+                                    <div class="text-white small">${hack.eventStartDate != null ? hack.eventStartDate : 'TBA'}</div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="stat-label text-danger">Submission Deadline</div>
+                                    <div class="text-danger small font-weight-bold">${hack.submissionDeadline != null ? hack.submissionDeadline : 'TBA'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AVAILABLE TEAMS -->
+                    <c:if test="${isRegistered}">
+                        <div class="cv-card">
+                            <div class="cv-card__header d-flex justify-content-between">
+                                <h3>Active Teams</h3>
+                                <span class="badge bg-dark">${fn:length(teams)}</span>
+                            </div>
+                            <div class="cv-card__body">
+                                <c:choose>
+                                    <c:when test="${empty teams}">
+                                        <div class="text-center py-4 text-muted small">No teams created yet</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach var="t" items="${teams}">
+                                            <div class="team-mini-card">
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <div style="font-weight: 700; color: #fff;">${t.teamName}</div>
+                                                    <span class="small text-accent">${fn:length(t.members)}/${hack.maxTeamSize}</span>
+                                                </div>
+                                                <div class="small text-muted mb-3">Leader: ${t.teamLeader.firstName}</div>
+                                                <form action="/team/requestJoin" method="post">
+                                                    <input type="hidden" name="teamId" value="${t.hackathonTeamId}" />
+                                                    <button type="submit" class="btn-cv btn-cv--ghost btn-cv--sm w-100">Join Team</button>
+                                                </form>
+                                            </div>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <div class="mt-4 pt-3" style="border-top: 1px dashed rgba(255,255,255,0.05)">
+                                    <c:choose>
+                                        <c:when test="${hasCreatedTeam}">
+                                            <div class="text-center text-success small"><i class="bi bi-check2-circle"></i> You are a team leader</div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="/participant/team-register?hackathonId=${hack.hackathonId}" class="btn-cv btn-cv--ghost w-100">
+                                                <i class="bi bi-plus-circle me-1"></i> Create My Team
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
+
+                    <a href="/hackathons" class="btn btn-link text-muted-cv w-100 mt-3 small text-decoration-none">
+                        <i class="bi bi-arrow-left me-1"></i> Discover More
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<%@ include file="../components/Footer.jsp" %>
+<%@ include file="../components/Scripts.jsp" %>
+
+<script>
+    setTimeout(() => {
+        const msgs = document.querySelectorAll('.cv-msg');
+        msgs.forEach(msg => {
+            msg.style.transition = "0.5s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        });
+    }, 4000);
+</script>
+
+</body>
+</html>

@@ -125,16 +125,19 @@
 												</td>
 
 												<td><a
-													href="viewHackathon?hackathonId=${h.hackathonId}"
-													class="btn-cv btn-cv-info btn-sm"> <i class="bi bi-eye"></i>
-												</a> <a href="editHackathon?hackathonId=${h.hackathonId}"
-													class="btn-cv btn-cv-warning btn-sm"> <i
-														class="bi bi-pencil"></i>
-												</a> <a href="deleteHackathon?hackathonId=${h.hackathonId}"
-													class="btn-cv btn-cv-danger btn-sm"
-													onclick="return confirm('Delete this hackathon?')"> <i
-														class="bi bi-trash"></i>
-												</a></td>
+								href="viewHackathon?hackathonId=${h.hackathonId}"
+								class="btn-cv btn-cv-info btn-sm"> <i class="bi bi-eye"></i>
+							</a> <a href="editHackathon?hackathonId=${h.hackathonId}"
+								class="btn-cv btn-cv-warning btn-sm"> <i
+									class="bi bi-pencil"></i>
+							</a>
+							<form action="deleteHackathon" method="post" style="display:inline"
+								onsubmit="return confirm('Are you sure you want to delete this hackathon? All related data (teams, registrations, submissions, evaluations) will be permanently removed.')">
+								<input type="hidden" name="hackathonId" value="${h.hackathonId}" />
+								<button type="submit" class="btn-cv btn-cv-danger btn-sm">
+									<i class="bi bi-trash"></i>
+								</button>
+							</form></td>
 
 											</tr>
 										</c:forEach>

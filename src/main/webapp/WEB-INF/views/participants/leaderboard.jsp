@@ -35,8 +35,12 @@
 							<!-- TABLE CARD -->
 							<div class="cv-card">
 
-								<div class="cv-card__header">
+								<div class="cv-card__header" style="display:flex;justify-content:space-between;align-items:center;">
 									<h3>Rankings</h3>
+									<a href="/leaderboard/export?hackathonId=${hackathonId}"
+										class="btn-cv btn-cv--ghost btn-cv--sm">
+										<i class="bi bi-download"></i> Export CSV
+									</a>
 								</div>
 
 								<div class="cv-card__body">

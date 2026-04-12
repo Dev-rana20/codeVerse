@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 		<c:set var="pageTitle" value="My Teams" scope="request" />
 		<c:set var="activePage" value="team" scope="request" />
 
@@ -85,10 +85,19 @@
 
 																	</div>
 
-																	<a href="/team/details/${tm.team.hackathonTeamId}"
-																		class="btn-cv btn-cv--primary btn-cv--sm"> <i
-																			class="bi bi-eye"></i> View Team
-																	</a>
+																	<div style="display: flex; gap: 8px;">
+																		<c:if test="${fn:toLowerCase(tm.team.hackathon.status) == 'completed'}">
+																			<a href="/participant/certificate/${tm.team.hackathon.hackathonId}" 
+																			   class="btn-cv btn-cv--warning btn-cv--sm" 
+																			   target="_blank">
+																				<i class="bi bi-patch-check-fill"></i> Certificate
+																			</a>
+																		</c:if>
+																		<a href="/team/details/${tm.team.hackathonTeamId}"
+																			class="btn-cv btn-cv--primary btn-cv--sm"> <i
+																				class="bi bi-eye"></i> View Team
+																		</a>
+																	</div>
 
 																</div>
 

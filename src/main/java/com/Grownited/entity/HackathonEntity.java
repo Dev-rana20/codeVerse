@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name="hackathon")
+@Table(name = "hackathon")
 public class HackathonEntity {
 
 	@Id
@@ -60,92 +60,122 @@ public class HackathonEntity {
 	LocalDate submissionDeadline;
 
 	Integer userId; // fk
-	
-	 @OneToOne(mappedBy = "hackathon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	    private HackathonDescriptionEntity description;
 
-	
+	private String firstPrize;
+	private String secondPrize;
+	private String thirdPrize;
+
+	@OneToOne(mappedBy = "hackathon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private HackathonDescriptionEntity description;
+
 	public Integer getHackathonId() {
 		return hackathonId;
 	}
+
 	public void setHackathonId(Integer hackathonId) {
 		this.hackathonId = hackathonId;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getStatus() {
 		return status;
 	}
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
 	public String getEventType() {
 		return eventType;
 	}
+
 	public void setEventType(String eventType) {
 		this.eventType = eventType;
 	}
+
 	public String getPayment() {
 		return payment;
 	}
+
 	public void setPayment(String payment) {
 		this.payment = payment;
 	}
+
 	public Integer getMinTeamSize() {
 		return minTeamSize;
 	}
+
 	public void setMinTeamSize(Integer minTeamSize) {
 		this.minTeamSize = minTeamSize;
 	}
+
 	public Integer getFee() {
 		return fee;
 	}
+
 	public void setFee(Integer fee) {
 		this.fee = fee;
 	}
+
 	public Integer getMaxTeamSize() {
 		return maxTeamSize;
 	}
+
 	public void setMaxTeamSize(Integer maxTeamSize) {
 		this.maxTeamSize = maxTeamSize;
 	}
+
 	public String getLocation() {
 		return location;
 	}
+
 	public void setLocation(String location) {
 		this.location = location;
 	}
+
 	public Integer getUserTypeId() {
 		return userTypeId;
 	}
+
 	public void setUserTypeId(Integer userTypeId) {
 		this.userTypeId = userTypeId;
 	}
+
 	public LocalDate getRegistrationStartDate() {
 		return registrationStartDate;
 	}
+
 	public void setRegistrationStartDate(LocalDate registrationStartDate) {
 		this.registrationStartDate = registrationStartDate;
 	}
+
 	public LocalDate getRegistrationEndDate() {
 		return registrationEndDate;
 	}
+
 	public void setRegistrationEndDate(LocalDate registrationEndDate) {
 		this.registrationEndDate = registrationEndDate;
 	}
+
 	public Integer getUserId() {
 		return userId;
 	}
+
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+
 	public HackathonDescriptionEntity getDescription() {
 		return description;
 	}
+
 	public void setDescription(HackathonDescriptionEntity description) {
 		this.description = description;
 	}
@@ -153,6 +183,7 @@ public class HackathonEntity {
 	public LocalDate getEventStartDate() {
 		return eventStartDate;
 	}
+
 	public void setEventStartDate(LocalDate eventStartDate) {
 		this.eventStartDate = eventStartDate;
 	}
@@ -160,6 +191,7 @@ public class HackathonEntity {
 	public LocalDate getEventEndDate() {
 		return eventEndDate;
 	}
+
 	public void setEventEndDate(LocalDate eventEndDate) {
 		this.eventEndDate = eventEndDate;
 	}
@@ -167,10 +199,33 @@ public class HackathonEntity {
 	public LocalDate getSubmissionDeadline() {
 		return submissionDeadline;
 	}
+
 	public void setSubmissionDeadline(LocalDate submissionDeadline) {
 		this.submissionDeadline = submissionDeadline;
 	}
 
+	public String getFirstPrize() {
+		return firstPrize;
+	}
 
+	public void setFirstPrize(String firstPrize) {
+		this.firstPrize = firstPrize;
+	}
+
+	public String getSecondPrize() {
+		return secondPrize;
+	}
+
+	public void setSecondPrize(String secondPrize) {
+		this.secondPrize = secondPrize;
+	}
+
+	public String getThirdPrize() {
+		return thirdPrize;
+	}
+
+	public void setThirdPrize(String thirdPrize) {
+		this.thirdPrize = thirdPrize;
+	}
 
 }

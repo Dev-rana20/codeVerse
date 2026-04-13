@@ -1,2 +1,11 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+# Normalize all text files to LF on checkout (prevents CRLF/LF mixed builds on Linux)
+* text=auto eol=lf
+
+# Windows scripts keep CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Maven wrapper must be LF for Linux/Docker
+mvnw text eol=lf

@@ -274,21 +274,21 @@
                                     <div class="prize-icon prize-1">🥇</div>
                                     <div>
                                         <div class="hc-prop-label">First Prize</div>
-                                        <div class="hc-prop-value">${hackathon.firstPrize != null ? hackathon.firstPrize : 'TBA'}</div>
+                                        <div class="hc-prop-value">₹ ${hackathon.firstPrize != null ? hackathon.firstPrize : 'TBA'}</div>
                                     </div>
                                 </div>
                                 <div class="prize-card-mini">
                                     <div class="prize-icon prize-2">🥈</div>
                                     <div>
                                         <div class="hc-prop-label">Second Prize</div>
-                                        <div class="hc-prop-value">${hackathon.secondPrize != null ? hackathon.secondPrize : 'TBA'}</div>
+                                        <div class="hc-prop-value">₹ ${hackathon.secondPrize != null ? hackathon.secondPrize : 'TBA'}</div>
                                     </div>
                                 </div>
                                 <div class="prize-card-mini">
                                     <div class="prize-icon prize-3">🥉</div>
                                     <div>
                                         <div class="hc-prop-label">Third Prize</div>
-                                        <div class="hc-prop-value">${hackathon.thirdPrize != null ? hackathon.thirdPrize : 'TBA'}</div>
+                                        <div class="hc-prop-value">₹ ${hackathon.thirdPrize != null ? hackathon.thirdPrize : 'TBA'}</div>
                                     </div>
                                 </div>
                             </div>

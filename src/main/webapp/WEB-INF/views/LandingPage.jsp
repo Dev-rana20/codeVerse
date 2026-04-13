@@ -1107,7 +1107,26 @@
             <div class="hk-grid">
               <c:forEach items="${hackathons}" var="hackathon">
                 <div class="hk-card" tabindex="0" onclick="location.href='hackathonDetail/${hackathon.hackathonId}'">
-                  <div class="hk-img"></div>
+                  <c:choose>
+                    <c:when test="${fn:containsIgnoreCase(hackathon.eventType, 'AI') or fn:containsIgnoreCase(hackathon.eventType, 'ML')}">
+                      <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?q=80&w=800&auto=format&fit=crop" class="hk-img" alt="AI Hackathon">
+                    </c:when>
+                    <c:when test="${fn:containsIgnoreCase(hackathon.eventType, 'Web3') or fn:containsIgnoreCase(hackathon.eventType, 'Blockchain')}">
+                      <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=800&auto=format&fit=crop" class="hk-img" alt="Web3 Hackathon">
+                    </c:when>
+                    <c:when test="${fn:containsIgnoreCase(hackathon.eventType, 'Mobile')}">
+                      <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=800&auto=format&fit=crop" class="hk-img" alt="Mobile Hackathon">
+                    </c:when>
+                    <c:when test="${fn:containsIgnoreCase(hackathon.eventType, 'Cloud')}">
+                      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop" class="hk-img" alt="Cloud Hackathon">
+                    </c:when>
+                    <c:when test="${fn:containsIgnoreCase(hackathon.eventType, 'Security')}">
+                      <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" class="hk-img" alt="Security Hackathon">
+                    </c:when>
+                    <c:otherwise>
+                      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=800&auto=format&fit=crop" class="hk-img" alt="Hackathon">
+                    </c:otherwise>
+                  </c:choose>
                   <div class="hk-body">
                     <div class="hk-meta">
                       <span class="hk-tag">${hackathon.eventType}</span>
@@ -1132,7 +1151,7 @@
                     <div class="hk-footer">
                       <span class="hk-prize">
                         <c:choose>
-                          <c:when test="${not empty hackathon.firstPrize}">${hackathon.firstPrize}</c:when>
+                          <c:when test="${not empty hackathon.firstPrize}">₹${hackathon.firstPrize}</c:when>
                           <c:otherwise>TBA</c:otherwise>
                         </c:choose>
                       </span>

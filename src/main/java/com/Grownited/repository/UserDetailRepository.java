@@ -12,4 +12,5 @@ public interface UserDetailRepository extends JpaRepository<UserDetailEntity, In
 
 	
 	Optional<UserDetailEntity> findByUserId(Integer userId);
+	java.util.List<UserDetailEntity> findByUserIdIn(java.util.List<Integer> userIds);
 }

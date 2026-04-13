@@ -77,6 +77,13 @@ public class TeamController {
 			return "redirect:/login";
 
 		HackathonEntity hackathon = hackathonRepository.findById(hackathonId).orElseThrow();
+		
+		// Check if hackathon is closed or completed
+		String status = hackathon.getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			model.addAttribute("error", "Teams cannot be managed for this hackathon as it is closed or completed.");
+			return "redirect:/hackathonDetail/" + hackathonId;
+		}
 
 		// Check if user already created a team for this hackathon
 		boolean hasCreatedTeam = hackathonTeamRepository.existsByHackathon_HackathonIdAndTeamLeader_UserId(hackathonId,
@@ -128,6 +135,13 @@ public class TeamController {
 		}
 
 		HackathonEntity hackathon = hackathonRepository.findById(hackathonId).orElseThrow();
+
+		// Hard check: Block creation for closed/completed hackathons
+		String status = hackathon.getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			redirectAttributes.addFlashAttribute("error", "Team creation is no longer available.");
+			return "redirect:/hackathonDetail/" + hackathonId;
+		}
 
 		// Check if user already created or joined a team for this hackathon
 		boolean hasTeam = hackathonTeamRepository.existsByHackathon_HackathonIdAndTeamLeader_UserId(hackathonId,
@@ -214,6 +228,15 @@ public class TeamController {
 
 		HackathonTeamMembersEntity tm = hackathonTeamMemberRepository.findByTeam_HackathonTeamIdAndMember_UserId(teamId,
 				user.getUserId());
+
+		if (tm == null) return "redirect:/participant/team";
+		
+		// Block if hackathon is closed/completed
+		String status = tm.getTeam().getHackathon().getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			redirectAttributes.addFlashAttribute("error", "Cannot join team for a completed or closed hackathon.");
+			return "redirect:/participant/team";
+		}
 
 		if (tm != null && "PENDING".equals(tm.getStatus())) {
 			tm.setStatus("ACCEPTED");
@@ -302,6 +325,13 @@ public class TeamController {
 		if (!team.getTeamLeader().getUserId().equals(currentUser.getUserId())) {
 			ra.addFlashAttribute("error", "Only leader can invite members");
 			return "redirect:/participant/team";
+		}
+
+		// Block if hackathon is closed/completed
+		String status = team.getHackathon().getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			ra.addFlashAttribute("error", "Invites are no longer allowed for this hackathon.");
+			return "redirect:/team/details/" + teamId;
 		}
 
 		UserEntity userToInvite = userRepository.findById(memberId).orElseThrow();
@@ -411,6 +441,13 @@ public class TeamController {
 			return "redirect:/login";
 
 		HackathonTeamEntity team = hackathonTeamRepository.findById(teamId).orElseThrow();
+		
+		// Hard check: Block join requests for closed/completed hackathons
+		String status = team.getHackathon().getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			ra.addFlashAttribute("error", "Participation is no longer available for this hackathon.");
+			return "redirect:/hackathonDetail/" + team.getHackathon().getHackathonId();
+		}
 
 		// ❌ prevent duplicate in the same hackathon
 		boolean alreadyInTeam = hackathonTeamMemberRepository.existsByMember_UserIdAndTeam_Hackathon_HackathonId(

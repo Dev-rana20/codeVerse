@@ -96,8 +96,8 @@
 
 								<!-- Entry Fee -->
 								<div class="cv-form-group" id="feeGroup" style="display: none;">
-									<label class="cv-label">Entry Fee</label> <input type="number"
-										name="fee" id="feeInput" class="cv-input" min="0" placeholder="Enter entry fee" />
+									<label class="cv-label">Entry Fee (₹)</label> <input type="number"
+										name="fee" id="feeInput" class="cv-input" min="0" placeholder="Enter entry fee in ₹" />
 								</div>
 
 								<!-- Team Size -->
@@ -183,19 +183,19 @@
 									<div class="col-md-4">
 										<div class="cv-form-group">
 											<label class="cv-label">1st Prize</label>
-											<input type="text" name="firstPrize" class="cv-input" placeholder="e.g. $10,000" required />
+											<input type="text" name="firstPrize" class="cv-input" placeholder="e.g. ₹1,00,000" required />
 										</div>
 									</div>
 									<div class="col-md-4">
 										<div class="cv-form-group">
 											<label class="cv-label">2nd Prize</label>
-											<input type="text" name="secondPrize" class="cv-input" placeholder="e.g. $5,000" required />
+											<input type="text" name="secondPrize" class="cv-input" placeholder="e.g. ₹50,000" required />
 										</div>
 									</div>
 									<div class="col-md-4">
 										<div class="cv-form-group">
 											<label class="cv-label">3rd Prize</label>
-											<input type="text" name="thirdPrize" class="cv-input" placeholder="e.g. $2,000" required />
+											<input type="text" name="thirdPrize" class="cv-input" placeholder="e.g. ₹20,000" required />
 										</div>
 									</div>
 								</div>

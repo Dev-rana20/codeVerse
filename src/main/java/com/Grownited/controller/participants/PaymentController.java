@@ -40,6 +40,12 @@ public class PaymentController {
 
 		HackathonEntity hack = hackathonRepository.findById(hackathonId).orElseThrow();
 
+		// Check if registration is closed or hackathon completed
+		String status = hack.getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			return "redirect:/hackathonDetail/" + hackathonId;
+		}
+
 		// If it's already registered, redirect back
 		boolean exists = registrationRepository.existsByUserUserIdAndHackathonHackathonId(user.getUserId(), hackathonId);
 		if (exists) {
@@ -66,7 +72,13 @@ public class PaymentController {
 
 		HackathonEntity hackathon = hackathonRepository.findById(hackathonId).orElseThrow();
 
-		// Check if already registered
+		// Check if already registered or closed
+		String status = hackathon.getStatus();
+		if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+			redirectAttributes.addFlashAttribute("error", "Registrations are no longer accepted!");
+			return "redirect:/hackathonDetail/" + hackathonId;
+		}
+
 		boolean exists = registrationRepository.existsByUserUserIdAndHackathonHackathonId(user.getUserId(), hackathonId);
 		if (!exists) {
 			HackathonRegistrationEntity reg = new HackathonRegistrationEntity();

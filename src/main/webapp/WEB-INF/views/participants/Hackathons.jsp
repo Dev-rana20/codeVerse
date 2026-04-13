@@ -142,7 +142,7 @@
 
 															<c:choose>
 																<c:when
-																	test="${fn:toLowerCase(hack.status) == 'open' || fn:toLowerCase(hack.status) == 'upcoming'}">
+																	test="${fn:toLowerCase(hack.status) != 'close' && fn:toLowerCase(hack.status) != 'closed' && fn:toLowerCase(hack.status) != 'completed'}">
 																	<a href="/hackathonDetail/${hack.hackathonId}"
 																		class="btn-cv btn-cv--ghost btn-cv--sm">
 																		Register </a>

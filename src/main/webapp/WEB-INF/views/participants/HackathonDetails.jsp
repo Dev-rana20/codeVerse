@@ -331,15 +331,15 @@
                             <div class="prizes-wrap">
                                 <div class="prize-tile prize-1">
                                     <span class="prize-rank" style="color:#ffd700">🥇 First Place</span>
-                                    <div class="prize-amount">${hack.firstPrize != null ? hack.firstPrize : 'TBA'}</div>
+                                    <div class="prize-amount">₹${hack.firstPrize != null ? hack.firstPrize : 'TBA'}</div>
                                 </div>
                                 <div class="prize-tile prize-2">
                                     <span class="prize-rank" style="color:#c0c0c0">🥈 Second Place</span>
-                                    <div class="prize-amount">${hack.secondPrize != null ? hack.secondPrize : 'TBA'}</div>
+                                    <div class="prize-amount">₹${hack.secondPrize != null ? hack.secondPrize : 'TBA'}</div>
                                 </div>
                                 <div class="prize-tile prize-3">
                                     <span class="prize-rank" style="color:#cd7f32">🥉 Third Place</span>
-                                    <div class="prize-amount">${hack.thirdPrize != null ? hack.thirdPrize : 'TBA'}</div>
+                                    <div class="prize-amount">₹${hack.thirdPrize != null ? hack.thirdPrize : 'TBA'}</div>
                                 </div>
                             </div>
                         </div>
@@ -381,7 +381,7 @@
                             </c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test="${fn:toLowerCase(hack.status) == 'close'}">
+                                    <c:when test="${fn:toLowerCase(hack.status) == 'close' || fn:toLowerCase(hack.status) == 'closed' || fn:toLowerCase(hack.status) == 'completed'}">
                                         <div class="alert alert-secondary py-2 small">Registrations Closed</div>
                                     </c:when>
                                     <c:otherwise>
@@ -450,10 +450,17 @@
                                                     <span class="small text-accent">${fn:length(t.members)}/${hack.maxTeamSize}</span>
                                                 </div>
                                                 <div class="small text-muted mb-3">Leader: ${t.teamLeader.firstName}</div>
-                                                <form action="/team/requestJoin" method="post">
-                                                    <input type="hidden" name="teamId" value="${t.hackathonTeamId}" />
-                                                    <button type="submit" class="btn-cv btn-cv--ghost btn-cv--sm w-100">Join Team</button>
-                                                </form>
+                                                <c:choose>
+                                                    <c:when test="${fn:toLowerCase(hack.status) == 'close' || fn:toLowerCase(hack.status) == 'closed' || fn:toLowerCase(hack.status) == 'completed'}">
+                                                        <div class="text-center text-muted x-small">N/A</div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <form action="/team/requestJoin" method="post">
+                                                            <input type="hidden" name="teamId" value="${t.hackathonTeamId}" />
+                                                            <button type="submit" class="btn-cv btn-cv--ghost btn-cv--sm w-100">Join Team</button>
+                                                        </form>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </c:forEach>
                                     </c:otherwise>
@@ -465,9 +472,16 @@
                                             <div class="text-center text-success small"><i class="bi bi-check2-circle"></i> You are a team leader</div>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="/participant/team-register?hackathonId=${hack.hackathonId}" class="btn-cv btn-cv--ghost w-100">
-                                                <i class="bi bi-plus-circle me-1"></i> Create My Team
-                                            </a>
+                                            <c:choose>
+                                                <c:when test="${fn:toLowerCase(hack.status) == 'close' || fn:toLowerCase(hack.status) == 'closed' || fn:toLowerCase(hack.status) == 'completed'}">
+                                                    <div class="text-center text-muted small">Registrations closed</div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="/participant/team-register?hackathonId=${hack.hackathonId}" class="btn-cv btn-cv--ghost w-100">
+                                                        <i class="bi bi-plus-circle me-1"></i> Create My Team
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>

@@ -2,6 +2,7 @@ package com.Grownited.controller.participants;
 
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,8 +96,7 @@ public class ParticipantController {
 		// 1. All Hackathons (for discovery)
 		LocalDate today = LocalDate.now();
 		hackathonService.updateHackathonStatuses();
-		
-		List<HackathonEntity> hackathonList = hackathonRepository.findAll();
+		List<HackathonEntity> hackathonList = hackathonRepository.findByStatusIn(Arrays.asList("UPCOMING", "ONGOING", "IN_PROGRESS", "Close"));
 		
 		// 2. My Registrations
 		List<HackathonRegistrationEntity> myRegistrations = registrationRepository
@@ -106,8 +106,8 @@ public class ParticipantController {
 		int hackathonCount = myRegistrations.size();
 		long submissionsCount = 0; // Will be calculated below
 
-		// 4. Closest Registration Deadline
-		HackathonEntity nextDeadlineHack = null;
+		// 4. Closest Submission Deadline (Participated Hackathons Only)
+		HackathonEntity nextSubmissionHack = null;
 		
 		for (HackathonRegistrationEntity reg : myRegistrations) {
 			HackathonEntity h = reg.getHackathon();
@@ -120,7 +120,7 @@ public class ParticipantController {
 				reg.setTeamName(tm.getTeam().getTeamName());
 				if (tm.getTeam().getFinalSubmissionLink() != null) submissionsCount++;
 			} else {
-				// Second chance for leaders who might not be in members table
+				// Second chance for leaders
 				HackathonTeamEntity leadTeam = hackathonTeamRepository.findByHackathon_HackathonIdAndTeamLeader_UserId(h.getHackathonId(), currentUser.getUserId());
 				if (leadTeam != null) {
 					reg.setTeamName(leadTeam.getTeamName());
@@ -130,10 +130,10 @@ public class ParticipantController {
 				}
 			}
 			
-			// Find closest registration end date
-			if (h.getRegistrationEndDate() != null && !h.getRegistrationEndDate().isBefore(today)) {
-				if (nextDeadlineHack == null || h.getRegistrationEndDate().isBefore(nextDeadlineHack.getRegistrationEndDate())) {
-					nextDeadlineHack = h;
+			// Find closest upcoming submission deadline
+			if (h.getSubmissionDeadline() != null && !h.getSubmissionDeadline().isBefore(today)) {
+				if (nextSubmissionHack == null || h.getSubmissionDeadline().isBefore(nextSubmissionHack.getSubmissionDeadline())) {
+					nextSubmissionHack = h;
 				}
 			}
 		}
@@ -151,13 +151,13 @@ public class ParticipantController {
 		model.addAttribute("myRegistrations", myRegistrations);
 		model.addAttribute("hackathonCount", hackathonCount);
 		model.addAttribute("submissionsCount", submissionsCount);
-		model.addAttribute("upcomingHackathon", nextDeadlineHack);
+		model.addAttribute("upcomingHackathon", nextSubmissionHack);
 		model.addAttribute("latestTeam", latestTeam);
 		model.addAttribute("participantCounts", participantCounts);
 		
-		if (nextDeadlineHack != null && nextDeadlineHack.getRegistrationEndDate() != null) {
-			long millis = nextDeadlineHack.getRegistrationEndDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
-			model.addAttribute("registrationDeadlineMillis", millis);
+		if (nextSubmissionHack != null && nextSubmissionHack.getSubmissionDeadline() != null) {
+			long millis = nextSubmissionHack.getSubmissionDeadline().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+			model.addAttribute("submissionDeadlineMillis", millis);
 		}
 
 		return "/participants/DashBoard";
@@ -204,9 +204,10 @@ public class ParticipantController {
 		} else {
 			HackathonEntity hackathon = hackathonRepository.findById(hackathonId).get();
             
-            // Check if registration is closed
-			if ("Close".equalsIgnoreCase(hackathon.getStatus())) {
-				redirectAttributes.addFlashAttribute("error", "Registration is closed for this hackathon!");
+            // Check if registration is closed or hackathon completed
+			String status = hackathon.getStatus();
+			if ("Close".equalsIgnoreCase(status) || "CLOSED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
+				redirectAttributes.addFlashAttribute("error", "Registrations are no longer accepted for this hackathon!");
 				return "redirect:/hackathons";
 			}
 
@@ -518,9 +519,17 @@ public class ParticipantController {
 		 if (currentUser == null) return "redirect:/login";
 
 		 List<UserEntity> participants = userRepository.findByRole("PARTICIPANT");
-		 // Optionally, you could Map them to DTOs or just pass entities and fetch details in JSP
+		 
+		 // Optimization: Fetch all details in batch to avoid N+1 in JSP
+		 List<Integer> participantIds = participants.stream().map(UserEntity::getUserId).collect(Collectors.toList());
+		 List<UserDetailEntity> details = userDetailRepository.findByUserIdIn(participantIds);
+		 
+		 // Build a map for easy lookup in JSP
+		 Map<Integer, UserDetailEntity> detailMap = details.stream()
+				 .collect(Collectors.toMap(UserDetailEntity::getUserId, d -> d));
+
 		 model.addAttribute("participants", participants);
-		 model.addAttribute("userDetailRepo", userDetailRepository); // Hacky for JSP but works if needed
+		 model.addAttribute("detailMap", detailMap); 
 		 return "/participants/Discovery";
 	 }
 

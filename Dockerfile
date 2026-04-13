@@ -2,11 +2,7 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
-# Copy everything at once — avoids classpath/resolution issues during build
 COPY . .
-
-# Normalize Windows CRLF line endings to LF (fixes javac package resolution on Linux)
-RUN find src -name "*.java" -exec sed -i 's/\r//' {} \;
 
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 

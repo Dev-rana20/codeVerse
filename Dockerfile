@@ -2,14 +2,10 @@
 FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom first (for layer caching)
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -q
+# Copy everything at once — avoids classpath/resolution issues during build
+COPY . .
 
-# Copy source and build
-COPY src ./src
-RUN ./mvnw clean package -DskipTests -q
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 # ---- Stage 2: Run ----
 FROM eclipse-temurin:17-jre-alpine

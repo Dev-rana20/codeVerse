@@ -107,6 +107,16 @@ public class SubmissionController {
 		// All hackathons user registered in
 		List<HackathonRegistrationEntity> myRegistrations = registrationRepository.findByUserUserId(user.getUserId());
 
+		for (HackathonRegistrationEntity reg : myRegistrations) {
+			HackathonTeamMembersEntity tm = hackathonTeamMemberRepository
+					.findByMember_UserIdAndTeam_Hackathon_HackathonId(user.getUserId(), reg.getHackathon().getHackathonId());
+			
+			if (tm != null) {
+				boolean exists = submissionRepository.existsByTeamAndTypeAndStatus(tm.getTeam(), SubmissionType.FINAL, "SUBMITTED");
+				reg.setFinalSubmitted(exists);
+			}
+		}
+
 		model.addAttribute("registrations", myRegistrations);
 
 		return "participants/submissionHome"; // NEW JSP
@@ -131,6 +141,13 @@ public class SubmissionController {
 		java.time.LocalDate deadline = team.getHackathon().getSubmissionDeadline();
 		if (deadline != null && java.time.LocalDate.now().isAfter(deadline)) {
 			ra.addFlashAttribute("error", "Submission deadline has passed for this hackathon.");
+			return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
+		}
+
+		// 🚫 Prevent upload if FINAL submission is already done
+		boolean finalDone = submissionRepository.existsByTeamAndTypeAndStatus(team, SubmissionType.FINAL, "SUBMITTED");
+		if (finalDone) {
+			ra.addFlashAttribute("error", "Final submission is already done. No more uploads allowed.");
 			return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
 		}
 
@@ -212,6 +229,13 @@ public class SubmissionController {
 		if (deadline != null && java.time.LocalDate.now().isAfter(deadline)) {
 			ra.addFlashAttribute("error", "Submission deadline has passed for this hackathon.");
 			return "redirect:/team/details/" + teamId;
+		}
+
+		// 🚫 Prevent resubmission if FINAL submission is already done
+		boolean finalDone = submissionRepository.existsByTeamAndTypeAndStatus(team, SubmissionType.FINAL, "SUBMITTED");
+		if (finalDone) {
+			ra.addFlashAttribute("error", "Final submission is already done. You cannot submit again.");
+			return "redirect:/participant/submissions/" + team.getHackathon().getHackathonId();
 		}
 
 		// leader check

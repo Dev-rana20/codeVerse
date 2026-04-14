@@ -87,27 +87,37 @@
 							<h3 class="fs-6 mb-0">Upload Your Work</h3>
 						</div>
 						<div class="cv-card__body p-3">
-							<form action="${pageContext.request.contextPath}/team/upload" method="post" enctype="multipart/form-data">
-								<input type="hidden" name="teamId" value="${team.hackathonTeamId}" />
-								
-								<div class="row g-2">
-									<div class="col-12">
-										<input type="text" name="link" class="cv-input py-1 px-2 mb-1" style="font-size: 0.85rem;" placeholder="GitHub / Project Link" />
+							<c:choose>
+								<c:when test="${not empty finalSubmission}">
+									<div class="text-center py-4">
+										<i class="bi bi-lock-fill display-6 text-muted mb-2"></i>
+										<p class="text-muted mb-0">Uploads are closed because the final project has been submitted.</p>
 									</div>
-									<div class="col-md-6">
-										<label class="form-label small mb-0" style="font-size: 0.75rem;">Project File (10MB)</label>
-										<input type="file" name="projectFile" class="cv-input py-1 px-2" style="font-size: 0.8rem;" accept=".zip,.pdf,.docx" />
-									</div>
-									<div class="col-md-6">
-										<label class="form-label small mb-0" style="font-size: 0.75rem;">Demo Video (50MB)</label>
-										<input type="file" name="projectVideo" class="cv-input py-1 px-2" style="font-size: 0.8rem;" accept="video/*" />
-									</div>
-									<div class="col-12">
-										<textarea name="description" class="cv-input py-1 px-2 mt-1" style="font-size: 0.85rem; height: 60px;" placeholder="What did you work on?" required></textarea>
-									</div>
-								</div>
-								<button class="btn-cv btn-cv--primary btn-cv--sm mt-2 w-100">Upload Work</button>
-							</form>
+								</c:when>
+								<c:otherwise>
+									<form action="${pageContext.request.contextPath}/team/upload" method="post" enctype="multipart/form-data">
+										<input type="hidden" name="teamId" value="${team.hackathonTeamId}" />
+										
+										<div class="row g-2">
+											<div class="col-12">
+												<input type="text" name="link" class="cv-input py-1 px-2 mb-1" style="font-size: 0.85rem;" placeholder="GitHub / Project Link" />
+											</div>
+											<div class="col-md-6">
+												<label class="form-label small mb-0" style="font-size: 0.75rem;">Project File (10MB)</label>
+												<input type="file" name="projectFile" class="cv-input py-1 px-2" style="font-size: 0.8rem;" accept=".zip,.pdf,.docx" />
+											</div>
+											<div class="col-md-6">
+												<label class="form-label small mb-0" style="font-size: 0.75rem;">Demo Video (50MB)</label>
+												<input type="file" name="projectVideo" class="cv-input py-1 px-2" style="font-size: 0.8rem;" accept="video/*" />
+											</div>
+											<div class="col-12">
+												<textarea name="description" class="cv-input py-1 px-2 mt-1" style="font-size: 0.85rem; height: 60px;" placeholder="What did you work on?" required></textarea>
+											</div>
+										</div>
+										<button class="btn-cv btn-cv--primary btn-cv--sm mt-2 w-100">Upload Work</button>
+									</form>
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</div>
 				</div>
@@ -122,9 +132,9 @@
 								<c:choose>
 									<c:when test="${not empty finalSubmission}">
 										<div class="text-center py-4">
-											<div class="display-6 text-success mb-2"><i class="bi bi-check-circle-fill"></i></div>
-											<p class="text-success fw-bold mb-0">Project Successfully Submitted</p>
-											<small class="text-muted">You can update it by resubmitting below if needed.</small>
+											<div class="display-6 text-success mb-2"><i class="bi bi-patch-check-fill"></i></div>
+											<p class="text-success fw-bold mb-0">Project Completed</p>
+											<small class="text-muted">Final submission has been received by judges.</small>
 										</div>
 									</c:when>
 									<c:otherwise>

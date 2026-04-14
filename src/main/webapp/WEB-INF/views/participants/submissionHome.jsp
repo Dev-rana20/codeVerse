@@ -14,6 +14,18 @@
 					.cv-card h4 {
 						min-height: 60px;
 					}
+					.btn-completed {
+						background: #198754 !important;
+						color: white !important;
+						border-color: #198754 !important;
+						transition: all 0.3s ease;
+					}
+					.btn-completed:hover {
+						background: #157347 !important;
+						border-color: #146c43 !important;
+						box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+						transform: translateY(-2px);
+					}
 				</style>
 		</head>
 
@@ -57,12 +69,22 @@
 
 												<div class="d-flex justify-content-between align-items-center">
 
-													<span class="cv-badge"> Hackathon </span> <a
-														href="/participant/submissions/${r.hackathon.hackathonId}"
-														class="btn-cv btn-cv--primary btn-cv--sm"> <i
-															class="bi bi-cloud-arrow-up"></i> Submit
-
-													</a>
+													<span class="cv-badge"> Hackathon </span> 
+													
+													<c:choose>
+														<c:when test="${r.finalSubmitted}">
+															<a href="/participant/submissions/${r.hackathon.hackathonId}"
+																class="btn-cv btn-cv--sm btn-completed"> 
+																<i class="bi bi-check-circle-fill"></i> Completed
+															</a>
+														</c:when>
+														<c:otherwise>
+															<a href="/participant/submissions/${r.hackathon.hackathonId}"
+																class="btn-cv btn-cv--primary btn-cv--sm"> 
+																<i class="bi bi-cloud-arrow-up"></i> Submit
+															</a>
+														</c:otherwise>
+													</c:choose>
 
 												</div>
 

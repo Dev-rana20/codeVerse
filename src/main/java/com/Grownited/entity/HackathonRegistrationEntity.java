@@ -42,6 +42,17 @@ public class HackathonRegistrationEntity {
         this.teamName = teamName;
     }
 
+    @Transient
+    private boolean isFinalSubmitted;
+
+    public boolean isFinalSubmitted() {
+        return isFinalSubmitted;
+    }
+
+    public void setFinalSubmitted(boolean isFinalSubmitted) {
+        this.isFinalSubmitted = isFinalSubmitted;
+    }
+
 	public Integer getHackathonRegistrationId() {
 		return hackathonRegistrationId;
 	}
